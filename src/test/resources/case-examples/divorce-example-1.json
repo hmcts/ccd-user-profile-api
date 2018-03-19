@@ -1,0 +1,70 @@
+{
+    "event": {
+        "id": "createCase",
+        "short_comment": "Create a case",
+        "long_comment": "Create a case"
+    },
+    "data": {
+        "PersonAddress": {
+            "Country": "New Country",
+            "Postcode": "PP01 PPQ",
+            "AddressLine1": "123",
+            "AddressLine2": "New Street",
+            "AddressLine3": "Some Town",
+            "Occupant": {
+                "Title": "Mr",
+                "FirstName": "Phillip",
+                "MiddleName": "Cornelius",
+                "LastName": "Chan",
+                "DateOfBirth": "2017-05-15T00:00:00Z",
+                "NationalInsuranceNumber": "AB112233A",
+                "MarritalStatus": "MARRIAGE"
+            }
+        },
+        "PersonLastName": "Chan",
+        "PersonFirstName": "Phillip",
+        "DateOfBirth": "2017-05-15T00:00:00Z",
+        "ContactNumber": "07123456789",
+        "Age": "30",
+        "Wage": "100000",
+        "ContactEmail": "phillip.chan@test.com",
+        "Bilingual": "No",
+        "MarritalStatus": "MARRIAGE",
+        "RegionalCentre": "CARDIFF",
+        "Company": {
+            "Name": "PChan Engineering",
+            "BusinessAddress": {
+                "Country": "New Country",
+                "Postcode": "PP01 PPQ",
+                "AddressLine1": "123",
+                "AddressLine2": "New Street",
+                "AddressLine3": "Some Town",
+                "Occupant": {
+                    "Title": "Mr",
+                    "FirstName": "Phillip",
+                    "MiddleName": "Cornelius",
+                    "LastName": "Chan",
+                    "DateOfBirth": "2017-05-15T00:00:00Z",
+                    "NationalInsuranceNumber": "AB112233A",
+                    "MarritalStatus": "MARRIAGE"
+                }
+            },
+            "PostalAddress": {
+                "Country": "New Country",
+                "Postcode": "PP01 PPQ",
+                "AddressLine1": "123",
+                "AddressLine2": "New Street",
+                "AddressLine3": "Some Town",
+                "Occupant": {
+                    "Title": "Mr",
+                    "FirstName": "Phillip",
+                    "MiddleName": "Cornelius",
+                    "LastName": "Chan",
+                    "DateOfBirth": "2017-05-15T00:00:00Z",
+                    "NationalInsuranceNumber": "AB112233A",
+                    "MarritalStatus": "MARRIAGE"
+                }
+            }
+        }
+    }
+}
