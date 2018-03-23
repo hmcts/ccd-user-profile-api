@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.userprofile.tests.AATHelper;
 import uk.gov.hmcts.ccd.userprofile.tests.BaseTest;
+
 import java.util.function.Supplier;
 
 class UserProfileTest extends BaseTest {

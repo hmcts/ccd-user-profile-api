@@ -1,0 +1,16 @@
+#!groovy
+properties(
+        [[$class: 'GithubProjectProperty', projectUrlStr: 'https://git.reform.hmcts.net/case-management/user-profile-app'],
+         pipelineTriggers([[$class: 'GitHubPushTrigger']])]
+)
+
+@Library("Infrastructure")
+
+def type = "java"
+
+def product = "ccd"
+
+def app = "user-profile-api"
+
+withPipeline(type, product, app) {
+}

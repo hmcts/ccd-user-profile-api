@@ -2,6 +2,8 @@ package uk.gov.hmcts.ccd.domain.service;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.codec.binary.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionEntity;
@@ -10,8 +12,9 @@ import uk.gov.hmcts.ccd.data.userprofile.UserProfileRepository;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 
-import javax.inject.Inject;
 import java.util.List;
+
+import javax.inject.Inject;
 
 @Service
 public class UserProfileOperation {
@@ -19,6 +22,7 @@ public class UserProfileOperation {
     private final UserProfileRepository userProfileRepository;
     private final JurisdictionRepository jurisdictionRepository;
     private final CreateUserProfileOperation createUserProfileOperation;
+    private static final Logger LOG = LoggerFactory.getLogger(UserProfileOperation.class);
 
     @Inject
     public UserProfileOperation(final UserProfileRepository userProfileRepository,
@@ -38,6 +42,7 @@ public class UserProfileOperation {
             if (null == jurisdictionFound) {
                 final JurisdictionEntity newJurisdictionEntity = new JurisdictionEntity();
                 newJurisdictionEntity.setId(userProfile.getWorkBasketDefaultJurisdiction());
+                LOG.info("Jurisdiction entity for {} not found. Creating one...", newJurisdictionEntity.getId());
                 jurisdictionRepository.create(newJurisdictionEntity);
             }
 
@@ -48,9 +53,11 @@ public class UserProfileOperation {
             final UserProfile userProfileFound = userProfileRepository.findById(userProfile.getId());
 
             if (null == userProfileFound) {
+                LOG.info("User profile for {} not found. Creating one...", userProfile.getId());
                 createUserProfileOperation.execute(populateProfileJurisdiction(userProfile));
             } else {
                 if (isUpdateRequired(userProfileFound, userProfile)) {
+                    LOG.info("User profile for {} found. Updating...", userProfile.getId());
                     userProfileFound.setWorkBasketDefaultCaseType(userProfile.getWorkBasketDefaultCaseType());
                     userProfileFound.setWorkBasketDefaultJurisdiction(userProfile.getWorkBasketDefaultJurisdiction());
                     userProfileFound.setWorkBasketDefaultState(userProfile.getWorkBasketDefaultState());

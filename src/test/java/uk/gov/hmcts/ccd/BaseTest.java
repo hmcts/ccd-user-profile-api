@@ -12,10 +12,11 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.gov.hmcts.ccd.data.userprofile.UserProfileEntity;
 
-import javax.sql.DataSource;
 import java.nio.charset.Charset;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import javax.sql.DataSource;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
