@@ -6,28 +6,28 @@ before_cache:
 - rm -fr $HOME/.gradle/caches/
 cache:
   directories:
-  - $HOME/.gradle/caches/
-  - $HOME/.gradle/wrapper/
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
 before_install:
 - sudo apt-get install jq
 - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest
   | jq -r .assets[0].browser_download_url)
 script:
-- ./gradlew build
-- ./gradlew codeCoverageReport
+- "./gradlew build"
+- "./gradlew codeCoverageReport"
 after_success:
 - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter
   -l Java -r build/reports/jacoco/jacocoTestReport.xml
 deploy:
 - provider: script
-  script: ./gradlew bintrayUpload
+  script: "./gradlew bintrayUpload"
   skip_cleanup: true
   on:
-    repo: hmcts/java-logging
+    repo: hmcts/ccd-user-profile-api
     tags: true
 - provider: releases
   api_key:
-    secure: v1gAVCFHdpRMYEyD2R4zOqxNAkd+TL+RFndzlTw0kUtQT+SbTNfLhnxiMwHfFeIn3ivqQ1MLt8zXo5zDtFHHRGp6QX/kA9I0mIj74rf/sj0z0ElXCDtiB41NVcq9++X1OmvP4qniWxcvi03e4TMg0HIiLGzD41437NVN1So/PUYFVxgvyeENL6JUIe7d2y48ZP2YvWh1tvwj5Z3p/bEd2Kp7H0aTP58l1kSkSHoSonNHpB/yjT9qN6VSWTyMl8GxeRPX4FSYEGBpDy7+8wxVO/MVOMwu0X2T6vgYlmkXj4U7bmXf0kMkvbeBQC/yZEH8D2y1W3piERw0b17kc9t7tigULBXIEhUNUgKFVEdTDSAEJASpytlxKfsaNVjsUx9n9kWhSUqtFgIz9msS4iJpImkSLTr20BivJ829zNfcG1wbHyIqlV5MQKTAqCwU6RWvRrT0OwhCT38R0lzmyDKEUbRbz+kGW4Vqo5BaPRMrxZZFRMtSHDuh8HCp2LzefUcfUX7LCvSd4z0MFK0o1WEn1lEuB1haViF2JWiov973JFqH7FjJe0iF172GOaMMFRR6ck8g8omfGO+ufZtxPeW5Zw47IridV9HaOhN/K8wkT7xVgdKy+qZmRdzdEHOo2hT2n9mbagIFmqc4yKN91elhAc/vzieE1WNx0n8+Aj9joyY=
+    secure: pINA/JOGh2FZKm1bmVtqICQC7AlRrqsaqVk6su7TB4NQR2ukAWrDMjaClOEUpS/Y6zs2uMterh79/LxPQ4vYTuPYiXV39zJ/tTFkPC6mew4mfC9tDl/3VmdKKrt8R8fW906OTXrOprJAX+JRGDKoPgUsp03NT6nF8YvZbVEG6zCmkiKwgyiASc+wNxJ9MMghXtybYn95s4ak73re1B1pSzSrX+HQ2LwMXf02JJ0GZ/NX1he5F1565OH6qMkvKRJ7I2jA8PCt4a1iME/vzz2FDKOd3eVafybE8vQBhNWZzqt8q+82eLdH22fMeB1iIrLmMoztaVGRcV+iBQJklSjP8m4VmH4D8lXezR1ahifIwv8WniNN3fVA9Yq5XOXZ6/cD44xJzbC47R2B1GNFCjh75YQm01ll3t3SJSfSGehTjjw+aHnC+nnl/OyBg5Twc8jMGPEAV2L+8kVW4u7NGMV6xC+nk33+0IMiIZpduLw4WV8cWMHQPHzh0lKNY7fHfYEO+a781+dmHePbD/KoJB+4gGE647Eo/fzeIIsJDldSWNoGjRPygi6Gp4k0EWyB9KGunBPOWygbeuCU+UmSZs4MH4pO3Zf0Akoiv+TOtihQQSmJptewtZHjlZLPzADrSgOdHEM9ygPHFJ7zO/at/XbdNZYcLxaDUZCfAoa5hJ28Mpg=
   file_glob: true
   file:
   - build/libs/user-profile*.jar
@@ -37,5 +37,5 @@ deploy:
     tags: true
 env:
   global:
-  - secure: idyabL0MgrmQw8ZdwgRYe8/ewYrdYlNAaYUZbhTzLnnIkXAnPXhFxPB+k2mDaMf0ww26VpBl4O6aYv5bHrCI+1/oziByTSz6Qny9j3F2h/gnSwyXZUe427BCjTR9Wz1+TvASGansO+igj0FxENGikqKDd0V5Qe8lr4Lm01+xXLoAXfvyqqiAqjsRHvl1vG+9F+G80hzmMBSBm7AkN//uYJRFCJV07yp6J0ALd6Z81cChNJgvS7oG9iXimFltiCwf8KNcotkm/mbGHULyj6YVfnFePSoIuI94QBi2myqxDRQ56bv7wtipsF0zaOn+Zc5hPr6QGPMXNWeD3kp/ZmEYWsg5VFQEdcpnKhyv7zcmKZDaYQgIkdjZTZ1rDBj04ubBJs96dEex2CamascLTuq5XuVs3O8MG4GrcKPDqTbDNDnSVDtyRUakhWwnFn424shotCyXl+k06THlFVQq229eBRKCQDdGWtV2B4Z55AxQdIHqaDLppYJs1wCC7350/gY0pXgm4928UpVxx3Bk/Gu1HT8gIWOiEYigqqPOgFlfrdGMiPyRM0WHImZ9Ru8d/RvMnGYndwlY10q3i2lM+CdwthaPp1f9jZDZw2uqqmiUlOuH+oVG4l61h+gznlH277KXcjTPbLjwczo5nZ0L4H/TBGTVrhTOVUQEsBu/zYrAZo8=
-  - secure: lMbaGTv2PCsjiwGpDMsTKShmtC6Fj6bp++2Re2H2+lgRAmepnr9h8+5ckHyaGYH6HuxSBYN9Q01F1t6lwn1tZQYhJ6EJYK8Kb1KHWnXME3K6VnM/C+6Yr7TkZr0+1SaDE7CIAjCzgF3v5MsWlBUDLhJYViwNuZaJ+Ej73RJkIi0qEu2Dk0PYx6JMK/jwnCojCOYoWjm7d23Tyu5ACo+onZF1WCfVVrI7Gq8kEN4OhClozVvF5IFqfeGEJCWzMsNCxJDE9ptFJcDmp5he41l1GrXNgD9rCxWay03l96Z2+OcqeXV9prIZ36h1mnWy3pd+Xnpxi0LqE09nBFnnGMCwbeer16hG09zsxav6Qk68AUt+smHEcxzFJC9Q6otW+6ud8gxk4kxPkyYo0+adQj5yuudVNS8R7sH8hsTKdD6K0Hv5I3Yob2eSw+1aaE1iz8vplbMCdwOVuZH9uwpgWrivi4HZO9VKgkZ83nr7guJpES7i+YhmiokpN8eUZFrUKCW0ScUJGit8JBjOeaSZod6prd/X7roI4u79eeYG0l76PcN/vPgfUN4cQEOOwg97XLpAvYySghC5ppRUnczDs/iEV5sqWS2QnF20JY+2CDEJkrfC/JlpR2TETrVzeBfzs/VKm811vAoRXscaGWGCfg2FdAWHvpquQ8EViqKnzH/9V5M=
+  - secure: M0w7Bt6UCQA5ned4qFQ3hWSLaZzWP/MCVU5qjxYo52Nr2Zsyzw2Ajak+v3Ut8lQ6JFY6mvkmkO5uT1Qu8NNAuGIxh/rwufpNYpMpmFse61evXSMP6JmF8HuRKysCTmP+QABLZIWO1T/f0kG0W0v/sI9fAWYMXCzsndK8kz4U5kutFZtpBpQZCuNWPlqpMsQaTLaTqm+V4amJNy3SkVOObDIR63NeI0F+95CRuqhnu0P2z9YL0znMqNIlGXb2R9GGICy1uFTPdWRIG+AtMJG4MKZr5fegwf4Pd0A4wHRvGulRAo5cBj7suyX2mzlQXI7cKHaPzvIWKg3aQkbxRtE+jaSRQZ55aUV+yOh/pBQfo1ReSMYNeD/70ze9E6pVZOkBPaEQyxLWk42ikb1BahqUsTl5UPUPJKIV7K4yBpQJJI60dhxYKjUEGjEsLTNLW/38aTTVv+OaMWvti6MkH3cwcVWPcE2EpA0krS6CQc4yf02+EsJJ6ePk0Pdm8x99ZWSfy3L4dxI2t3p73I0QS7+0t0jZiodylvJfUzNrSlIk2fqH4RKNtPA8aZpC6ecbvLc+7vY8ciGYfd/WuP53AFyxkNYdvMfaUa3wFsFV9QXXQnMWX531pRwLT9695XVmoiA64Xf9s9lPS8dvIjA91e8cCTREfsJGTHN1WSQ/qkICJLk=
+  - secure: Fl6mvOvjz6455gHkCizBIPifhE6K6J42a/h5iEASK+Yw2Ye50WuI4B40TfM0jl+BQLoSTrrLAVMXLu7nUGp9oQ7QHTBCwOE5aMhTSCQN/bb/dJZWbi02rAQgko4Dc+GsgeYbUH2/+T+vmXxd2Jqpooq2jCby9H5lZhz0Qwe4dXxfjPMWTYO099oWo1RbW245VM3CUFaMSzEZaibUJzt8fqoKsuDM9Ow89oFpEvL8n95VMe7cFNpkLu7EdD8IayBwQtIEpWrz1KziEZ6dyjT4QHdP9mzINmJPT3kOHGc3nEU6zUZcS7wqE/dIdKtT7WZv5VIZr0YgQ+LqJ4D2224o6xlcmp2SWRuaS/bCfdXdMqds3vL1QAlSH84byRr8lLEb15aB9iEqwm8xWm52AHiGYY9x+lB/bdld+aUUP3KEF3C7ebht3TuchN2vmvhaCvxfl00ORD/vNu08kyXccJCXT/Kx6c9whSyRXplOO6QdwM++7GbHCDH8sVZ/7xIurXNNCXCzxkkeZHIkhsAP1tInvfi8NF/s7M3q1HUJmGRKUu78OYJw/1DEy2foUPQ7eytq95JWd7jtLWBTk3aHtoE8N9TupL58whPeq2E5H5YB3H2sVbPbMqruDKxChsJwNDXgZyRkhH+FSx6dY84C5r1QI9Z98qLKsPSx+tme9DIXia4=
