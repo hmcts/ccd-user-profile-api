@@ -300,43 +300,6 @@ spotbugsAat {
     ignoreFailures = true
 }
 
-task codeCoverageReport(type: JacocoReport, dependsOn: allprojects*.test) {
-
-    // Gather execution data from all subprojects
-    // (change this if you e.g. want to calculate unit test/integration test coverage separately)
-    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
-
-    // Add all relevant sourcesets from the subprojects
-    allprojects.each {
-        sourceSets it.sourceSets.main
-    }
-
-    reports {
-        csv.enabled = false
-        html.enabled = true
-        html.destination = file("${buildDir}/reports/jacoco/html")
-        xml.enabled = true
-        xml.destination = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
-    }
-}
-
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    publications = ['Main']
-    publish = true
-    pkg {
-        repo = 'hmcts-maven'
-        name = 'user-profile-api'
-        userOrg = 'hmcts'
-        licenses = ['MIT']
-        vcsUrl = 'https://github.com/hmcts/user-profile'
-        version {
-            name = project.version
-        }
-    }
-}
-
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allSource

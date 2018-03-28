@@ -14,28 +14,6 @@ before_install:
   | jq -r .assets[0].browser_download_url)
 script:
 - "./gradlew build"
-- "./gradlew codeCoverageReport"
 after_success:
 - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter
-  -l Java -r build/reports/jacoco/jacocoTestReport.xml
-deploy:
-- provider: script
-  script: "./gradlew bintrayUpload"
-  skip_cleanup: true
-  on:
-    repo: hmcts/ccd-user-profile-api
-    tags: true
-- provider: releases
-  api_key:
-    secure: pINA/JOGh2FZKm1bmVtqICQC7AlRrqsaqVk6su7TB4NQR2ukAWrDMjaClOEUpS/Y6zs2uMterh79/LxPQ4vYTuPYiXV39zJ/tTFkPC6mew4mfC9tDl/3VmdKKrt8R8fW906OTXrOprJAX+JRGDKoPgUsp03NT6nF8YvZbVEG6zCmkiKwgyiASc+wNxJ9MMghXtybYn95s4ak73re1B1pSzSrX+HQ2LwMXf02JJ0GZ/NX1he5F1565OH6qMkvKRJ7I2jA8PCt4a1iME/vzz2FDKOd3eVafybE8vQBhNWZzqt8q+82eLdH22fMeB1iIrLmMoztaVGRcV+iBQJklSjP8m4VmH4D8lXezR1ahifIwv8WniNN3fVA9Yq5XOXZ6/cD44xJzbC47R2B1GNFCjh75YQm01ll3t3SJSfSGehTjjw+aHnC+nnl/OyBg5Twc8jMGPEAV2L+8kVW4u7NGMV6xC+nk33+0IMiIZpduLw4WV8cWMHQPHzh0lKNY7fHfYEO+a781+dmHePbD/KoJB+4gGE647Eo/fzeIIsJDldSWNoGjRPygi6Gp4k0EWyB9KGunBPOWygbeuCU+UmSZs4MH4pO3Zf0Akoiv+TOtihQQSmJptewtZHjlZLPzADrSgOdHEM9ygPHFJ7zO/at/XbdNZYcLxaDUZCfAoa5hJ28Mpg=
-  file_glob: true
-  file:
-  - build/libs/user-profile*.jar
-  skip_cleanup: true
-  on:
-    repo: hmcts/ccd-user-profile-api
-    tags: true
-env:
-  global:
-  - secure: M0w7Bt6UCQA5ned4qFQ3hWSLaZzWP/MCVU5qjxYo52Nr2Zsyzw2Ajak+v3Ut8lQ6JFY6mvkmkO5uT1Qu8NNAuGIxh/rwufpNYpMpmFse61evXSMP6JmF8HuRKysCTmP+QABLZIWO1T/f0kG0W0v/sI9fAWYMXCzsndK8kz4U5kutFZtpBpQZCuNWPlqpMsQaTLaTqm+V4amJNy3SkVOObDIR63NeI0F+95CRuqhnu0P2z9YL0znMqNIlGXb2R9GGICy1uFTPdWRIG+AtMJG4MKZr5fegwf4Pd0A4wHRvGulRAo5cBj7suyX2mzlQXI7cKHaPzvIWKg3aQkbxRtE+jaSRQZ55aUV+yOh/pBQfo1ReSMYNeD/70ze9E6pVZOkBPaEQyxLWk42ikb1BahqUsTl5UPUPJKIV7K4yBpQJJI60dhxYKjUEGjEsLTNLW/38aTTVv+OaMWvti6MkH3cwcVWPcE2EpA0krS6CQc4yf02+EsJJ6ePk0Pdm8x99ZWSfy3L4dxI2t3p73I0QS7+0t0jZiodylvJfUzNrSlIk2fqH4RKNtPA8aZpC6ecbvLc+7vY8ciGYfd/WuP53AFyxkNYdvMfaUa3wFsFV9QXXQnMWX531pRwLT9695XVmoiA64Xf9s9lPS8dvIjA91e8cCTREfsJGTHN1WSQ/qkICJLk=
-  - secure: Fl6mvOvjz6455gHkCizBIPifhE6K6J42a/h5iEASK+Yw2Ye50WuI4B40TfM0jl+BQLoSTrrLAVMXLu7nUGp9oQ7QHTBCwOE5aMhTSCQN/bb/dJZWbi02rAQgko4Dc+GsgeYbUH2/+T+vmXxd2Jqpooq2jCby9H5lZhz0Qwe4dXxfjPMWTYO099oWo1RbW245VM3CUFaMSzEZaibUJzt8fqoKsuDM9Ow89oFpEvL8n95VMe7cFNpkLu7EdD8IayBwQtIEpWrz1KziEZ6dyjT4QHdP9mzINmJPT3kOHGc3nEU6zUZcS7wqE/dIdKtT7WZv5VIZr0YgQ+LqJ4D2224o6xlcmp2SWRuaS/bCfdXdMqds3vL1QAlSH84byRr8lLEb15aB9iEqwm8xWm52AHiGYY9x+lB/bdld+aUUP3KEF3C7ebht3TuchN2vmvhaCvxfl00ORD/vNu08kyXccJCXT/Kx6c9whSyRXplOO6QdwM++7GbHCDH8sVZ/7xIurXNNCXCzxkkeZHIkhsAP1tInvfi8NF/s7M3q1HUJmGRKUu78OYJw/1DEy2foUPQ7eytq95JWd7jtLWBTk3aHtoE8N9TupL58whPeq2E5H5YB3H2sVbPbMqruDKxChsJwNDXgZyRkhH+FSx6dY84C5r1QI9Z98qLKsPSx+tme9DIXia4=
+  -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
