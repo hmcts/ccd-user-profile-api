@@ -1,6 +1,6 @@
 buildscript {
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.0.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.6.RELEASE")
     }
     dependencies {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2"
@@ -16,7 +16,7 @@ buildscript {
 plugins {
     id 'application'
     id 'io.spring.dependency-management' version '1.0.4.RELEASE'
-    id 'org.springframework.boot' version '2.0.0.RELEASE'
+    id 'org.springframework.boot' version '1.5.6.RELEASE'
     id 'org.owasp.dependencycheck' version '3.1.1'
     id 'se.patrikerdes.use-latest-versions' version '0.2.0'
     id 'com.github.ben-manes.versions' version '0.17.0'
