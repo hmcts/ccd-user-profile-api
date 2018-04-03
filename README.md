@@ -1,4 +1,4 @@
-# user-profile-app
+# user-profile-app [![Build Status](https://travis-ci.org/hmcts/ccd-user-profile-api.svg?branch=master)](https://travis-ci.org/hmcts/ccd-user-profile-api)
 
 UI preferences for Core Case Data users.
 
