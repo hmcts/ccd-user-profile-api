@@ -10,7 +10,7 @@ def type = "java"
 
 def product = "ccd"
 
-def app = "user-profile-api"
+def component = "user-profile-api"
 
-withPipeline(type, product, app) {
+withPipeline(type, product, component) {
 }
