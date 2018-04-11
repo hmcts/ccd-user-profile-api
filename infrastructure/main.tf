@@ -1,10 +1,15 @@
+locals {
+  app_full_name = "${var.product}-${var.component}"
+}
+
 module "user-profile-api" {
   source   = "git@github.com:contino/moj-module-webapp?ref=master"
-  product  = "${var.product}-user-profile-api"
+  product  = "${local.app_full_name}"
   location = "${var.location}"
   env      = "${var.env}"
   ilbIp    = "${var.ilbIp}"
   subscription = "${var.subscription}"
+  is_frontend = false
 
   app_settings = {
     USER_PROFILE_DB_HOST        = "${module.postgres-user-profile.host_name}"
