@@ -228,4 +228,11 @@
         <cve>CVE-2016-6652</cve>
     </suppress>
 
+    <!-- RDM-2011 -->
+    <suppress>
+        <notes>
+            Introduced by service-token-generator-spring-2.1.0.jar
+        </notes>
+        <cve>CVE-2016-9878</cve>
+    </suppress>
 </suppressions>
