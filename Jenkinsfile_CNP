@@ -13,15 +13,15 @@ def product = "ccd"
 def component = "user-profile-api"
 
 List<LinkedHashMap<String, Object>> secrets = [
-    secret('microserviceDataStoreName', 'CCD_DS_SERVICE_NAME', '4c81f5d18d5947c28bc4116231525fed'),
-    secret('microserviceDataStoreSecret', 'CCD_DS_SERVICE_SECRET', '76393374cbcc4c87adf520b89bcd9495'),
+    secret('microserviceDataStoreName', 'CCD_DS_SERVICE_NAME'),
+    secret('microserviceDataStoreSecret', 'CCD_DS_SERVICE_SECRET')
 ]
 
-static LinkedHashMap<String, Object> secret(String secretName, String envVar, String version) {
+static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     [ $class: 'AzureKeyVaultSecret',
       secretType: 'Secret',
       name: secretName,
-      version: version,
+      version: '',
       envVariable: envVar
     ]
 }
