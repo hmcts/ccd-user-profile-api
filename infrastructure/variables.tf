@@ -33,6 +33,11 @@ variable "database_name" {
   default = "ccd_user_profile"
 }
 
+variable "use_uk_db" {
+  type = "string"
+  default = "false"
+}
+
 ////////////////////////////////
 // S2S
 ////////////////////////////////
