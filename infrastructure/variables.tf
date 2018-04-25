@@ -21,6 +21,22 @@ variable "subscription" {
 
 variable "ilbIp"{}
 
+////////////////////////////////
+// Database
+////////////////////////////////
+
+variable "postgresql_user" {
+  default = "ccd"
+}
+
+variable "database_name" {
+  default = "ccd_user_profile"
+}
+
+////////////////////////////////
+// S2S
+////////////////////////////////
+
 variable "s2s_url" {
   default = "http://betaDevBccidamS2SLB.reform.hmcts.net"
 }
