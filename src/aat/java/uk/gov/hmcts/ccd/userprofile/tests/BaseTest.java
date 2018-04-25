@@ -16,16 +16,11 @@ public abstract class BaseTest {
         RestAssured.baseURI = aat.getTestUrl();
     }
 
-    protected Supplier<RequestSpecification> asAutoTestCaseworker() {
-        final AuthenticatedUser caseworker = aat.getIdamHelper()
-                                                .authenticate(aat.getCaseworkerAutoTestEmail(),
-                                                              aat.getCaseworkerAutoTestPassword());
-
+    protected Supplier<RequestSpecification> asDataStoreService() {
         final String s2sToken = aat.getS2SHelper()
                                    .getToken(aat.getDataStoreServiceName(), aat.getDataStoreServiceSecret());
 
         return () -> RestAssured.given()
-                          .header("Authorization", "Bearer " + caseworker.getAccessToken())
                           .header("ServiceAuthorization", s2sToken);
     }
 }

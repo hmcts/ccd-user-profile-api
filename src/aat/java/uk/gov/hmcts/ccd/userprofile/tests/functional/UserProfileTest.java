@@ -17,9 +17,9 @@ class UserProfileTest extends BaseTest {
 
     @Test
     @DisplayName("Should not create a user profile without a body")
-    public void shouldNotCreateUserProfileWithoutBody() {
+    void shouldNotCreateUserProfileWithoutBody() {
 
-        Supplier<RequestSpecification> asUser = asAutoTestCaseworker();
+        Supplier<RequestSpecification> asUser = asDataStoreService();
 
         asUser.get()
             .given()
