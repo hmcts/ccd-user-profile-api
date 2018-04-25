@@ -248,4 +248,10 @@
         </notes>
         <cve>CVE-2018-1196</cve>
     </suppress>
+    <suppress>
+        <notes>
+            Only affect PATCH requests, those are not supported by CCD APIs.
+        </notes>
+        <cve>CVE-2017-8046</cve>
+    </suppress>
 </suppressions>
