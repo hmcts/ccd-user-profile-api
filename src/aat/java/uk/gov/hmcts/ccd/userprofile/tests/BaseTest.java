@@ -3,7 +3,6 @@ package uk.gov.hmcts.ccd.userprofile.tests;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.extension.ExtendWith;
-import uk.gov.hmcts.ccd.userprofile.tests.helper.idam.AuthenticatedUser;
 
 import java.util.function.Supplier;
 
