@@ -27,7 +27,7 @@ class UserProfileTest extends BaseTest {
             .when()
             .post("/user-profile/users")
             .then()
-            .statusCode(400);
+            .statusCode(500);
     }
 
 }
