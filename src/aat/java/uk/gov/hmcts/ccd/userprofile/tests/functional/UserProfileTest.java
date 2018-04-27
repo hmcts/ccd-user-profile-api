@@ -1,14 +1,12 @@
 package uk.gov.hmcts.ccd.userprofile.tests.functional;
 
 import io.restassured.http.ContentType;
-import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.userprofile.tests.AATHelper;
 import uk.gov.hmcts.ccd.userprofile.tests.BaseTest;
 
-import java.util.function.Supplier;
-
+@DisplayName("User profile: Functional tests")
 class UserProfileTest extends BaseTest {
 
     protected UserProfileTest(AATHelper aat) {
@@ -17,11 +15,9 @@ class UserProfileTest extends BaseTest {
 
     @Test
     @DisplayName("Should not create a user profile without a body")
-    public void shouldNotCreateUserProfileWithoutBody() {
+    void shouldNotCreateUserProfileWithoutBody() {
 
-        Supplier<RequestSpecification> asUser = asAutoTestCaseworker();
-
-        asUser.get()
+        asDataStoreService().get()
             .given()
             .contentType(ContentType.JSON)
             .when()
