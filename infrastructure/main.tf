@@ -17,6 +17,13 @@ module "user-profile-api" {
     USER_PROFILE_DB_NAME        = "${var.use_uk_db != "true" ? module.postgres-user-profile.postgresql_database : module.user-profile-db.postgresql_database}"
     USER_PROFILE_DB_USERNAME    = "${var.use_uk_db != "true" ? module.postgres-user-profile.user_name : module.user-profile-db.user_name}"
     USER_PROFILE_DB_PASSWORD    = "${var.use_uk_db != "true" ? module.postgres-user-profile.postgresql_password : module.user-profile-db.postgresql_password}"
+
+    UK_DB_HOST = "${module.user-profile-db.host_name}"
+    UK_DB_PORT = "${module.user-profile-db.postgresql_listen_port}"
+    UK_DB_NAME = "${module.user-profile-db.postgresql_database}"
+    UK_DB_USERNAME = "${module.user-profile-db.user_name}"
+    UK_DB_PASSWORD = "${module.user-profile-db.postgresql_password}"
+
     IDAM_S2S_URL = "${var.s2s_url}"
     USER_PROFILE_S2S_AUTHORISED_SERVICES = "${var.authorised-services}"
   }
