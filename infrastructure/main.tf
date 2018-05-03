@@ -2,12 +2,12 @@ locals {
   app_full_name = "${var.product}-${var.component}"
 
   // Vault name
-  previewVaultName = "ccd-profile-aat"
+  previewVaultName = "ccd-profile-preview"
   nonPreviewVaultName = "ccd-profile-${var.env}"
   vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
 
   // Vault URI
-  previewVaultUri = "https://${local.previewVaultName}.vault.azure.net/"
+  previewVaultUri = "https://ccd-profile-aat.vault.azure.net/"
   nonPreviewVaultUri = "${module.user-profile-vault.key_vault_uri}"
   vaultUri = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultUri : local.nonPreviewVaultUri}"
 }
