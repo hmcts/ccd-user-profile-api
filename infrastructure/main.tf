@@ -1,5 +1,15 @@
 locals {
   app_full_name = "${var.product}-${var.component}"
+
+  // Vault name
+  previewVaultName = "ccd-profile-preview"
+  nonPreviewVaultName = "ccd-profile-${var.env}"
+  vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
+
+  // Vault URI
+  previewVaultUri = "https://ccd-profile-aat.vault.azure.net/"
+  nonPreviewVaultUri = "${module.user-profile-vault.key_vault_uri}"
+  vaultUri = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultUri : local.nonPreviewVaultUri}"
 }
 
 module "user-profile-api" {
@@ -33,7 +43,7 @@ module "postgres-user-profile" {
 
 module "user-profile-vault" {
   source              = "git@github.com:hmcts/moj-module-key-vault?ref=master"
-  name                = "ccd-profile-${var.env}" // Max 24 characters
+  name                = "${local.vaultName}" // Max 24 characters
   product             = "${var.product}"
   env                 = "${var.env}"
   tenant_id           = "${var.tenant_id}"

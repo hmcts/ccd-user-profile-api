@@ -1,11 +1,10 @@
 output "vaultUri" {
-  value = "${module.user-profile-vault.key_vault_uri}"
+  value = "${local.vaultUri}"
 }
 
 output "vaultName" {
-  value = "${module.user-profile-vault.key_vault_name}"
+  value = "${local.vaultName}"
 }
-
 output "s2s_url" {
   value = "${var.s2s_url}"
 }
