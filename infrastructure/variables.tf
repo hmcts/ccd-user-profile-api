@@ -30,6 +30,27 @@ variable "jenkins_AAD_objectId" {
   description                 = "(Required) The Azure AD object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies."
 }
 
+////////////////////////////////
+// Database
+////////////////////////////////
+
+variable "postgresql_user" {
+  default = "ccd"
+}
+
+variable "database_name" {
+  default = "ccd_user_profile"
+}
+
+variable "use_uk_db" {
+  type = "string"
+  default = "false"
+}
+
+////////////////////////////////
+// S2S
+////////////////////////////////
+
 variable "s2s_url" {
   default = "http://betaDevBccidamS2SLB.reform.hmcts.net"
 }
