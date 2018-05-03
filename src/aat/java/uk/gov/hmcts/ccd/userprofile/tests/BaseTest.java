@@ -3,7 +3,6 @@ package uk.gov.hmcts.ccd.userprofile.tests;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.extension.ExtendWith;
-import uk.gov.hmcts.ccd.userprofile.tests.helper.idam.AuthenticatedUser;
 
 import java.util.function.Supplier;
 
@@ -14,18 +13,14 @@ public abstract class BaseTest {
     protected BaseTest(AATHelper aat) {
         this.aat = aat;
         RestAssured.baseURI = aat.getTestUrl();
+        RestAssured.useRelaxedHTTPSValidation();
     }
 
-    protected Supplier<RequestSpecification> asAutoTestCaseworker() {
-        final AuthenticatedUser caseworker = aat.getIdamHelper()
-                                                .authenticate(aat.getCaseworkerAutoTestEmail(),
-                                                              aat.getCaseworkerAutoTestPassword());
-
+    protected Supplier<RequestSpecification> asDataStoreService() {
         final String s2sToken = aat.getS2SHelper()
                                    .getToken(aat.getDataStoreServiceName(), aat.getDataStoreServiceSecret());
 
         return () -> RestAssured.given()
-                          .header("Authorization", "Bearer " + caseworker.getAccessToken())
                           .header("ServiceAuthorization", s2sToken);
     }
 }

@@ -278,13 +278,13 @@ task smoke(type: Test) {
 
 task functional(type: Test) {
     environment("APPINSIGHTS_INSTRUMENTATIONKEY", "some-key")
-    logger.quiet("TODO: Add functional tests")
-//    group = 'Delivery pipeline'
-//    description = 'Executes functional tests against an AAT CCD UserProfile Instance'
-//    setTestClassesDirs(sourceSets.aat.output.classesDirs)
-//    setClasspath(sourceSets.aat.runtimeClasspath)
-//    include "uk/gov/hmcts/ccd/userprofile/tests/functional/**"
-//    useJUnitPlatform()
+
+    group = 'Delivery pipeline'
+    description = 'Executes functional tests against the User Profile instance'
+    setTestClassesDirs(sourceSets.aat.output.classesDirs)
+    setClasspath(sourceSets.aat.runtimeClasspath)
+    include "uk/gov/hmcts/ccd/userprofile/tests/functional/**"
+    useJUnitPlatform()
 }
 
 check.dependsOn jacocoTestReport
