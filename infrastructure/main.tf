@@ -2,7 +2,7 @@ locals {
   app_full_name = "${var.product}-${var.component}"
 
   // Vault name
-  previewVaultName = "ccd-profile-preview"
+  previewVaultName = "${var.product}-profile"
   nonPreviewVaultName = "ccd-profile-${var.env}"
   vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
 
