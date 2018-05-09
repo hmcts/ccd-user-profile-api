@@ -2,8 +2,9 @@ locals {
   app_full_name = "${var.product}-${var.component}"
 
   // Vault name
-  previewVaultName = "${var.product}-profile"
-  nonPreviewVaultName = "ccd-profile-${var.env}"
+  previewVaultName = "${var.product}-${var.component}"
+  # preview env contains pr number prefix, other envs need a suffix
+  nonPreviewVaultName = "${local.previewVaultName}-${var.env}"
   vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
 
   // Vault URI
