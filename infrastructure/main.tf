@@ -2,7 +2,7 @@ locals {
   app_full_name = "${var.product}-${var.component}"
 
   // Vault name
-  previewVaultName = "ccd-profile-preview"
+  previewVaultName = "${var.product}-profile"
   nonPreviewVaultName = "ccd-profile-${var.env}"
   vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
 
@@ -80,29 +80,29 @@ module "user-profile-vault" {
 resource "azurerm_key_vault_secret" "POSTGRES-USER" {
   name = "${local.app_full_name}-POSTGRES-USER"
   value = "${var.use_uk_db != "true" ? module.postgres-user-profile.user_name : module.user-profile-db.user_name}"
-  vault_uri = "${local.vaultUri}"
+  vault_uri = "${module.user-profile-vault.key_vault_uri}"
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES-PASS" {
   name = "${local.app_full_name}-POSTGRES-PASS"
   value = "${var.use_uk_db != "true" ? module.postgres-user-profile.postgresql_password : module.user-profile-db.postgresql_password}"
-  vault_uri = "${local.vaultUri}"
+  vault_uri = "${module.user-profile-vault.key_vault_uri}"
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES_HOST" {
   name = "${local.app_full_name}-POSTGRES-HOST"
   value = "${var.use_uk_db != "true" ? module.postgres-user-profile.host_name : module.user-profile-db.host_name}"
-  vault_uri = "${local.vaultUri}"
+  vault_uri = "${module.user-profile-vault.key_vault_uri}"
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES_PORT" {
   name = "${local.app_full_name}-POSTGRES-PORT"
   value = "${var.use_uk_db != "true" ? module.postgres-user-profile.postgresql_listen_port : module.user-profile-db.postgresql_listen_port}"
-  vault_uri = "${local.vaultUri}"
+  vault_uri = "${module.user-profile-vault.key_vault_uri}"
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
   name = "${local.app_full_name}-POSTGRES-DATABASE"
   value = "${var.use_uk_db != "true" ? module.postgres-user-profile.postgresql_database : module.user-profile-db.postgresql_database}"
-  vault_uri = "${local.vaultUri}"
+  vault_uri = "${module.user-profile-vault.key_vault_uri}"
 }
