@@ -72,3 +72,37 @@ module "user-profile-vault" {
   resource_group_name = "${module.user-profile-api.resource_group_name}"
   product_group_object_id = "be8b3850-998a-4a66-8578-da268b8abd6b"
 }
+
+////////////////////////////////
+// Populate Vault with DB info
+////////////////////////////////
+
+resource "azurerm_key_vault_secret" "POSTGRES-USER" {
+  name = "${local.app_full_name}-POSTGRES-USER"
+  value = "${var.use_uk_db != "true" ? module.postgres-user-profile.user_name : module.user-profile-db.user_name}"
+  vault_uri = "${module.user-profile-vault.key_vault_uri}"
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES-PASS" {
+  name = "${local.app_full_name}-POSTGRES-PASS"
+  value = "${var.use_uk_db != "true" ? module.postgres-user-profile.postgresql_password : module.user-profile-db.postgresql_password}"
+  vault_uri = "${module.user-profile-vault.key_vault_uri}"
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES_HOST" {
+  name = "${local.app_full_name}-POSTGRES-HOST"
+  value = "${var.use_uk_db != "true" ? module.postgres-user-profile.host_name : module.user-profile-db.host_name}"
+  vault_uri = "${module.user-profile-vault.key_vault_uri}"
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES_PORT" {
+  name = "${local.app_full_name}-POSTGRES-PORT"
+  value = "${var.use_uk_db != "true" ? module.postgres-user-profile.postgresql_listen_port : module.user-profile-db.postgresql_listen_port}"
+  vault_uri = "${module.user-profile-vault.key_vault_uri}"
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
+  name = "${local.app_full_name}-POSTGRES-DATABASE"
+  value = "${var.use_uk_db != "true" ? module.postgres-user-profile.postgresql_database : module.user-profile-db.postgresql_database}"
+  vault_uri = "${module.user-profile-vault.key_vault_uri}"
+}
