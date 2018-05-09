@@ -1,5 +1,11 @@
 locals {
   app_full_name = "${var.product}-${var.component}"
+  aseName = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
+
+  local_env = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "aat" : "saat" : var.env}"
+  local_ase = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "core-compute-aat" : "core-compute-saat" : local.aseName}"
+
+  env_ase_url = "${local.local_env}.service.${local.local_ase}.internal"
 
   // Vault name
   previewVaultName = "${var.product}-profile"
@@ -11,6 +17,8 @@ locals {
   previewVaultUri = "https://ccd-profile-aat.vault.azure.net/"
   nonPreviewVaultUri = "${module.user-profile-vault.key_vault_uri}"
   vaultUri = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultUri : local.nonPreviewVaultUri}"
+
+  s2s_url = "http://rpe-service-auth-provider-${local.env_ase_url}"
 }
 
 module "user-profile-api" {
@@ -35,7 +43,7 @@ module "user-profile-api" {
     UK_DB_USERNAME = "${module.user-profile-db.user_name}"
     UK_DB_PASSWORD = "${module.user-profile-db.postgresql_password}"
 
-    IDAM_S2S_URL = "${var.s2s_url}"
+    IDAM_S2S_URL = "${local.s2s_url}"
     USER_PROFILE_S2S_AUTHORISED_SERVICES = "${var.authorised-services}"
   }
 

@@ -51,10 +51,6 @@ variable "use_uk_db" {
 // S2S
 ////////////////////////////////
 
-variable "s2s_url" {
-  default = "http://betaDevBccidamS2SLB.reform.hmcts.net"
-}
-
 variable "authorised-services" {
   type    = "string"
   default = "ccd_data,ccd_definition"
