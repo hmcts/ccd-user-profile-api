@@ -54,6 +54,8 @@ apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'se.patrikerdes.use-latest-versions'
 
+apply from: 'liquibase.gradle'
+
 mainClassName = 'uk.gov.hmcts.ccd.UserProfileApplication'
 
 // https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html

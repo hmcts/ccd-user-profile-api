@@ -28,6 +28,8 @@ module "user-profile-api" {
     USER_PROFILE_DB_USERNAME    = "${var.use_uk_db != "true" ? module.postgres-user-profile.user_name : module.user-profile-db.user_name}"
     USER_PROFILE_DB_PASSWORD    = "${var.use_uk_db != "true" ? module.postgres-user-profile.postgresql_password : module.user-profile-db.postgresql_password}"
 
+    ENABLE_DB_MIGRATE = "false"
+
     UK_DB_HOST = "${module.user-profile-db.host_name}"
     UK_DB_PORT = "${module.user-profile-db.postgresql_listen_port}"
     UK_DB_NAME = "${module.user-profile-db.postgresql_database}"
