@@ -9,7 +9,6 @@ properties([
 ])
 
 List<LinkedHashMap<String, Object>> secrets = [
-    secret('microserviceDataStoreName', 'CCD_DS_SERVICE_NAME'),
     secret('microserviceDataStoreSecret', 'CCD_DS_SERVICE_SECRET')
 ]
 
