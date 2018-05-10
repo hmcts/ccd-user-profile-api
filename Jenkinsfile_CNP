@@ -29,4 +29,5 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 withPipeline(type, product, component) {
     enableDbMigration()
     loadVaultSecrets(secrets)
+    enableSlackNotifications('#ccd-notifications')
 }

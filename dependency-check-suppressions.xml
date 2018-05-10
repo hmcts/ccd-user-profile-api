@@ -254,4 +254,33 @@
         </notes>
         <cve>CVE-2017-8046</cve>
     </suppress>
+    <suppress>
+        <notes>
+            ldap related
+        </notes>
+        <cve>CVE-2016-6497</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            running as a service related
+        </notes>
+        <cve>CVE-2016-5425</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            running as a service related
+        </notes>
+        <cve>CVE-2016-6325</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            ssl related
+        </notes>
+        <cve>CVE-2017-6056</cve>
+    </suppress>
+    <suppress>
+        <notes>suppress false positives</notes>
+        <gav regex="true">^org\.apache\.tomcat:tomcat-annotations-api:.*$</gav>
+        <cpe>cpe:/a:apache:tomcat</cpe>
+    </suppress>
 </suppressions>
