@@ -144,7 +144,7 @@ dependencies {
     compile group: 'javax.inject', name: 'javax.inject', version: '1'
     compile group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: '2.1.2'
     compile group: 'io.rest-assured', name: 'rest-assured', version: '3.1.0'
-    aatCompile group: 'com.warrenstrange', name: 'googleauth', version: '1.1.5'
+    aatCompile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '0.6.0'
     testCompile "org.junit.platform:junit-platform-suite-api:${junitPlatformVersion}"
     testCompile "org.junit.platform:junit-platform-runner:${junitPlatformVersion}"
     testCompile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"

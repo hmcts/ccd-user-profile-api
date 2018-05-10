@@ -1,3 +1,17 @@
+provider "vault" {
+  //  # It is strongly recommended to configure this provider through the
+  //  # environment variables described above, so that each user can have
+  //  # separate credentials set in the environment.
+  //  #
+  //  # This will default to using $VAULT_ADDR
+  //  # But can be set explicitly
+  address = "https://vault.reform.hmcts.net:6200"
+}
+
+data "vault_generic_secret" "ccd_data_s2s_key" {
+  path = "secret/${var.vault_section}/ccidam/service-auth-provider/api/microservice-keys/ccd-data"
+}
+
 locals {
   app_full_name = "${var.product}-${var.component}"
   aseName = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
@@ -113,5 +127,11 @@ resource "azurerm_key_vault_secret" "POSTGRES_PORT" {
 resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
   name = "${local.app_full_name}-POSTGRES-DATABASE"
   value = "${var.use_uk_db != "true" ? module.postgres-user-profile.postgresql_database : module.user-profile-db.postgresql_database}"
+  vault_uri = "${module.user-profile-vault.key_vault_uri}"
+}
+
+resource "azurerm_key_vault_secret" "ds_s2s_key" {
+  name = "microserviceDataStoreSecret"
+  value = "${data.vault_generic_secret.ccd_data_s2s_key.data["value"]}"
   vault_uri = "${module.user-profile-vault.key_vault_uri}"
 }
