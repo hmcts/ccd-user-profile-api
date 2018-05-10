@@ -5,7 +5,6 @@ properties([
   parameters([
     choice(name: 'ENVIRONMENT', choices: 'saat\nsprod', description: 'Environment where code should be build and deployed')
   ]),
-  [$class: 'GithubProjectProperty', projectUrlStr: 'https://git.reform.hmcts.net/case-management/user-profile-app'],
   pipelineTriggers([[$class: 'GitHubPushTrigger']])
 ])
 
