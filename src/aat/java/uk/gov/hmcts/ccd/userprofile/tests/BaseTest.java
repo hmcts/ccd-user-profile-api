@@ -18,7 +18,7 @@ public abstract class BaseTest {
 
     protected Supplier<RequestSpecification> asDataStoreService() {
         final String s2sToken = aat.getS2SHelper()
-                                   .getToken(aat.getDataStoreServiceName(), aat.getDataStoreServiceSecret());
+                                   .getToken();
 
         return () -> RestAssured.given()
                           .header("ServiceAuthorization", s2sToken);

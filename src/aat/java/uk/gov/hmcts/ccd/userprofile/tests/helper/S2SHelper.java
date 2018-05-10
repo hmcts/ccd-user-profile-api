@@ -1,33 +1,35 @@
 package uk.gov.hmcts.ccd.userprofile.tests.helper;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClients;
-import uk.gov.hmcts.auth.provider.service.token.HttpComponentsBasedServiceTokenGenerator;
-import uk.gov.hmcts.auth.totp.GoogleTotpAuthenticator;
+import com.warrenstrange.googleauth.GoogleAuthenticator;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
+import java.util.Map;
+
+import static java.lang.String.format;
 
 public class S2SHelper {
 
-    private final String baseUrl;
-    private final HashMap<String, String> services = new HashMap<>();
-    private final GoogleTotpAuthenticator authenticator = new GoogleTotpAuthenticator();
-    private final HttpClient httpClient = HttpClients.createDefault();
+    private final String s2sUrl;
+    private final String secret;
+    private final String microservice;
+    private final GoogleAuthenticator googleAuthenticator;
 
-    public S2SHelper(String baseUrl) {
-        this.baseUrl = baseUrl;
+    public S2SHelper(final String s2sUrl, final String secret, final String microservice) {
+        this.s2sUrl = s2sUrl;
+        this.secret = secret;
+        this.microservice = microservice;
+        this.googleAuthenticator = new GoogleAuthenticator();
     }
 
-    public String getToken(String microservice, String secret) {
-        return services.computeIfAbsent(microservice, e -> {
-            final HttpComponentsBasedServiceTokenGenerator
-                tokenGenerator = new HttpComponentsBasedServiceTokenGenerator(
-                httpClient,
-                baseUrl,
-                microservice,
-                authenticator,
-                secret);
-            return tokenGenerator.generate();
-        });
+    // Weird dependency problems with feign in this project
+    public String getToken() {
+        final String oneTimePassword = format("%06d", googleAuthenticator.getTotpPassword(secret));
+
+        Map<String, String> signInDetails = new HashMap<>();
+        signInDetails.put("microservice", this.microservice);
+        signInDetails.put("oneTimePassword", oneTimePassword);
+
+        return new RestTemplate().postForEntity(s2sUrl + "/lease", signInDetails, String.class).getBody();
     }
 }

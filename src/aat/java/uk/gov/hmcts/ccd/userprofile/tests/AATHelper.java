@@ -9,7 +9,7 @@ public enum AATHelper {
     private final S2SHelper s2SHelper;
 
     AATHelper() {
-        s2SHelper = new S2SHelper(getS2SUrl());
+        s2SHelper = new S2SHelper(getS2SUrl(), getDataStoreServiceSecret(), getDataStoreServiceName());
     }
 
     public String getTestUrl() {
