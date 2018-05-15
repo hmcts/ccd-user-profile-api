@@ -37,8 +37,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserProfileEndpointIT extends BaseTest {
 
     private static final String CREATE_USER_PROFILE = "/user-profile/users";
-    private static final String FIND_JURISDICTION_FOR_USER_1 = "/user-profile/users?uid=USER1";
-    private static final String FIND_JURISDICTION_FOR_USER_2 = "/user-profile/users?uid=User2";
+    private static final String FIND_PROFILE_FOR_USER_1 = "/user-profile/users?uid=USER1";
+    private static final String FIND_PROFILE_FOR_USER_2 = "/user-profile/users?uid=User2";
     private static final String USER_PROFILE_USERS_DEFAULTS = "/user-profile/users";
 
     private static final String USER_ID_1 = "user1";
@@ -278,7 +278,7 @@ public class UserProfileEndpointIT extends BaseTest {
         // Given - a User Profile (id = user1) with 3 Jurisdictions (TEST1,
         // TEST2 and TEST3)
         // When - attempting to find Jurisdictions for the User Profile
-        final MvcResult mvcResult = mockMvc.perform(get(FIND_JURISDICTION_FOR_USER_1)).andReturn();
+        final MvcResult mvcResult = mockMvc.perform(get(FIND_PROFILE_FOR_USER_1)).andReturn();
 
         assertEquals("Unexpected response status", 200, mvcResult.getResponse().getStatus());
 
@@ -316,7 +316,7 @@ public class UserProfileEndpointIT extends BaseTest {
 
         // When - attempting to find Jurisdictions for the User Profile
         // Then - assert that no Jurisdiction id's are found
-        final MvcResult mvcResult = mockMvc.perform(get(FIND_JURISDICTION_FOR_USER_2)).andReturn();
+        final MvcResult mvcResult = mockMvc.perform(get(FIND_PROFILE_FOR_USER_2)).andReturn();
 
         assertEquals("Unexpected response status", 200, mvcResult.getResponse().getStatus());
 
@@ -327,15 +327,12 @@ public class UserProfileEndpointIT extends BaseTest {
 
     @Test
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:sql/init_db.sql" })
-    public void getJurisdictionsForNonExistentUserProfile() throws Exception {
-        // Given - there is no User Profile with id = user1
-        // When - attempting to find Jurisdictions for a User Profile iwth id =
-        // user1
-        // Then - assert that the expected error is returned
-        final MvcResult mvcResult = mockMvc.perform(get(FIND_JURISDICTION_FOR_USER_1)).andReturn();
+    public void testRetrievalOfUnknownProfile() throws Exception {
 
-        assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
-        assertEquals("Unexpected response message", "No user exists with the Id 'USER1'",
+        final MvcResult mvcResult = mockMvc.perform(get(FIND_PROFILE_FOR_USER_1)).andReturn();
+
+        assertEquals("Unexpected response status", 404, mvcResult.getResponse().getStatus());
+        assertEquals("Unexpected response message", "No profile exists for user 'USER1'",
             mvcResult.getResponse().getContentAsString());
     }
 
