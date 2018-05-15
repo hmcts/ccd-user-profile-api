@@ -13,7 +13,6 @@ def product = "ccd"
 def component = "user-profile-api"
 
 List<LinkedHashMap<String, Object>> secrets = [
-    secret('microserviceDataStoreName', 'CCD_DS_SERVICE_NAME'),
     secret('microserviceDataStoreSecret', 'CCD_DS_SERVICE_SECRET')
 ]
 
@@ -27,6 +26,7 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 }
 
 withPipeline(type, product, component) {
+    enableDbMigration()
     loadVaultSecrets(secrets)
     enableSlackNotifications('#ccd-notifications')
 }
