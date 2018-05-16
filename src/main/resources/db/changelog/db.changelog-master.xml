@@ -6,4 +6,5 @@
     <include file="db/changelog/db.changelog-0.0.1.xml"/>
     <include file="db/changelog/db.changelog-0.0.2.xml"/>
     <include file="db/changelog/db.changelog-RDM-2761-UserProfileAuditTable.xml"/>
+    <include file="db/changelog/db.changelog-RDM-3853.xml"/>
 </databaseChangeLog>
