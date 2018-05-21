@@ -18,4 +18,4 @@ HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" wget -q 
 
 EXPOSE 4453
 
-ENTRYPOINT exec java ${JAVA_OPTS} -jar "/opt/app/user-profile.jar"ure
+ENTRYPOINT exec java ${JAVA_OPTS} -jar "/opt/app/user-profile.jar"
