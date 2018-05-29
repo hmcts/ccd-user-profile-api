@@ -25,6 +25,6 @@ public class FindUserProfileOperation {
         LOG.info("Finding user with id {}", userProfileId);
         final UserProfile userProfile = userProfileRepository.findById(userProfileId);
         return Optional.ofNullable(userProfile)
-            .orElseThrow(() -> new NotFoundException("No profile exists for user '" + userProfileId + "'"));
+            .orElseThrow(() -> new NotFoundException("Cannot find profile for user '" + userProfileId + "'"));
     }
 }
