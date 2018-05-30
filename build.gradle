@@ -48,6 +48,7 @@ apply plugin: "org.sonarqube"
 apply plugin: "com.github.spotbugs"
 apply plugin: 'checkstyle'
 apply plugin: 'jacoco'
+apply plugin: 'pmd'
 apply plugin: "com.github.kt3k.coveralls"
 apply plugin: 'org.owasp.dependencycheck'
 apply plugin: 'com.jfrog.bintray'
