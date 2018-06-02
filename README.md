@@ -38,12 +38,6 @@ To build project please execute the following command:
 ./gradlew clean build
 ```
 
-When build finishes successfully, a jar file can be found in
-
-```bash
-build/libs/user-profile-$(./gradlew -q projectVersion)-all.jar
-```
-
 ### Running
 
 If you want your code to become available to other Docker projects (e.g. for local environment testing), you need to build the image:
