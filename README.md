@@ -5,6 +5,8 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3798a9145e064d71bcf5fc7c89c74013)](https://www.codacy.com/app/adr1ancho/ccd-user-profile-api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hmcts/ccd-user-profile-api&amp;utm_campaign=Badge_Grade)
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/3798a9145e064d71bcf5fc7c89c74013)](https://www.codacy.com/app/adr1ancho/ccd-user-profile-api?utm_source=github.com&utm_medium=referral&utm_content=hmcts/ccd-user-profile-api&utm_campaign=Badge_Coverage)
 [![Known Vulnerabilities](https://snyk.io/test/github/hmcts/ccd-user-profile-api/badge.svg)](https://snyk.io/test/github/hmcts/ccd-user-profile-api)
+[![Issue Stats](http://issuestats.com/github/hmcts/ccd-data-store-api/badge/pr)](http://issuestats.com/github/hmcts/ccd-data-store-api)
+[![Issue Stats](http://issuestats.com/github/hmcts/ccd-data-store-api/badge/issue)](http://issuestats.com/github/hmcts/ccd-data-store-api)
 
 UI preferences for Core Case Data users.
 ____
