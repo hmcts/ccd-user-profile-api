@@ -53,12 +53,6 @@ module "user-profile-api" {
 
     ENABLE_DB_MIGRATE = "false"
 
-    UK_DB_HOST = "${module.user-profile-db.host_name}"
-    UK_DB_PORT = "${module.user-profile-db.postgresql_listen_port}"
-    UK_DB_NAME = "${module.user-profile-db.postgresql_database}"
-    UK_DB_USERNAME = "${module.user-profile-db.user_name}"
-    UK_DB_PASSWORD = "${module.user-profile-db.postgresql_password}"
-
     IDAM_S2S_URL = "${local.s2s_url}"
     USER_PROFILE_S2S_AUTHORISED_SERVICES = "${var.authorised-services}"
   }
