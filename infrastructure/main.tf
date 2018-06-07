@@ -65,14 +65,6 @@ module "user-profile-api" {
 
 }
 
-module "postgres-user-profile" {
-  source              = "git@github.com:contino/moj-module-postgres?ref=master"
-  product             = "${var.product}-user-profile"
-  location            = "West Europe"
-  env                 = "${var.env}"
-  postgresql_user     = "ccd"
-}
-
 module "user-profile-db" {
   source = "git@github.com:hmcts/moj-module-postgres?ref=cnp-449-tactical"
   product = "${local.app_full_name}-postgres-db"
