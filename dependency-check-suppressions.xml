@@ -2,10 +2,18 @@
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
 
     <suppress>
+        <notes>From transitive dependency scala-compiler-2.11.8.jar;  we do not use scala in the project</notes>
+        <cve>CVE-2016-5725</cve>
+    </suppress>
+    <suppress>
         <notes>
             ldap and groovy related and they are not used in production
         </notes>
         <cve>CVE-2016-6497</cve>
+    </suppress>
+    <suppress>
+        <notes>From transitive dependency scala-compiler-2.11.8.jar;  we do not use scala in the project</notes>
+        <cve>CVE-2017-15288</cve>
     </suppress>
     <suppress>
         <notes>h2database is not used in production</notes>

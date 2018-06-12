@@ -294,9 +294,6 @@ spotbugsAat {
     ignoreFailures = true
 }
 
-// for cnp pipeline
-task dependencyCheck(dependsOn: dependencyCheckAnalyze)
-
 //Needs a token from https://app.codacy.com/app/%OrgOrOwner%/ccd-user-profile-api/settings/coverage
 configurations { codacy }
 repositories {
