@@ -1,3 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
+
+    <suppress>
+        <notes>
+            ldap and groovy related and they are not used in production
+        </notes>
+        <cve>CVE-2016-6497</cve>
+    </suppress>
+    <suppress>
+        <notes>h2database is not used in production</notes>
+        <cve>CVE-2018-10054</cve>
+    </suppress>
+
 </suppressions>
