@@ -267,6 +267,10 @@
         <cve>CVE-2016-5425</cve>
     </suppress>
     <suppress>
+        <notes>From transitive dependency scala-compiler-2.11.8.jar;  we do not use scala in the project</notes>
+        <cve>CVE-2016-5725</cve>
+    </suppress>
+    <suppress>
         <notes>
             running as a service related
         </notes>
@@ -279,6 +283,10 @@
         <cve>CVE-2017-6056</cve>
     </suppress>
     <suppress>
+        <notes>From transitive dependency scala-compiler-2.11.8.jar;  we do not use scala in the project</notes>
+        <cve>CVE-2017-15288</cve>
+    </suppress>
+    <suppress>
         <notes>h2database is not used in production</notes>
         <cve>CVE-2018-10054</cve>
     </suppress>
@@ -287,4 +295,5 @@
         <gav regex="true">^org\.apache\.tomcat:tomcat-annotations-api:.*$</gav>
         <cpe>cpe:/a:apache:tomcat</cpe>
     </suppress>
+
 </suppressions>
