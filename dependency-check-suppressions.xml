@@ -16,8 +16,11 @@
         <cve>CVE-2017-15288</cve>
     </suppress>
     <suppress>
+        <notes>postgresql-42.2.2.jar (org.postgresql:postgresql:42.2.2, cpe:/a:postgresql:postgresql:42.2.2, cpe:/a:postgresql:postgresql_jdbc_driver:42.2.2) : CVE-2018-1115</notes>
+        <cve>CVE-2018-1115</cve>
+    </suppress>
+    <suppress>
         <notes>h2database is not used in production</notes>
         <cve>CVE-2018-10054</cve>
     </suppress>
-
 </suppressions>
