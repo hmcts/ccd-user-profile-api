@@ -8,11 +8,38 @@ cache:
   directories:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
-
 script:
-  - "./gradlew check"
-  - "./gradlew jacocoTestReport"
-
+- "./gradlew check"
+- "./gradlew jacocoTestReport"
 after_success:
-  - "bash <(curl -s https://codecov.io/bash) || echo 'Codecov failed to upload'"
-  - "./gradlew installDist bootRepackage"
+- bash <(curl -s https://codecov.io/bash) || echo 'Codecov failed to upload'
+- "./gradlew installDist bootRepackage"
+
+env:
+  global:
+    secure: b/1SyZwPxKIQIWyIhn2mQfF2K8dNZkSZEm4u/eqKXHB7a7ZrezvWnowlgAMAU7kvpSLANxvKFYVHtzddOEIZBgn9rJTLYPm+PBpkZrkQxNWeYBXVeF5b845q4Fnl2kZoEzjmOwAWqE4eFD5RFaaNFSHpH/PKl6JFaf4qFVhIqzdRHFhZM3+eS4uMeE3Xf7Kz1TYneTFPaCmorDzJQN5S2ufW8+WdfXdXydb/Zk3q4bc6S6vELNe3VrMQ6+X1AwXSYSN0ix7OTzRIPL9RLva50pmtz9DNFjJbwaJ9kCnB7JJQiGg6B1/Lmz3Co2UfIjb4WPDnkAxRnQOVr1I7hifAfsJ2KgVEy9XVUhXWszL6/zS7SDaAWiCo2GtnIFyOsqpVzvyB9UCQSr4dkIk8Yl01lE6cZV0qykAsEbPQsvH2l6erSjVshiPkriEmVOAAc0cjeSa7iN4LGCAMh4fBoliNTvvSktjnEcVo21V6alBDz8/okANeMUigPP/j5kVqr9AP7LeLYSLUn/vyg0sphZA0uT0Qqqeljd29H5GJttl/gdf1ncxZYhFLbtsWC5q2V2os9FkBH0FzswyDTbvJrLju5IWt/bhYSDzKLeBOeBi0Q0h/wB9z1IB7ha7GvklVTnRT0FZjUVojhJ5t/oiWDogdvC+h5EjWVHH+PaIgqb9VFCs=
+
+addons:
+  coverity_scan:
+
+    # GitHub project metadata
+    project:
+      name: hmcts/ccd-user-profile-api
+      version: 1.0
+      description: ccd-user-profile-api
+
+    # Where email notification of build analysis results will be sent
+    notification_email: WaiHung.Cho@HMCTS.NET
+
+    # Commands to prepare for build_command
+    # ** likely specific to your build **
+    build_command_prepend: ./configure
+
+    # The command that will be added as an argument to "cov-build" to compile your project for analysis,
+    # ** likely specific to your build **
+    build_command: ./gradlew check
+
+    # Pattern to match selecting branches that will run analysis. We recommend leaving this set to 'coverity_scan'.
+    # Take care in resource usage, and consider the build frequency allowances per
+    #   https://scan.coverity.com/faq#frequency
+    branch_pattern: coverity_scan
