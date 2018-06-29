@@ -45,32 +45,18 @@ module "user-profile-api" {
   is_frontend = false
 
   app_settings = {
-    USER_PROFILE_DB_HOST        = "${var.use_uk_db != "true" ? module.postgres-user-profile.host_name : module.user-profile-db.host_name}"
-    USER_PROFILE_DB_PORT        = "${var.use_uk_db != "true" ? module.postgres-user-profile.postgresql_listen_port : module.user-profile-db.postgresql_listen_port}"
-    USER_PROFILE_DB_NAME        = "${var.use_uk_db != "true" ? module.postgres-user-profile.postgresql_database : module.user-profile-db.postgresql_database}"
-    USER_PROFILE_DB_USERNAME    = "${var.use_uk_db != "true" ? module.postgres-user-profile.user_name : module.user-profile-db.user_name}"
-    USER_PROFILE_DB_PASSWORD    = "${var.use_uk_db != "true" ? module.postgres-user-profile.postgresql_password : module.user-profile-db.postgresql_password}"
+    USER_PROFILE_DB_HOST        = "${module.user-profile-db.host_name}"
+    USER_PROFILE_DB_PORT        = "${module.user-profile-db.postgresql_listen_port}"
+    USER_PROFILE_DB_NAME        = "${module.user-profile-db.postgresql_database}"
+    USER_PROFILE_DB_USERNAME    = "${module.user-profile-db.user_name}"
+    USER_PROFILE_DB_PASSWORD    = "${module.user-profile-db.postgresql_password}"
 
     ENABLE_DB_MIGRATE = "false"
-
-    UK_DB_HOST = "${module.user-profile-db.host_name}"
-    UK_DB_PORT = "${module.user-profile-db.postgresql_listen_port}"
-    UK_DB_NAME = "${module.user-profile-db.postgresql_database}"
-    UK_DB_USERNAME = "${module.user-profile-db.user_name}"
-    UK_DB_PASSWORD = "${module.user-profile-db.postgresql_password}"
 
     IDAM_S2S_URL = "${local.s2s_url}"
     USER_PROFILE_S2S_AUTHORISED_SERVICES = "${var.authorised-services}"
   }
 
-}
-
-module "postgres-user-profile" {
-  source              = "git@github.com:contino/moj-module-postgres?ref=master"
-  product             = "${var.product}-user-profile"
-  location            = "West Europe"
-  env                 = "${var.env}"
-  postgresql_user     = "ccd"
 }
 
 module "user-profile-db" {
@@ -102,31 +88,31 @@ module "user-profile-vault" {
 
 resource "azurerm_key_vault_secret" "POSTGRES-USER" {
   name = "${local.app_full_name}-POSTGRES-USER"
-  value = "${var.use_uk_db != "true" ? module.postgres-user-profile.user_name : module.user-profile-db.user_name}"
+  value = "${module.user-profile-db.user_name}"
   vault_uri = "${module.user-profile-vault.key_vault_uri}"
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES-PASS" {
   name = "${local.app_full_name}-POSTGRES-PASS"
-  value = "${var.use_uk_db != "true" ? module.postgres-user-profile.postgresql_password : module.user-profile-db.postgresql_password}"
+  value = "${module.user-profile-db.postgresql_password}"
   vault_uri = "${module.user-profile-vault.key_vault_uri}"
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES_HOST" {
   name = "${local.app_full_name}-POSTGRES-HOST"
-  value = "${var.use_uk_db != "true" ? module.postgres-user-profile.host_name : module.user-profile-db.host_name}"
+  value = "${module.user-profile-db.host_name}"
   vault_uri = "${module.user-profile-vault.key_vault_uri}"
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES_PORT" {
   name = "${local.app_full_name}-POSTGRES-PORT"
-  value = "${var.use_uk_db != "true" ? module.postgres-user-profile.postgresql_listen_port : module.user-profile-db.postgresql_listen_port}"
+  value = "${module.user-profile-db.postgresql_listen_port}"
   vault_uri = "${module.user-profile-vault.key_vault_uri}"
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
   name = "${local.app_full_name}-POSTGRES-DATABASE"
-  value = "${var.use_uk_db != "true" ? module.postgres-user-profile.postgresql_database : module.user-profile-db.postgresql_database}"
+  value = "${module.user-profile-db.postgresql_database}"
   vault_uri = "${module.user-profile-vault.key_vault_uri}"
 }
 
