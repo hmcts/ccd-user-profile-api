@@ -23,4 +23,8 @@
         <notes>h2database is not used in production</notes>
         <cve>CVE-2018-10054</cve>
     </suppress>
+    <suppress>
+        <notes>Temporarly supress until we can migration to Spring Boot 2 see https://tools.hmcts.net/jira/browse/RDM-2464</notes>
+        <cve>CVE-2018-1258</cve>
+    </suppress>
 </suppressions>
