@@ -9,10 +9,13 @@ import uk.gov.hmcts.ccd.domain.model.UserProfile;
 import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 @Repository
 public class UserProfileRepository {
@@ -80,5 +83,13 @@ public class UserProfileRepository {
 
     private UserProfileEntity findEntityById(String id) {
         return em.find(UserProfileEntity.class, id.toLowerCase());
+    }
+
+    public List<UserProfile> findAll() {
+        TypedQuery<UserProfileEntity> query = em.createNamedQuery("UserProfileEntity.findAll", UserProfileEntity.class);
+        return query.getResultList()
+            .stream()
+            .map(UserProfileMapper::entityToModel)
+            .collect(Collectors.toList());
     }
 }
