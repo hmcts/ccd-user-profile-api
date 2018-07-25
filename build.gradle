@@ -237,6 +237,16 @@ jacocoTestReport {
 
 test {
     environment("APPINSIGHTS_INSTRUMENTATIONKEY", "some-key")
+
+    useJUnitPlatform()
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+
+    reports {
+        html.enabled = true
+    }
 }
 
 
@@ -307,18 +317,4 @@ task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
             "-r",
             "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
     ]
-}
-
-test {
-    environment("APPINSIGHTS_INSTRUMENTATIONKEY", "some-key")
-
-    useJUnitPlatform()
-
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
-
-    reports {
-        html.enabled = true
-    }
 }
