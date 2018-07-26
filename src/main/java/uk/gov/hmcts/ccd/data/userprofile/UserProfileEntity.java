@@ -9,7 +9,8 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "user_profile")
-@NamedQuery(name = "UserProfileEntity.findAll", query = "SELECT u FROM UserProfileEntity u")
+@NamedQuery(name = "UserProfileEntity.findAll",
+            query = "SELECT u FROM UserProfileEntity u WHERE :jurisdiction MEMBER OF u.jurisdictions")
 public class UserProfileEntity {
 
     @Id

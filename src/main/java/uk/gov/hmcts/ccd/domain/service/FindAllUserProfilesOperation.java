@@ -19,8 +19,9 @@ public class FindAllUserProfilesOperation {
         this.userProfileRepository = userProfileRepository;
     }
 
-    public List<UserProfile> execute() {
-        final Optional<List<UserProfile>> userProfiles = Optional.ofNullable(userProfileRepository.findAll());
+    public List<UserProfile> execute(String jurisdictionId) {
+        final Optional<List<UserProfile>> userProfiles =
+            Optional.ofNullable(userProfileRepository.findAll(jurisdictionId));
         return userProfiles.orElse(Collections.emptyList());
     }
 }

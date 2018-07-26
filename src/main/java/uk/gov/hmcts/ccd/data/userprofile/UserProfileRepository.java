@@ -85,11 +85,16 @@ public class UserProfileRepository {
         return em.find(UserProfileEntity.class, id.toLowerCase());
     }
 
-    public List<UserProfile> findAll() {
+    public List<UserProfile> findAll(String jurisdictionId) {
         TypedQuery<UserProfileEntity> query = em.createNamedQuery("UserProfileEntity.findAll", UserProfileEntity.class);
+        query.setParameter("jurisdiction", findJurisdictionEntityById(jurisdictionId));
         return query.getResultList()
             .stream()
             .map(UserProfileMapper::entityToModel)
             .collect(Collectors.toList());
+    }
+
+    private JurisdictionEntity findJurisdictionEntityById(String jurisdictionId) {
+        return em.find(JurisdictionEntity.class, jurisdictionId);
     }
 }
