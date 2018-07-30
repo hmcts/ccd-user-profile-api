@@ -36,15 +36,16 @@ public class FindAllUserProfilesOperationTest {
     public class FindAllUserProfilesTests {
 
         @Test
-        @DisplayName("Should map each UserProfileEntity to a UserProfile and return a list of mapped UserProfiles")
-        public void shouldReturnAllUserProfiles() {
+        @DisplayName("Should map each UserProfileEntity to a UserProfile and return a list of mapped UserProfiles," +
+            "for the specified Jurisdiction")
+        public void shouldReturnAllUserProfilesForJurisdiction() {
             UserProfile userProfile1a = createUserProfile("test1a@example.com", "TEST", "CT1");
             UserProfile userProfile1b = createUserProfile("test1b@example.com", "TEST", "CT2");
             UserProfile userProfile2 = createUserProfile("test2@example.com", "TEST2", "CT2");
 
             when(userProfileRepository.findAll("TEST")).thenReturn(Arrays.asList(userProfile1a, userProfile1b));
 
-            List<UserProfile> userProfiles = classUnderTest.execute("TEST");
+            List<UserProfile> userProfiles = classUnderTest.getAll("TEST");
             assertEquals(2, userProfiles.size());
             assertEquals("test1a@example.com", userProfiles.get(0).getId());
             assertEquals("TEST", userProfiles.get(0).getWorkBasketDefaultJurisdiction());
@@ -56,11 +57,30 @@ public class FindAllUserProfilesOperationTest {
         }
 
         @Test
+        @DisplayName("Should map each UserProfileEntity to a UserProfile and return a list of mapped UserProfiles")
+        public void shouldReturnAllUserProfiles() {
+            UserProfile userProfile1a = createUserProfile("test1a@example.com", "TEST", "CT1");
+            UserProfile userProfile1b = createUserProfile("test1b@example.com", "TEST", "CT2");
+            UserProfile userProfile2 = createUserProfile("test2@example.com", "TEST2", "CT2");
+
+            when(userProfileRepository.findAll()).thenReturn(Arrays.asList(userProfile1a, userProfile1b, userProfile2));
+
+            List<UserProfile> userProfiles = classUnderTest.getAll();
+            assertEquals(3, userProfiles.size());
+            assertEquals("test1a@example.com", userProfiles.get(0).getId());
+            assertEquals("TEST", userProfiles.get(0).getWorkBasketDefaultJurisdiction());
+            assertEquals("CT1", userProfiles.get(0).getWorkBasketDefaultCaseType());
+            assertEquals("test2@example.com", userProfiles.get(2).getId());
+            assertEquals("TEST2", userProfiles.get(2).getWorkBasketDefaultJurisdiction());
+            assertEquals("CT2", userProfiles.get(2).getWorkBasketDefaultCaseType());
+        }
+
+        @Test
         @DisplayName("Should return an empty list when the repository returns one")
         public void shouldReturnEmptyUserProfileList() {
             when(userProfileRepository.findAll("TEST3")).thenReturn(Collections.emptyList());
 
-            List<UserProfile> userProfiles = classUnderTest.execute("TEST3");
+            List<UserProfile> userProfiles = classUnderTest.getAll("TEST3");
             assertEquals(0, userProfiles.size());
         }
 

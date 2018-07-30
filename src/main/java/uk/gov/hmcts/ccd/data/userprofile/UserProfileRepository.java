@@ -86,7 +86,8 @@ public class UserProfileRepository {
     }
 
     public List<UserProfile> findAll(String jurisdictionId) {
-        TypedQuery<UserProfileEntity> query = em.createNamedQuery("UserProfileEntity.findAll", UserProfileEntity.class);
+        TypedQuery<UserProfileEntity> query = em.createNamedQuery("UserProfileEntity.findAllByJurisdiction",
+            UserProfileEntity.class);
         query.setParameter("jurisdiction", findJurisdictionEntityById(jurisdictionId));
         return query.getResultList()
             .stream()
@@ -96,5 +97,13 @@ public class UserProfileRepository {
 
     private JurisdictionEntity findJurisdictionEntityById(String jurisdictionId) {
         return em.find(JurisdictionEntity.class, jurisdictionId);
+    }
+
+    public List<UserProfile> findAll() {
+        TypedQuery<UserProfileEntity> query = em.createNamedQuery("UserProfileEntity.findAll", UserProfileEntity.class);
+        return query.getResultList()
+            .stream()
+            .map(UserProfileMapper::entityToModel)
+            .collect(Collectors.toList());
     }
 }
