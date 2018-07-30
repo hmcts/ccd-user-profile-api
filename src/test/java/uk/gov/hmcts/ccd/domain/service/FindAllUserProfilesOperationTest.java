@@ -19,7 +19,7 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class FindAllUserProfilesOperationTest {
+class FindAllUserProfilesOperationTest {
 
     @Mock
     private UserProfileRepository userProfileRepository;
@@ -27,18 +27,18 @@ public class FindAllUserProfilesOperationTest {
     private FindAllUserProfilesOperation classUnderTest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.initMocks(this);
         classUnderTest = new FindAllUserProfilesOperation(userProfileRepository);
     }
 
     @Nested
-    public class FindAllUserProfilesTests {
+    class FindAllUserProfilesTests {
 
         @Test
         @DisplayName("Should map each UserProfileEntity to a UserProfile and return a list of mapped UserProfiles," +
             "for the specified Jurisdiction")
-        public void shouldReturnAllUserProfilesForJurisdiction() {
+        void shouldReturnAllUserProfilesForJurisdiction() {
             UserProfile userProfile1a = createUserProfile("test1a@example.com", "TEST", "CT1");
             UserProfile userProfile1b = createUserProfile("test1b@example.com", "TEST", "CT2");
             UserProfile userProfile2 = createUserProfile("test2@example.com", "TEST2", "CT2");
@@ -58,7 +58,7 @@ public class FindAllUserProfilesOperationTest {
 
         @Test
         @DisplayName("Should map each UserProfileEntity to a UserProfile and return a list of mapped UserProfiles")
-        public void shouldReturnAllUserProfiles() {
+        void shouldReturnAllUserProfiles() {
             UserProfile userProfile1a = createUserProfile("test1a@example.com", "TEST", "CT1");
             UserProfile userProfile1b = createUserProfile("test1b@example.com", "TEST", "CT2");
             UserProfile userProfile2 = createUserProfile("test2@example.com", "TEST2", "CT2");
@@ -77,7 +77,7 @@ public class FindAllUserProfilesOperationTest {
 
         @Test
         @DisplayName("Should return an empty list when the repository returns one")
-        public void shouldReturnEmptyUserProfileList() {
+        void shouldReturnEmptyUserProfileList() {
             when(userProfileRepository.findAll("TEST3")).thenReturn(Collections.emptyList());
 
             List<UserProfile> userProfiles = classUnderTest.getAll("TEST3");
