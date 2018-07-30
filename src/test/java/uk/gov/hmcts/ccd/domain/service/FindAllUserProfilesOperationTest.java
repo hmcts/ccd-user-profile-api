@@ -36,12 +36,12 @@ class FindAllUserProfilesOperationTest {
     class FindAllUserProfilesTests {
 
         @Test
-        @DisplayName("Should map each UserProfileEntity to a UserProfile and return a list of mapped UserProfiles," +
-            "for the specified Jurisdiction")
+        @DisplayName("Should map each UserProfileEntity to a UserProfile and return a list of mapped UserProfiles, "
+            + "for the specified Jurisdiction")
         void shouldReturnAllUserProfilesForJurisdiction() {
-            UserProfile userProfile1a = createUserProfile("test1a@example.com", "TEST", "CT1");
-            UserProfile userProfile1b = createUserProfile("test1b@example.com", "TEST", "CT2");
-            UserProfile userProfile2 = createUserProfile("test2@example.com", "TEST2", "CT2");
+            final UserProfile userProfile1a = createUserProfile("test1a@example.com", "TEST", "CT1");
+            final UserProfile userProfile1b = createUserProfile("test1b@example.com", "TEST", "CT2");
+            final UserProfile userProfile2 = createUserProfile("test2@example.com", "TEST2", "CT2");
 
             when(userProfileRepository.findAll("TEST")).thenReturn(Arrays.asList(userProfile1a, userProfile1b));
 
@@ -59,9 +59,9 @@ class FindAllUserProfilesOperationTest {
         @Test
         @DisplayName("Should map each UserProfileEntity to a UserProfile and return a list of mapped UserProfiles")
         void shouldReturnAllUserProfiles() {
-            UserProfile userProfile1a = createUserProfile("test1a@example.com", "TEST", "CT1");
-            UserProfile userProfile1b = createUserProfile("test1b@example.com", "TEST", "CT2");
-            UserProfile userProfile2 = createUserProfile("test2@example.com", "TEST2", "CT2");
+            final UserProfile userProfile1a = createUserProfile("test1a@example.com", "TEST", "CT1");
+            final UserProfile userProfile1b = createUserProfile("test1b@example.com", "TEST", "CT2");
+            final UserProfile userProfile2 = createUserProfile("test2@example.com", "TEST2", "CT2");
 
             when(userProfileRepository.findAll()).thenReturn(Arrays.asList(userProfile1a, userProfile1b, userProfile2));
 
