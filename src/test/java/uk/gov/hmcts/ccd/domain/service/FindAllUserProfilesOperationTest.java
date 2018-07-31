@@ -76,7 +76,7 @@ class FindAllUserProfilesOperationTest {
         }
 
         @Test
-        @DisplayName("Should return an empty list when the repository returns none")
+        @DisplayName("Should return an empty list when the repository returns no UserProfiles")
         void shouldReturnEmptyUserProfileList() {
             when(userProfileRepository.findAll("TEST3")).thenReturn(Collections.emptyList());
 
