@@ -12,10 +12,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "user_profile")
+@NamedQueries({
+    @NamedQuery(name = "UserProfileEntity.findAllByJurisdiction",
+        query = "SELECT u FROM UserProfileEntity u WHERE :jurisdiction MEMBER OF u.jurisdictions"),
+    @NamedQuery(name = "UserProfileEntity.findAll",
+        query = "SELECT u FROM UserProfileEntity u"),
+})
 public class UserProfileEntity {
 
     @Id
