@@ -40,6 +40,8 @@ public class UserProfileEndpointIT extends BaseTest {
     private static final String FIND_JURISDICTION_FOR_USER_1 = "/user-profile/users?uid=USER1";
     private static final String FIND_JURISDICTION_FOR_USER_2 = "/user-profile/users?uid=User2";
     private static final String USER_PROFILE_USERS_DEFAULTS = "/user-profile/users";
+    private static final String GET_ALL_USER_PROFILES_FOR_JURISDICTION = "/users?jurisdiction=TEST1";
+    private static final String GET_ALL_USER_PROFILES = "/users";
 
     private static final String USER_ID_1 = "user1";
     private static final String USER_ID_2 = "user2";
@@ -118,7 +120,7 @@ public class UserProfileEndpointIT extends BaseTest {
         scripts = {"classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql"})
     public void createUsingExistingJurisdictions() throws Exception {
         // Given - a pre-existing UserProfile with Id = user1 which has 3
-        // Jurisdiction's associated.
+        // Jurisdictions associated.
         UserProfile userProfile = new UserProfile();
         userProfile.setId(USER_ID_3);
 
@@ -329,7 +331,7 @@ public class UserProfileEndpointIT extends BaseTest {
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:sql/init_db.sql" })
     public void getJurisdictionsForNonExistentUserProfile() throws Exception {
         // Given - there is no User Profile with id = user1
-        // When - attempting to find Jurisdictions for a User Profile iwth id =
+        // When - attempting to find Jurisdictions for a User Profile with id =
         // user1
         // Then - assert that the expected error is returned
         final MvcResult mvcResult = mockMvc.perform(get(FIND_JURISDICTION_FOR_USER_1)).andReturn();
@@ -344,7 +346,7 @@ public class UserProfileEndpointIT extends BaseTest {
         scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
     public void updateUserProfileDefaults() throws Exception {
 
-        // Given a listof user profile defaults
+        // Given a list of user profile defaults
         List<UserProfile> userProfiles = new ArrayList<>();
 
         // user exists, jurisdiction does not
@@ -414,6 +416,40 @@ public class UserProfileEndpointIT extends BaseTest {
         // And existing user profile jurisdiction link is intact
         assertEquals(1, template.queryForObject(COUNT_USER_PROFILE_JURISDICTION_QUERY, Integer.class,
             "user1", "TEST1").intValue());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
+        scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
+    public void getAllUserProfilesForJurisdiction() throws Exception {
+        // Given there are two User Profiles with Jurisdiction "TEST1"
+        // When attempting to find all User Profiles with the above Jurisdiction
+        final MvcResult mvcResult = mockMvc.perform(get(GET_ALL_USER_PROFILES_FOR_JURISDICTION)).andReturn();
+
+        assertEquals("Unexpected response status", 200, mvcResult.getResponse().getStatus());
+
+        final List<UserProfile> userProfiles =
+            Arrays.asList(mapper.readValue(mvcResult.getResponse().getContentAsString(), UserProfile[].class));
+
+        // Then a list with the two User Profiles is returned
+        assertEquals("Unexpected number of User Profiles", 2, userProfiles.size());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
+        scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
+    public void getAllUserProfiles() throws Exception {
+        // Given there are three User Profiles in total
+        // When attempting to find all User Profiles
+        final MvcResult mvcResult = mockMvc.perform(get(GET_ALL_USER_PROFILES)).andReturn();
+
+        assertEquals("Unexpected response status", 200, mvcResult.getResponse().getStatus());
+
+        final List<UserProfile> userProfiles =
+            Arrays.asList(mapper.readValue(mvcResult.getResponse().getContentAsString(), UserProfile[].class));
+
+        // Then a list with three User Profiles is returned
+        assertEquals("Unexpected number of User Profiles", 3, userProfiles.size());
     }
 
     static UserProfile createUserProfile(final String id,
