@@ -23,4 +23,8 @@
         <notes>h2database is not used in production</notes>
         <cve>CVE-2018-10054</cve>
     </suppress>
+    <suppress>
+        <notes>We do not use: Spring Framework 5.0.5.RELEASE + Spring Security (any version), see https://pivotal.io/security/cve-2018-1258</notes>
+        <cve>CVE-2018-1258</cve>
+    </suppress>
 </suppressions>

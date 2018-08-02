@@ -58,3 +58,7 @@ variable "authorised-services" {
   type    = "string"
   default = "ccd_data,ccd_definition"
 }
+
+variable "common_tags" {
+  type = "map"
+}
