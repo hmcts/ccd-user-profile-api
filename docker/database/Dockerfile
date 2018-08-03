@@ -1,4 +1,5 @@
 FROM postgres:9.6
+LABEL maintainer="https://github.com/hmcts/ccd-user-profile-api"
 
 COPY init-db.sh /docker-entrypoint-initdb.d
 
