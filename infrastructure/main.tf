@@ -22,17 +22,16 @@ locals {
   env_ase_url = "${local.local_env}.service.${local.local_ase}.internal"
 
   // Vault name
-  previewVaultName = "${var.product}-profile"
-  # preview env contains pr number prefix, other envs need a suffix
-  nonPreviewVaultName = "${local.previewVaultName}-${var.env}"
+  previewVaultName = "${var.product}-shared-aat"
+  nonPreviewVaultName = "${var.product}-shared-${var.env}"
   vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
 
-  // Vault URI
-  previewVaultUri = "https://ccd-profile-aat.vault.azure.net/"
-  nonPreviewVaultUri = "${module.user-profile-vault.key_vault_uri}"
-  vaultUri = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultUri : local.nonPreviewVaultUri}"
-
   s2s_url = "http://rpe-service-auth-provider-${local.env_ase_url}"
+}
+
+data "azurerm_key_vault" "ccd_shared_key_vault" {
+  name = "${local.vaultName}"
+  resource_group_name = "${local.vaultName}"
 }
 
 module "user-profile-api" {
