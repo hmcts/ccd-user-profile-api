@@ -22,8 +22,8 @@ locals {
   env_ase_url = "${local.local_env}.service.${local.local_ase}.internal"
 
   // Vault name
-  previewVaultName = "${var.product}-shared-aat"
-  nonPreviewVaultName = "${var.product}-shared-${var.env}"
+  previewVaultName = "${var.raw_product}-shared-aat"
+  nonPreviewVaultName = "${var.raw_product}-shared-${var.env}"
   vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
 
   s2s_url = "http://rpe-service-auth-provider-${local.env_ase_url}"
