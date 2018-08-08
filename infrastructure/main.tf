@@ -27,6 +27,11 @@ locals {
   vaultName = "${(var.env == "preview" || var.env == "spreview") ? local.previewVaultName : local.nonPreviewVaultName}"
 
   s2s_url = "http://rpe-service-auth-provider-${local.env_ase_url}"
+  
+  ### TODO Remove with old vault
+  odlPreviewVaultName = "${var.product}-profile"
+  oldNonPreviewVaultName = "${local.odlPreviewVaultName}-${var.env}"
+  oldVaultName = "${(var.env == "preview" || var.env == "spreview") ? local.odlPreviewVaultName : local.oldNonPreviewVaultName}"
 }
 
 data "azurerm_key_vault" "ccd_shared_key_vault" {
@@ -70,6 +75,17 @@ module "user-profile-db" {
   sku_tier = "GeneralPurpose"
   storage_mb = "51200"
   common_tags  = "${var.common_tags}"
+}
+  
+module "user-profile-vault" {
+  source              = "git@github.com:hmcts/moj-module-key-vault?ref=master"
+  name                = "${local.oldVaultName}" // Max 24 characters
+  product             = "${var.product}"
+  env                 = "${var.env}"
+  tenant_id           = "${var.tenant_id}"
+  object_id           = "${var.jenkins_AAD_objectId}"
+  resource_group_name = "${module.user-profile-api.resource_group_name}"
+  product_group_object_id = "be8b3850-998a-4a66-8578-da268b8abd6b"
 }
 
 
