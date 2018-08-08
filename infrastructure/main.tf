@@ -108,7 +108,7 @@ resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
 }
 
 resource "azurerm_key_vault_secret" "ds_s2s_key" {
-  name = "microserviceDataStoreSecret"
+  name = "ccd-data-s2s-key"
   value = "${data.vault_generic_secret.ccd_data_s2s_key.data["value"]}"
   vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
 }
