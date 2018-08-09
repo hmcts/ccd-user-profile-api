@@ -41,6 +41,13 @@ To build project please execute the following command:
 ./gradlew clean build
 ```
 
+### Gradle Upgrades
+It is important to run the following command and commit the updated `gradle-wrapper.jar` to the repository for proper gradle upgrades
+
+```bash
+# this sample is for v4.9 replace with correct upgrade version
+./gradlew wrapper --gradle-version 4.9 --distribution-type all
+```
 ### Running
 
 If you want your code to become available to other Docker projects (e.g. for local environment testing), you need to build the image:
