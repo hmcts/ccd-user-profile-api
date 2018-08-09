@@ -22,6 +22,7 @@ plugins {
     id 'checkstyle'
     id "com.github.spotbugs" version "1.6.2"
     id "com.github.kt3k.coveralls" version "2.8.2"
+    id 'net.ltgt.apt' version '0.18'
 }
 
 dependencyUpdates.resolutionStrategy = {
@@ -125,6 +126,8 @@ ext {
 }
 
 dependencies {
+    compile('org.projectlombok:lombok:1.18.2')
+    apt 'org.projectlombok:lombok:1.18.2'
     compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: reformLogging
     compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: reformLogging
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
