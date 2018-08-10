@@ -1,12 +1,13 @@
 # ccd-user-profile-api
+[![API Docs](https://img.shields.io/badge/API%20Docs-site-e140ad.svg)](https://hmcts.github.io/reform-api-docs/swagger.html?url=https://hmcts.github.io/reform-api-docs/specs/ccd-user-profile-api.json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Build Status](https://travis-ci.org/hmcts/ccd-user-profile-api.svg?branch=master)](https://travis-ci.org/hmcts/ccd-user-profile-api)
+[![Build Status](https://api.travis-ci.org/hmcts/ccd-user-profile-api.svg?branch=master)](https://travis-ci.org/hmcts/ccd-user-profile-api)
+[![Docker Build Status](https://img.shields.io/docker/build/hmcts/ccd-user-profile-api.svg)](https://hub.docker.com/r/hmcts/ccd-user-profile-api)
 [![codecov](https://codecov.io/gh/hmcts/ccd-user-profile-api/branch/master/graph/badge.svg)](https://codecov.io/gh/hmcts/ccd-user-profile-api)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3798a9145e064d71bcf5fc7c89c74013)](https://www.codacy.com/app/adr1ancho/ccd-user-profile-api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hmcts/ccd-user-profile-api&amp;utm_campaign=Badge_Grade)
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/3798a9145e064d71bcf5fc7c89c74013)](https://www.codacy.com/app/adr1ancho/ccd-user-profile-api?utm_source=github.com&utm_medium=referral&utm_content=hmcts/ccd-user-profile-api&utm_campaign=Badge_Coverage)
 [![Known Vulnerabilities](https://snyk.io/test/github/hmcts/ccd-user-profile-api/badge.svg)](https://snyk.io/test/github/hmcts/ccd-user-profile-api)
 [![HitCount](http://hits.dwyl.io/hmcts/ccd-user-profile-api.svg)](#ccd-user-profile-api)
-[![Issue Stats](http://issuestats.com/github/hmcts/ccd-user-profile-api/badge/pr)](http://issuestats.com/github/hmcts/ccd-user-profile-api)
 
 UI preferences for Core Case Data users.
 ____
