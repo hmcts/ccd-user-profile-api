@@ -565,9 +565,9 @@ public class UserProfileEndpointIT extends BaseTest {
     }
 
     private static UserProfile createUserProfile(final String id,
-                                         final String caseType,
-                                         final String jurisdiction,
-                                         final String state) {
+                                                 final String caseType,
+                                                 final String jurisdiction,
+                                                 final String state) {
         final UserProfile userDefault = new UserProfile();
         userDefault.setId(id.toLowerCase());
         userDefault.setWorkBasketDefaultCaseType(caseType);
