@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.AppInsights;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
+import uk.gov.hmcts.ccd.domain.service.CreateOrUpdateUserProfileOperation;
 import uk.gov.hmcts.ccd.domain.service.FindAllUserProfilesOperation;
 import uk.gov.hmcts.ccd.domain.service.UserProfileOperation;
 
@@ -27,24 +28,27 @@ import java.util.Optional;
 class UserProfileController {
     private final FindAllUserProfilesOperation findAllUserProfilesOperation;
     private final UserProfileOperation userProfileOperation;
+    private final CreateOrUpdateUserProfileOperation createOrUpdateUserProfileOperation;
     private final AppInsights appInsights;
 
     @Autowired
     public UserProfileController(FindAllUserProfilesOperation findAllUserProfilesOperation,
                                  UserProfileOperation userProfileOperation,
+                                 CreateOrUpdateUserProfileOperation createOrUpdateUserProfileOperation,
                                  AppInsights appInsights) {
         this.findAllUserProfilesOperation = findAllUserProfilesOperation;
         this.userProfileOperation = userProfileOperation;
+        this.createOrUpdateUserProfileOperation = createOrUpdateUserProfileOperation;
         this.appInsights = appInsights;
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get user profiles",
+    @ApiOperation(value = "Get User Profiles",
                   notes = "Optional filtering of results via \"jurisdiction\" request parameter")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Found user profiles"),
-        @ApiResponse(code = 400, message = "Unable to find user profiles")
+        @ApiResponse(code = 200, message = "Found User Profiles"),
+        @ApiResponse(code = 400, message = "Unable to find User Profiles")
     })
     public List<UserProfile> getUserProfiles(@ApiParam(value = "Jurisdiction ID")
                                              @RequestParam("jurisdiction")
@@ -59,13 +63,28 @@ class UserProfileController {
 
     @Transactional
     @RequestMapping(value = "/users", method = RequestMethod.PUT)
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Update a new User Profile",
-        notes = "a user profile or jurisdiction is created if it does not exist")
+        notes = "A User Profile or Jurisdiction is created if it does not exist")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Updated User Profile defaults")
+        @ApiResponse(code = 200, message = "Updated User Profile defaults")
     })
     public void populateUserProfiles(@RequestBody final List<UserProfile> userProfiles) {
         userProfileOperation.execute(userProfiles);
+    }
+
+    @Transactional
+    @RequestMapping(value = "/users/create", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Create or update a User Profile",
+                  notes = "A User Profile and/or Jurisdiction is created if it does not exist. Behaves exactly the "
+                    + "same as the `PUT` /users endpoint, except that an HTTP 400 Bad Request is returned if the user "
+                    + "already belongs to the given Jurisdiction")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Created/updated User Profile"),
+        @ApiResponse(code = 400, message = "User Profile does not exist, or user already belongs to given Jurisdiction")
+    })
+    public void createOrUpdateUserProfile(@RequestBody final UserProfile userProfile) {
+        createOrUpdateUserProfileOperation.createOrUpdate(userProfile);
     }
 }
