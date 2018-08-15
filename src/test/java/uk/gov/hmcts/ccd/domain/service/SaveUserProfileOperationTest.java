@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class CreateOrUpdateUserProfileOperationTest {
+class SaveUserProfileOperationTest {
 
     @Mock
     private UserProfileRepository userProfileRepository;
@@ -31,7 +31,7 @@ class CreateOrUpdateUserProfileOperationTest {
     @Mock
     private CreateUserProfileOperation createUserProfileOperation;
 
-    private CreateOrUpdateUserProfileOperation classUnderTest;
+    private SaveUserProfileOperation classUnderTest;
 
     @Captor
     private ArgumentCaptor<JurisdictionEntity> jurisdictionEntityArgCaptor;
@@ -42,7 +42,7 @@ class CreateOrUpdateUserProfileOperationTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        classUnderTest = new CreateOrUpdateUserProfileOperation(
+        classUnderTest = new SaveUserProfileOperation(
             userProfileRepository,
             jurisdictionRepository,
             createUserProfileOperation);
@@ -59,7 +59,7 @@ class CreateOrUpdateUserProfileOperationTest {
             when(jurisdictionRepository.findEntityById(userProfile.getWorkBasketDefaultJurisdiction()))
                 .thenReturn(null);
 
-            classUnderTest.createOrUpdate(userProfile);
+            classUnderTest.saveUserProfile(userProfile);
             verify(jurisdictionRepository).create(jurisdictionEntityArgCaptor.capture());
             assertEquals("TEST", jurisdictionEntityArgCaptor.getValue().getId());
         }
@@ -75,7 +75,7 @@ class CreateOrUpdateUserProfileOperationTest {
                 .thenReturn(jurisdiction);
             when(userProfileRepository.findById(userProfile.getId())).thenReturn(null);
 
-            classUnderTest.createOrUpdate(userProfile);
+            classUnderTest.saveUserProfile(userProfile);
             verify(createUserProfileOperation).execute(userProfileArgCaptor.capture());
             assertEquals("user@hmcts", userProfileArgCaptor.getValue().getId());
             assertEquals("TEST", userProfileArgCaptor.getValue().getWorkBasketDefaultJurisdiction());
@@ -94,7 +94,7 @@ class CreateOrUpdateUserProfileOperationTest {
                 .thenReturn(jurisdictionEntity);
             when(userProfileRepository.findById(userProfile.getId())).thenReturn(userProfile);
 
-            classUnderTest.createOrUpdate(userProfile);
+            classUnderTest.saveUserProfile(userProfile);
             verify(userProfileRepository).updateUserProfileOnCreate(userProfileArgCaptor.capture());
             assertEquals("user@hmcts", userProfileArgCaptor.getValue().getId());
             assertEquals("TEST", userProfileArgCaptor.getValue().getWorkBasketDefaultJurisdiction());
@@ -116,7 +116,7 @@ class CreateOrUpdateUserProfileOperationTest {
                     + "the " + userProfile.getWorkBasketDefaultJurisdiction() + " jurisdiction"));
 
             BadRequestException exception =
-                assertThrows(BadRequestException.class, () -> classUnderTest.createOrUpdate(userProfile));
+                assertThrows(BadRequestException.class, () -> classUnderTest.saveUserProfile(userProfile));
             assertEquals("User with ID " + userProfile.getId() + " is already a member of the "
                 + userProfile.getWorkBasketDefaultJurisdiction() + " jurisdiction", exception.getMessage());
         }

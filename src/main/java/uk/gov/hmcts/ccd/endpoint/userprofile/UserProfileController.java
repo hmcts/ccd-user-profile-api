@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.AppInsights;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
-import uk.gov.hmcts.ccd.domain.service.CreateOrUpdateUserProfileOperation;
+import uk.gov.hmcts.ccd.domain.service.SaveUserProfileOperation;
 import uk.gov.hmcts.ccd.domain.service.FindAllUserProfilesOperation;
 import uk.gov.hmcts.ccd.domain.service.UserProfileOperation;
 
@@ -28,17 +28,17 @@ import java.util.Optional;
 class UserProfileController {
     private final FindAllUserProfilesOperation findAllUserProfilesOperation;
     private final UserProfileOperation userProfileOperation;
-    private final CreateOrUpdateUserProfileOperation createOrUpdateUserProfileOperation;
+    private final SaveUserProfileOperation saveUserProfileOperation;
     private final AppInsights appInsights;
 
     @Autowired
     public UserProfileController(FindAllUserProfilesOperation findAllUserProfilesOperation,
                                  UserProfileOperation userProfileOperation,
-                                 CreateOrUpdateUserProfileOperation createOrUpdateUserProfileOperation,
+                                 SaveUserProfileOperation saveUserProfileOperation,
                                  AppInsights appInsights) {
         this.findAllUserProfilesOperation = findAllUserProfilesOperation;
         this.userProfileOperation = userProfileOperation;
-        this.createOrUpdateUserProfileOperation = createOrUpdateUserProfileOperation;
+        this.saveUserProfileOperation = saveUserProfileOperation;
         this.appInsights = appInsights;
     }
 
@@ -74,17 +74,17 @@ class UserProfileController {
     }
 
     @Transactional
-    @RequestMapping(value = "/users/create", method = RequestMethod.PUT)
+    @RequestMapping(value = "/users/save", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Create or update a User Profile",
+    @ApiOperation(value = "Save a User Profile",
                   notes = "A User Profile and/or Jurisdiction is created if it does not exist. Behaves exactly the "
                     + "same as the `PUT` /users endpoint, except that an HTTP 400 Bad Request is returned if the user "
                     + "already belongs to the given Jurisdiction")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Created/updated User Profile"),
+        @ApiResponse(code = 200, message = "Saved User Profile"),
         @ApiResponse(code = 400, message = "User Profile does not exist, or user already belongs to given Jurisdiction")
     })
     public void createOrUpdateUserProfile(@RequestBody final UserProfile userProfile) {
-        createOrUpdateUserProfileOperation.createOrUpdate(userProfile);
+        saveUserProfileOperation.saveUserProfile(userProfile);
     }
 }

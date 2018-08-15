@@ -11,23 +11,23 @@ import uk.gov.hmcts.ccd.domain.model.UserProfile;
 import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
 
 @Service
-public class CreateOrUpdateUserProfileOperation {
+public class SaveUserProfileOperation {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CreateOrUpdateUserProfileOperation.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SaveUserProfileOperation.class);
     private final UserProfileRepository userProfileRepository;
     private final JurisdictionRepository jurisdictionRepository;
     private final CreateUserProfileOperation createUserProfileOperation;
 
     @Autowired
-    public CreateOrUpdateUserProfileOperation(final UserProfileRepository userProfileRepository,
-                                              final JurisdictionRepository jurisdictionRepository,
-                                              final CreateUserProfileOperation createUserProfileOperation) {
+    public SaveUserProfileOperation(final UserProfileRepository userProfileRepository,
+                                    final JurisdictionRepository jurisdictionRepository,
+                                    final CreateUserProfileOperation createUserProfileOperation) {
         this.userProfileRepository = userProfileRepository;
         this.jurisdictionRepository = jurisdictionRepository;
         this.createUserProfileOperation = createUserProfileOperation;
     }
 
-    public void createOrUpdate(final UserProfile userProfile) throws BadRequestException {
+    public void saveUserProfile(final UserProfile userProfile) throws BadRequestException {
         final JurisdictionEntity existingJurisdiction = jurisdictionRepository.findEntityById(
             userProfile.getWorkBasketDefaultJurisdiction());
         if (existingJurisdiction == null) {
