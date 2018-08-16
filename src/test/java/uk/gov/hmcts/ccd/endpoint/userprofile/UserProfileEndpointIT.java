@@ -42,7 +42,7 @@ public class UserProfileEndpointIT extends BaseTest {
     private static final String USER_PROFILE_USERS_DEFAULTS = "/users";
     private static final String GET_ALL_USER_PROFILES_FOR_JURISDICTION = "/users?jurisdiction=TEST1";
     private static final String GET_ALL_USER_PROFILES = "/users";
-    private static final String CREATE_OR_UPDATE_USER_PROFILE = "/users/create";
+    private static final String SAVE_USER_PROFILE = "/users/save";
 
     private static final String USER_ID_1 = "user1";
     private static final String USER_ID_2 = "user2";
@@ -466,7 +466,7 @@ public class UserProfileEndpointIT extends BaseTest {
         jurisdiction.setId("TEST1");
         userProfile.addJurisdiction(jurisdiction);
         mockMvc.perform(
-            put(CREATE_OR_UPDATE_USER_PROFILE)
+            put(SAVE_USER_PROFILE)
                 .contentType(contentType)
                 .content(mapper.writeValueAsBytes(userProfile)))
             .andExpect(status().is(200));
@@ -493,7 +493,7 @@ public class UserProfileEndpointIT extends BaseTest {
         jurisdiction.setId("TEST4");
         userProfile.addJurisdiction(jurisdiction);
         mockMvc.perform(
-            put(CREATE_OR_UPDATE_USER_PROFILE)
+            put(SAVE_USER_PROFILE)
                 .contentType(contentType)
                 .content(mapper.writeValueAsBytes(userProfile)))
             .andExpect(status().is(200));
@@ -523,7 +523,7 @@ public class UserProfileEndpointIT extends BaseTest {
         jurisdiction.setId("TEST3");
         userProfile.addJurisdiction(jurisdiction);
         mockMvc.perform(
-            put(CREATE_OR_UPDATE_USER_PROFILE)
+            put(SAVE_USER_PROFILE)
                 .contentType(contentType)
                 .content(mapper.writeValueAsBytes(userProfile)))
             .andExpect(status().is(200));
@@ -553,7 +553,7 @@ public class UserProfileEndpointIT extends BaseTest {
         jurisdiction.setId("TEST2");
         userProfile.addJurisdiction(jurisdiction);
         final MvcResult mvcResult = mockMvc.perform(
-            put(CREATE_OR_UPDATE_USER_PROFILE)
+            put(SAVE_USER_PROFILE)
                 .contentType(contentType)
                 .content(mapper.writeValueAsBytes(userProfile)))
             .andReturn();
