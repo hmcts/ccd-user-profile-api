@@ -469,7 +469,7 @@ public class UserProfileEndpointIT extends BaseTest {
             put(CREATE_OR_UPDATE_USER_PROFILE)
                 .contentType(contentType)
                 .content(mapper.writeValueAsBytes(userProfile)))
-        .andExpect(status().is(200));
+            .andExpect(status().is(200));
 
         // Then the Jurisdiction "TEST1" is created
         assertEquals(1,
