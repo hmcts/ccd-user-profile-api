@@ -27,7 +27,7 @@ public class SaveUserProfileOperation {
         this.createUserProfileOperation = createUserProfileOperation;
     }
 
-    public void saveUserProfile(final UserProfile userProfile) throws BadRequestException {
+    public UserProfile saveUserProfile(final UserProfile userProfile) throws BadRequestException {
         final JurisdictionEntity existingJurisdiction = jurisdictionRepository.findEntityById(
             userProfile.getWorkBasketDefaultJurisdiction());
         if (existingJurisdiction == null) {
@@ -44,11 +44,11 @@ public class SaveUserProfileOperation {
 
         if (foundUserProfile == null) {
             LOG.info("No User Profile for {} found. Creating new User Profile...", userProfile.getId());
-            createUserProfileOperation.execute(userProfile);
+            return createUserProfileOperation.execute(userProfile);
         } else {
             // Attempt to update the user profile (UserProfileRepository will throw an exception if the user is being
             // added to a Jurisdiction they already belong to)
-            userProfileRepository.updateUserProfileOnCreate(userProfile);
+            return userProfileRepository.updateUserProfileOnCreate(userProfile);
         }
     }
 }

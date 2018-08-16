@@ -84,7 +84,7 @@ class UserProfileController {
         @ApiResponse(code = 200, message = "Saved User Profile"),
         @ApiResponse(code = 400, message = "User Profile does not exist, or user already belongs to given Jurisdiction")
     })
-    public void createOrUpdateUserProfile(@RequestBody final UserProfile userProfile) {
-        saveUserProfileOperation.saveUserProfile(userProfile);
+    public UserProfile saveUserProfile(@RequestBody final UserProfile userProfile) {
+        return saveUserProfileOperation.saveUserProfile(userProfile);
     }
 }
