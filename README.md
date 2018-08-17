@@ -27,7 +27,7 @@ The following environment variables are required:
 |------|---------|-------------|
 | USER_PROFILE_DB_USERNAME | - | Username for database |
 | USER_PROFILE_DB_PASSWORD | - | Password for database |
-| USER_PROFILE_S2S_AUTHORISED_SERVICES | ccd_data,ccd_definition | Authorised micro-service names for S2S calls |
+| USER_PROFILE_S2S_AUTHORISED_SERVICES | ccd_data,ccd_definition,ccd_admin | Authorised micro-service names for S2S calls |
 | IDAM_S2S_URL | - | Base URL for IdAM's S2S API service (service-auth-provider). `http://localhost:4502` for the dockerised local instance or tunneled `dev` instance. |
 | APPINSIGHTS_INSTRUMENTATIONKEY | - | For CNP environment this is provided by the terraform scripts. However any value would do for your local environment. |
 | USER_PROFILE_DB_USE_SSL | - | Mandated by Cloud Native Platform.  For local testing, set this variable to false |

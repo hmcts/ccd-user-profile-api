@@ -60,7 +60,7 @@ variable "database_name" {
 
 variable "authorised-services" {
   type    = "string"
-  default = "ccd_data,ccd_definition"
+  default = "ccd_data,ccd_definition,ccd_admin"
 }
 
 variable "common_tags" {
