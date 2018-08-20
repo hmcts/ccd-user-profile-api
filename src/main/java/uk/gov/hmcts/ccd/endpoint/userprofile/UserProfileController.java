@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.AppInsights;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
+import uk.gov.hmcts.ccd.domain.service.DeleteUserProfileJurisdictionOperation;
 import uk.gov.hmcts.ccd.domain.service.SaveUserProfileOperation;
 import uk.gov.hmcts.ccd.domain.service.FindAllUserProfilesOperation;
 import uk.gov.hmcts.ccd.domain.service.UserProfileOperation;
@@ -29,16 +30,19 @@ class UserProfileController {
     private final FindAllUserProfilesOperation findAllUserProfilesOperation;
     private final UserProfileOperation userProfileOperation;
     private final SaveUserProfileOperation saveUserProfileOperation;
+    private final DeleteUserProfileJurisdictionOperation deleteUserProfileJurisdictionOperation;
     private final AppInsights appInsights;
 
     @Autowired
     public UserProfileController(FindAllUserProfilesOperation findAllUserProfilesOperation,
                                  UserProfileOperation userProfileOperation,
                                  SaveUserProfileOperation saveUserProfileOperation,
+                                 DeleteUserProfileJurisdictionOperation deleteUserProfileJurisdictionOperation,
                                  AppInsights appInsights) {
         this.findAllUserProfilesOperation = findAllUserProfilesOperation;
         this.userProfileOperation = userProfileOperation;
         this.saveUserProfileOperation = saveUserProfileOperation;
+        this.deleteUserProfileJurisdictionOperation = deleteUserProfileJurisdictionOperation;
         this.appInsights = appInsights;
     }
 
@@ -65,7 +69,7 @@ class UserProfileController {
     @RequestMapping(value = "/users", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Update a new User Profile",
-        notes = "A User Profile or Jurisdiction is created if it does not exist")
+                  notes = "A User Profile or Jurisdiction is created if it does not exist")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Updated User Profile defaults")
     })
@@ -86,5 +90,28 @@ class UserProfileController {
     })
     public UserProfile saveUserProfile(@RequestBody final UserProfile userProfile) {
         return saveUserProfileOperation.saveUserProfile(userProfile);
+    }
+
+    @Transactional
+    @RequestMapping(value = "/users", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiOperation(value = "Delete the association to a Jurisdiction from a User Profile",
+                  notes = "Deletes the Jurisdiction unless it matches the user's Workbasket default Jurisdiction AND "
+                    + "the user currently belongs to more than one Jurisdiction. If the Jurisdiction being deleted "
+                    + "is the user's sole Jurisdiction, removal is permitted. In addition, their Workbasket defaults "
+                    + "are set to null, since they no longer belong to any Jurisdictions")
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Deleted Jurisdiction from User Profile"),
+        @ApiResponse(code = 400, message = "User Profile does not exist, user is not a member of specified "
+                                    + "Jurisdiction, or user's Workbasket defaults are for the Jurisdiction being "
+                                    + "removed")
+    })
+    public void deleteJurisdictionFromUserProfile(@ApiParam(value = "User Profile ID")
+                                                  @RequestParam("uid")
+                                                  final String uid,
+                                                  @ApiParam(value = "Jurisdiction ID")
+                                                  @RequestParam("jid")
+                                                  final String jid) {
+        deleteUserProfileJurisdictionOperation.deleteAssociation(uid, jid);
     }
 }
