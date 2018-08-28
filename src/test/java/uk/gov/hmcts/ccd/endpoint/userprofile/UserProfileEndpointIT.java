@@ -39,7 +39,7 @@ public class UserProfileEndpointIT extends BaseTest {
     private static final String CREATE_USER_PROFILE = "/user-profile/users";
     private static final String FIND_JURISDICTION_FOR_USER_1 = "/user-profile/users?uid=USER1";
     private static final String FIND_JURISDICTION_FOR_USER_2 = "/user-profile/users?uid=User2";
-    private static final String USER_PROFILE_USERS_DEFAULTS = "/user-profile/users";
+    private static final String USER_PROFILE_USERS_DEFAULTS = "/users";
     private static final String GET_ALL_USER_PROFILES_FOR_JURISDICTION = "/users?jurisdiction=TEST1";
     private static final String GET_ALL_USER_PROFILES = "/users";
 
