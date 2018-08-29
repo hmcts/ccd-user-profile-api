@@ -3,11 +3,11 @@ output "microserviceName" {
 }
 
 output "vaultUri" {
-  value = "${local.vaultUri}"
+  value = "${local.oldVaultUri}"
 }
 
 output "vaultName" {
-  value = "${local.vaultName}"
+  value = "${local.oldVaultName}"
 }
 output "s2s_url" {
   value = "${local.s2s_url}"
