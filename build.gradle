@@ -100,7 +100,7 @@ jar {
 
 configurations {
     providedRuntime
-
+    annotationProcessor
     aatCompile.extendsFrom(testCompile)
     aatRuntime.extendsFrom(testRuntime)
 }
@@ -127,7 +127,7 @@ ext {
 
 dependencies {
     compile('org.projectlombok:lombok:1.18.2')
-    apt 'org.projectlombok:lombok:1.18.2'
+    annotationProcessor 'org.projectlombok:lombok:1.18.2'
     compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: reformLogging
     compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: reformLogging
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
@@ -163,7 +163,7 @@ dependencies {
 // end::dependencies[]
 
 // tag::wrapper[]
-task wrapper(type: Wrapper) {
+wrapper {
     gradleVersion = '4.9'
 }
 // end::wrapper[]
@@ -186,6 +186,13 @@ tasks.withType(com.github.spotbugs.SpotBugsTask) {
     }
 }
 
+compileJava {
+    options.annotationProcessorPath = configurations.annotationProcessor
+}
+
+compileTestJava {
+    options.annotationProcessorPath = configurations.annotationProcessor
+}
 // adopted from
 // https://github.com/springfox/springfox/blob/fb780ee1f14627b239fba95730a69900b9b2313a/gradle/coverage.gradle
 jacocoTestReport {
@@ -200,7 +207,7 @@ jacocoTestReport {
         logger.lifecycle("Checking coverage results: ${report}")
 
         def parser = new XmlParser()
-        parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
         parser.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false)
         def results = parser.parse(report)
 
