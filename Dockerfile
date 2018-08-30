@@ -1,4 +1,5 @@
 FROM openjdk:8-jre
+LABEL maintainer="https://github.com/hmcts/ccd-user-profile-api"
 
 COPY build/libs/user-profile.jar /app.jar
 

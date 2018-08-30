@@ -235,6 +235,16 @@ jacocoTestReport {
 
 test {
     environment("APPINSIGHTS_INSTRUMENTATIONKEY", "some-key")
+
+    useJUnitPlatform()
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+
+    reports {
+        html.enabled = true
+    }
 }
 
 

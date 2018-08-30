@@ -19,7 +19,7 @@ public class UserProfileOperationTest {
     private CreateUserProfileOperation createUserProfileOperation;
 
     @Before
-    public void setup() {
+    public void setUp() {
         userProfileRepository = mock(UserProfileRepository.class);
         jurisdictionRepository = mock(JurisdictionRepository.class);
         createUserProfileOperation = mock(CreateUserProfileOperation.class);
