@@ -3,11 +3,11 @@ output "microserviceName" {
 }
 
 output "vaultUri" {
-  value = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
+  value = "${local.oldVaultUri}"
 }
 
 output "vaultName" {
-  value = "${local.vaultName}"
+  value = "${local.oldVaultName}"
 }
 output "s2s_url" {
   value = "${local.s2s_url}"
