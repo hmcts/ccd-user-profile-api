@@ -1,6 +1,6 @@
 buildscript {
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.13.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.3.RELEASE")
     }
     dependencies {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2"
@@ -13,7 +13,7 @@ buildscript {
 plugins {
     id 'application'
     id 'io.spring.dependency-management' version '1.0.5.RELEASE'
-    id 'org.springframework.boot' version '1.5.13.RELEASE'
+    id 'org.springframework.boot' version '2.0.3.RELEASE'
     id 'org.owasp.dependencycheck' version '3.2.1'
     id 'se.patrikerdes.use-latest-versions' version '0.2.3'
     id 'com.github.ben-manes.versions' version '0.17.0'
@@ -149,6 +149,7 @@ dependencies {
     testCompile group: 'com.opentable.components', name: 'otj-pg-embedded', version: '0.12.0'
     testCompile group: 'com.github.tomakehurst', name: 'wiremock', version: '2.18.0'
     testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '1.2.4.RELEASE'
+    runtime("org.springframework.boot:spring-boot-properties-migrator")
 }
 // end::dependencies[]
 
