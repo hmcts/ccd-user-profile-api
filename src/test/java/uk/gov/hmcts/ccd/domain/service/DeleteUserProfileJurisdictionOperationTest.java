@@ -131,6 +131,19 @@ class DeleteUserProfileJurisdictionOperationTest {
             assertNull(updatedUserProfile.getWorkBasketDefaultState());
         }
 
+        @Test
+        @DisplayName("Should throw an exception if the user does not belong to any Jurisdictions")
+        void shouldThrowExceptionIfUserIsNotMemberOfAnyJurisdictions() {
+            final UserProfile userProfile = new UserProfile();
+            userProfile.setId(USER_ID);
+            when(userProfileRepository.findById(USER_ID)).thenReturn(userProfile);
+
+            BadRequestException exception = assertThrows(BadRequestException.class,
+                () -> classUnderTest.deleteAssociation(USER_ID, JURISDICTION_ID));
+            assertEquals("User with ID " + USER_ID + " is not a member of any Jurisdictions",
+                exception.getMessage());
+        }
+
         private UserProfile createUserProfile(String userId, String... jurisdictionIds) {
             UserProfile userProfile = new UserProfile();
             userProfile.setId(userId);

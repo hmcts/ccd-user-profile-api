@@ -30,6 +30,11 @@ public class DeleteUserProfileJurisdictionOperation {
             throw new BadRequestException("User does not exist with ID " + userId);
         }
 
+        // Throw an exception if the user is not a member of any Jurisdictions
+        if (userProfile.getJurisdictions() == null) {
+            throw new BadRequestException("User with ID " + userId + " is not a member of any Jurisdictions");
+        }
+
         // Throw an exception if the Jurisdiction being removed matches the user's Workbasket default Jurisdiction.
         // The only case this is permitted is if the user belongs to only one Jurisdiction.
         if (userProfile.getJurisdictions().size() > 1
