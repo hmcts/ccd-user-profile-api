@@ -43,6 +43,9 @@ public class UserProfileRepositoryTest {
     private UserProfile userProfile;
     private UserProfile userProfileWithMultipleJurisdictions;
 
+    @Rule
+    private ExpectedException exceptionRule = ExpectedException.none();
+
     @Before
     public void setUp() {
         final Jurisdiction jurisdiction = new Jurisdiction();
@@ -63,9 +66,6 @@ public class UserProfileRepositoryTest {
             createUserProfile("user4@hmcts.net", jurisdiction.getId(), "TEST5", "TEST6");
         saveUserProfileClearAndFlushSession(userProfileWithMultipleJurisdictions);
     }
-
-    @Rule
-    public ExpectedException exceptionRule = ExpectedException.none();
 
     @Test
     public void createUserProfileWhenItAlreadyExists() {
