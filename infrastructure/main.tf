@@ -8,10 +8,6 @@ provider "vault" {
   address = "https://vault.reform.hmcts.net:6200"
 }
 
-data "vault_generic_secret" "ccd_data_s2s_key" {
-  path = "secret/${var.vault_section}/ccidam/service-auth-provider/api/microservice-keys/ccd-data"
-}
-
 locals {
   app_full_name = "${var.product}-${var.component}"
   aseName = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
@@ -109,11 +105,5 @@ resource "azurerm_key_vault_secret" "POSTGRES_PORT" {
 resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
   name = "${local.app_full_name}-POSTGRES-DATABASE"
   value = "${module.user-profile-db.postgresql_database}"
-  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
-}
-
-resource "azurerm_key_vault_secret" "ds_s2s_key" {
-  name = "ccd-data-s2s-key"
-  value = "${data.vault_generic_secret.ccd_data_s2s_key.data["value"]}"
   vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
 }
