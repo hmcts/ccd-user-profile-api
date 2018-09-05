@@ -44,7 +44,7 @@ public class UserProfileRepositoryTest {
     private UserProfile userProfileWithMultipleJurisdictions;
 
     @Rule
-    private ExpectedException exceptionRule = ExpectedException.none();
+    public ExpectedException exceptionRule = ExpectedException.none();
 
     @Before
     public void setUp() {
