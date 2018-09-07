@@ -1,15 +1,14 @@
 #!groovy
-properties(
-        [[$class: 'GithubProjectProperty', projectUrlStr: 'https://git.reform.hmcts.net/case-management/user-profile-app'],
-         pipelineTriggers([[$class: 'GitHubPushTrigger']])]
-)
+
+properties([
+    // H allow predefined but random minute see https://en.wikipedia.org/wiki/Cron#Non-standard_characters
+    pipelineTriggers([cron('H 05 * * *')])
+])
 
 @Library("Infrastructure")
 
 def type = "java"
-
 def product = "ccd"
-
 def component = "user-profile-api"
 
 List<LinkedHashMap<String, Object>> secrets = [
@@ -25,8 +24,8 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     ]
 }
 
-withPipeline(type, product, component) {
-    enableDbMigration()
+withNightlyPipeline(type, product, component) {
     loadVaultSecrets(secrets)
-    enableSlackNotifications('#ccd-notifications')
+    enableDbMigration()
+    enableSlackNotifications('#ccd-nightly-builds')
 }
