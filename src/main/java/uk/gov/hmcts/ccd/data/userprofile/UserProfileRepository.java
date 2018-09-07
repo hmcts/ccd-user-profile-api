@@ -64,12 +64,10 @@ public class UserProfileRepository {
         userProfileEntity.setWorkBasketDefaultJurisdiction(userProfile.getWorkBasketDefaultJurisdiction());
         userProfileEntity.setWorkBasketDefaultState(userProfile.getWorkBasketDefaultState());
 
-        final JurisdictionEntity jurisdictionEntity = jurisdictionRepository
-            .findEntityById(userProfile.getWorkBasketDefaultJurisdiction());
-        if (0 == userProfileEntity.getJurisdictions()
-            .stream()
-            .filter(j -> j.getId().equals(userProfile.getWorkBasketDefaultJurisdiction()))
-            .count()) {
+        if (userProfileEntity.getJurisdictions()
+            .stream().noneMatch(j -> j.getId().equals(userProfile.getWorkBasketDefaultJurisdiction()))) {
+            final JurisdictionEntity jurisdictionEntity = jurisdictionRepository
+                .findEntityById(userProfile.getWorkBasketDefaultJurisdiction());
             userProfileEntity.addJurisdiction(jurisdictionEntity);
         }
 
@@ -101,6 +99,38 @@ public class UserProfileRepository {
             .stream()
             .map(UserProfileMapper::entityToModel)
             .collect(Collectors.toList());
+    }
+
+    /**
+     * Updates a User Profile when attempting to create a user for a given Jurisdiction, when that user already exists.
+     *
+     * @param userProfile The UserProfile with the updated data
+     * @return The updated UserProfile
+     * @throws BadRequestException If there is no such user, or if the user already belongs to the given Jurisdiction
+     */
+    public UserProfile updateUserProfileOnCreate(final UserProfile userProfile) throws BadRequestException {
+
+        final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId());
+        if (null == userProfileEntity) {
+            throw new BadRequestException("User does not exist with Id " + userProfile.getId());
+        }
+
+        userProfileEntity.setWorkBasketDefaultCaseType(userProfile.getWorkBasketDefaultCaseType());
+        userProfileEntity.setWorkBasketDefaultJurisdiction(userProfile.getWorkBasketDefaultJurisdiction());
+        userProfileEntity.setWorkBasketDefaultState(userProfile.getWorkBasketDefaultState());
+
+        if (userProfileEntity.getJurisdictions()
+            .stream().noneMatch(j -> j.getId().equals(userProfile.getWorkBasketDefaultJurisdiction()))) {
+            final JurisdictionEntity jurisdictionEntity = jurisdictionRepository
+                .findEntityById(userProfile.getWorkBasketDefaultJurisdiction());
+            userProfileEntity.addJurisdiction(jurisdictionEntity);
+
+            em.persist(userProfileEntity);
+            return UserProfileMapper.entityToModel(userProfileEntity);
+        } else {
+            throw new BadRequestException("User with ID " + userProfile.getId() + " is already a member of the "
+                + userProfile.getWorkBasketDefaultJurisdiction() + " jurisdiction");
+        }
     }
 
     private JurisdictionEntity findJurisdictionEntityById(String jurisdictionId) {

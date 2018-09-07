@@ -48,8 +48,8 @@ It is important to run the following command and commit the updated `gradle-wrap
 # this sample is for v4.9 replace with correct upgrade version
 ./gradlew wrapper --gradle-version 4.9 --distribution-type all
 ```
-### Running
 
+### Running
 If you want your code to become available to other Docker projects (e.g. for local environment testing), you need to build the image:
 
 ```bash
@@ -103,6 +103,5 @@ To create a user the following example JSON can be used:
 ```
 
 ## LICENSE
-
 This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
 
