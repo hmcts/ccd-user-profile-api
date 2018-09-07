@@ -92,10 +92,10 @@ jar {
         attributes 'Implementation-Title': project.name,
                 'Implementation-Version': project.version
     }
+}
 
-    configurations {
-        jar.archiveName = 'user-profile.jar'
-    }
+bootJar {
+    archiveName = 'user-profile.jar'
 }
 
 configurations {

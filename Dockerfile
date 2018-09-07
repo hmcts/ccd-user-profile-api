@@ -1,7 +1,7 @@
 FROM openjdk:8-jre
 LABEL maintainer="https://github.com/hmcts/ccd-user-profile-api"
 
-COPY build/libs/user-profile-*.jar /app.jar
+COPY build/libs/user-profile.jar /app.jar
 
 HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" curl --silent --fail http://localhost:4453/status/health
 
