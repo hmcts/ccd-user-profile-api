@@ -128,7 +128,7 @@ public class UserProfileRepository {
             em.persist(userProfileEntity);
             return UserProfileMapper.entityToModel(userProfileEntity);
         } else {
-            throw new BadRequestException("User with ID" + userProfile.getId() + " is already a member of the "
+            throw new BadRequestException("User with ID " + userProfile.getId() + " is already a member of the "
                 + userProfile.getWorkBasketDefaultJurisdiction() + " jurisdiction");
         }
     }
