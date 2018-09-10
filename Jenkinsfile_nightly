@@ -12,7 +12,7 @@ def product = "ccd"
 def component = "user-profile-api"
 
 List<LinkedHashMap<String, Object>> secrets = [
-    secret('ccd-data-s2s-key', 'CCD_DS_SERVICE_SECRET')
+    secret('ccd-data-store-api-s2s-secret', 'CCD_DS_SERVICE_SECRET')
 ]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
