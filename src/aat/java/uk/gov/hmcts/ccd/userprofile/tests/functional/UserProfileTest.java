@@ -21,7 +21,7 @@ class UserProfileTest extends BaseTest {
             .given()
             .contentType(ContentType.JSON)
             .when()
-            .post("/user-profile/users")
+            .post(aat.getTestUrl() + "/user-profile/users")
             .then()
             .statusCode(400);
     }

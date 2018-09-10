@@ -1,6 +1,6 @@
 buildscript {
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.13.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.4.RELEASE")
     }
     dependencies {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2"
@@ -12,8 +12,8 @@ buildscript {
 
 plugins {
     id 'application'
-    id 'io.spring.dependency-management' version '1.0.5.RELEASE'
-    id 'org.springframework.boot' version '1.5.13.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.6.RELEASE'
+    id 'org.springframework.boot' version '2.0.4.RELEASE'
     id 'org.owasp.dependencycheck' version '3.2.1'
     id 'se.patrikerdes.use-latest-versions' version '0.2.3'
     id 'com.github.ben-manes.versions' version '0.17.0'
@@ -22,6 +22,7 @@ plugins {
     id 'checkstyle'
     id "com.github.spotbugs" version "1.6.2"
     id "com.github.kt3k.coveralls" version "2.8.2"
+    id 'net.ltgt.apt' version '0.18'
 }
 
 dependencyUpdates.resolutionStrategy = {
@@ -42,6 +43,7 @@ apply plugin: 'eclipse'
 apply plugin: 'application'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 apply plugin: "org.sonarqube"
 apply plugin: "com.github.spotbugs"
 apply plugin: 'checkstyle'
@@ -90,15 +92,15 @@ jar {
         attributes 'Implementation-Title': project.name,
                 'Implementation-Version': project.version
     }
+}
 
-    configurations {
-        jar.archiveName = 'user-profile.jar'
-    }
+bootJar {
+    archiveName = 'user-profile.jar'
 }
 
 configurations {
     providedRuntime
-
+    annotationProcessor
     aatCompile.extendsFrom(testCompile)
     aatRuntime.extendsFrom(testRuntime)
 }
@@ -109,7 +111,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 ext {
-    reformLogging= '2.2.1'
+    reformLogging= '3.0.2'
     junitJupiterVersion = '5.2.0'
     junitVintageVersion = '5.2.0'
     hibernateVersion = '5.2.12.Final'
@@ -124,6 +126,8 @@ ext {
 }
 
 dependencies {
+    compile('org.projectlombok:lombok:1.18.2')
+    annotationProcessor 'org.projectlombok:lombok:1.18.2'
     compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: reformLogging
     compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: reformLogging
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
@@ -133,14 +137,20 @@ dependencies {
     }
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    compile("org.springframework.boot:spring-boot-starter-actuator")
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.0'
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.0'
     compile group: 'org.liquibase', name: 'liquibase-core', version: '3.6.1'
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.2.0'
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.2'
     compile group: 'javax.inject', name: 'javax.inject', version: '1'
-    compile group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: '2.1.3'
+    compile (group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: '2.1.3') {
+        // TODO remove when auth-checker-lib upgrades its dependency to spring boot 2.0.x
+        exclude group: 'uk.gov.hmcts.reform', module: 'java-logging-spring'
+    }
     compile group: 'io.rest-assured', name: 'rest-assured', version: '3.1.0'
+    compile 'net.jcip:jcip-annotations:1.0'
+    compile 'com.github.spotbugs:spotbugs-annotations:3.1.3'
     aatCompile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '0.6.0'
     testCompile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
     testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
@@ -153,7 +163,7 @@ dependencies {
 // end::dependencies[]
 
 // tag::wrapper[]
-task wrapper(type: Wrapper) {
+wrapper {
     gradleVersion = '4.9'
 }
 // end::wrapper[]
@@ -176,6 +186,13 @@ tasks.withType(com.github.spotbugs.SpotBugsTask) {
     }
 }
 
+compileJava {
+    options.annotationProcessorPath = configurations.annotationProcessor
+}
+
+compileTestJava {
+    options.annotationProcessorPath = configurations.annotationProcessor
+}
 // adopted from
 // https://github.com/springfox/springfox/blob/fb780ee1f14627b239fba95730a69900b9b2313a/gradle/coverage.gradle
 jacocoTestReport {
@@ -190,7 +207,7 @@ jacocoTestReport {
         logger.lifecycle("Checking coverage results: ${report}")
 
         def parser = new XmlParser()
-        parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
         parser.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false)
         def results = parser.parse(report)
 
