@@ -112,7 +112,7 @@ public class UserProfileRepository {
 
         final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId());
         if (null == userProfileEntity) {
-            throw new BadRequestException("User does not exist with Id " + userProfile.getId());
+            throw new BadRequestException("User does not exist with ID " + userProfile.getId());
         }
 
         userProfileEntity.setWorkBasketDefaultCaseType(userProfile.getWorkBasketDefaultCaseType());
@@ -131,6 +131,36 @@ public class UserProfileRepository {
             throw new BadRequestException("User with ID " + userProfile.getId() + " is already a member of the "
                 + userProfile.getWorkBasketDefaultJurisdiction() + " jurisdiction");
         }
+    }
+
+    /**
+     * Removes an association from a User Profile to a Jurisdiction. Additionally, sets all workbasket defaults to null
+     * if, after removing an association, the user no longer belongs to any Jurisdiction.
+     *
+     * @param userProfile UserProfile from which the Jurisdiction is to be removed
+     * @param jurisdiction Jurisdiction to be removed
+     * @return The updated UserProfile
+     * @throws BadRequestException If there is no such User Profile, or no such association to the Jurisdiction exists
+     */
+    public UserProfile deleteJurisdictionFromUserProfile(final UserProfile userProfile, final Jurisdiction jurisdiction)
+        throws BadRequestException {
+
+        final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId());
+        if (userProfileEntity == null) {
+            throw new BadRequestException("User does not exist with ID " + userProfile.getId());
+        }
+
+        userProfileEntity.getJurisdictions().remove(jurisdictionRepository.findEntityById(jurisdiction.getId()));
+
+        // Set all workbasket defaults to null if the user no longer belongs to any Jurisdiction
+        if (userProfileEntity.getJurisdictions().size() == 0) {
+            userProfileEntity.setWorkBasketDefaultJurisdiction(null);
+            userProfileEntity.setWorkBasketDefaultCaseType(null);
+            userProfileEntity.setWorkBasketDefaultState(null);
+        }
+
+        em.merge(userProfileEntity);
+        return UserProfileMapper.entityToModel(userProfileEntity);
     }
 
     private JurisdictionEntity findJurisdictionEntityById(String jurisdictionId) {

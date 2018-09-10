@@ -28,6 +28,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -45,6 +46,10 @@ public class UserProfileEndpointIT extends BaseTest {
     private static final String GET_ALL_USER_PROFILES_FOR_JURISDICTION = "/users?jurisdiction=TEST1";
     private static final String GET_ALL_USER_PROFILES = "/users";
     private static final String SAVE_USER_PROFILE = "/users/save";
+    private static final String DELETE_NON_DEFAULT_JURISDICTION = "/users?uid=user1&jid=TEST1";
+    private static final String DELETE_DEFAULT_JURISDICTION = "/users?uid=user1&jid=TEST2";
+    private static final String DELETE_JURISDICTION_NOT_IN_USER_LIST = "/users?uid=user5&jid=TEST1";
+    private static final String DELETE_SOLE_JURISDICTION = "/users?uid=user5&jid=TEST2";
 
     private static final String USER_ID_1 = "user1";
     private static final String USER_ID_2 = "user2";
@@ -60,6 +65,10 @@ public class UserProfileEndpointIT extends BaseTest {
     private static final String COUNT_USER_PROFILE_ALL_JURISDICTIONS_QUERY
         = "SELECT COUNT(1) FROM user_profile_jurisdiction WHERE user_profile_id = ?";
     private static final String COUNT_ALL_JURISDICTIONS_QUERY = "SELECT COUNT(1) FROM jurisdiction";
+
+    private static final String DELETE_WORKBASKET_DEFAULT_JURISDICTION_ERROR = "Cannot delete user profile as the "
+        + "user's workbasket defaults are set to the Jurisdiction the user is being deleted from. Please update the "
+        + "user's workbasket default values to another Jurisdiction and try again.";
 
     @Autowired
     private WebApplicationContext wac;
@@ -445,7 +454,7 @@ public class UserProfileEndpointIT extends BaseTest {
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
         scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
     public void getAllUserProfiles() throws Exception {
-        // Given there are three User Profiles in total
+        // Given there are four User Profiles in total
         // When attempting to find all User Profiles
         final MvcResult mvcResult = mockMvc.perform(get(GET_ALL_USER_PROFILES)).andReturn();
 
@@ -454,8 +463,8 @@ public class UserProfileEndpointIT extends BaseTest {
         final List<UserProfile> userProfiles =
             Arrays.asList(mapper.readValue(mvcResult.getResponse().getContentAsString(), UserProfile[].class));
 
-        // Then a list with three User Profiles is returned
-        assertEquals("Unexpected number of User Profiles", 3, userProfiles.size());
+        // Then a list with four User Profiles is returned
+        assertEquals("Unexpected number of User Profiles", 4, userProfiles.size());
     }
 
     @Test
@@ -564,6 +573,83 @@ public class UserProfileEndpointIT extends BaseTest {
         assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
         assertEquals("Unexpected response message", "User with ID user1 is already a member of the "
             + "TEST2 jurisdiction", mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
+        scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
+    public void deleteJurisdictionThatIsNotWorkbasketDefault() throws Exception {
+        // Given the user "user1" belongs to three Jurisdictions: "TEST1", "TEST2", and "TEST3"
+        // And the Jurisdiction "TEST1" is NOT the user's Workbasket default Jurisdiction
+        // When deleting the Jurisdiction "TEST1" from the User Profile
+        mockMvc.perform(
+            delete(DELETE_NON_DEFAULT_JURISDICTION))
+            .andExpect(status().is(204));
+
+        // Then the user should now belong to two Jurisdictions instead of three
+        final UserProfileEntity userProfileEntity =
+            template.queryForObject(GET_USER_PROFILE_QUERY, this::mapUserProfileData, "user1");
+        assertEquals("user1", userProfileEntity.getId());
+        assertEquals("TEST2", userProfileEntity.getWorkBasketDefaultJurisdiction());
+        assertEquals(2,
+            template.queryForObject(COUNT_USER_PROFILE_ALL_JURISDICTIONS_QUERY, Integer.class, "user1")
+                .intValue());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
+        scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
+    public void deleteJurisdictionThatIsWorkbasketDefault() throws Exception {
+        // Given the user "user1" belongs to three Jurisdictions: "TEST1", "TEST2", and "TEST3"
+        // And the Jurisdiction "TEST2" is the user's Workbasket default Jurisdiction
+        // When deleting the Jurisdiction "TEST2" from the User Profile
+        final MvcResult mvcResult = mockMvc.perform(
+            delete(DELETE_DEFAULT_JURISDICTION))
+            .andReturn();
+
+        // Then an HTTP 400 (Bad Request) status should be returned
+        assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
+        assertEquals("Unexpected response message", DELETE_WORKBASKET_DEFAULT_JURISDICTION_ERROR,
+            mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
+        scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
+    public void deleteJurisdictionThatIsNotInUserProfile() throws Exception {
+        // Given the user "user5" belongs to one Jurisdiction: "TEST2"
+        // When deleting the Jurisdiction "TEST1" from the User Profile
+        final MvcResult mvcResult = mockMvc.perform(
+            delete(DELETE_JURISDICTION_NOT_IN_USER_LIST))
+            .andReturn();
+
+        // Then an HTTP 400 (Bad Request) status should be returned
+        assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
+        assertEquals("Unexpected response message", "User with ID user5 is not a member of the TEST1 "
+            + "jurisdiction", mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
+        scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
+    public void deleteSoleJurisdictionForUserProfile() throws Exception {
+        // Given the user "user5" belongs to one Jurisdiction: "TEST2"
+        // When deleting the Jurisdiction "TEST2" from the User Profile
+        mockMvc.perform(
+            delete(DELETE_SOLE_JURISDICTION))
+            .andExpect(status().is(204));
+
+        // Then the user should now belong to zero Jurisdictions instead of one
+        // And all Workbasket defaults should be null
+        final UserProfileEntity userProfileEntity =
+            template.queryForObject(GET_USER_PROFILE_QUERY, this::mapUserProfileData, "user5");
+        assertEquals("user5", userProfileEntity.getId());
+        assertEquals(0,
+            template.queryForObject(COUNT_USER_PROFILE_ALL_JURISDICTIONS_QUERY, Integer.class, "user5")
+                .intValue());
+        assertNull(userProfileEntity.getWorkBasketDefaultJurisdiction());
+        assertNull(userProfileEntity.getWorkBasketDefaultCaseType());
+        assertNull(userProfileEntity.getWorkBasketDefaultState());
     }
 
     private static UserProfile createUserProfile(final String id,
