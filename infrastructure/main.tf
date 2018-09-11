@@ -34,6 +34,8 @@ module "user-profile-api" {
   subscription = "${var.subscription}"
   is_frontend = false
   common_tags  = "${var.common_tags}"
+  asp_name = "${var.asp_name}"
+  asp_rg = "${var.asp_rg}"
 
   app_settings = {
     USER_PROFILE_DB_HOST        = "${module.user-profile-db.host_name}"
