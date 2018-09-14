@@ -26,7 +26,7 @@ data "azurerm_key_vault" "ccd_shared_key_vault" {
 }
 
 module "user-profile-api" {
-  source   = "git@github.com:contino/moj-module-webapp?ref=master"
+  source   = "git@github.com:hmcts/cnp-module-webapp?ref=master"
   product  = "${local.app_full_name}"
   location = "${var.location}"
   env      = "${var.env}"
@@ -51,7 +51,7 @@ module "user-profile-api" {
 }
 
 module "user-profile-db" {
-  source = "git@github.com:hmcts/moj-module-postgres?ref=master"
+  source = "git@github.com:hmcts/cnp-module-postgres?ref=master"
   product = "${local.app_full_name}-postgres-db"
   location = "${var.location}"
   env = "${var.env}"
