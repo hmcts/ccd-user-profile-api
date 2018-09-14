@@ -113,7 +113,7 @@ targetCompatibility = 1.8
 ext {
     reformLogging= '3.0.2'
     junitJupiterVersion = '5.2.0'
-    junitVintageVersion = '5.2.0'
+    junitVintageVersion = '5.3.1'
     hibernateVersion = '5.2.12.Final'
     limits = [
             'instruction': 86,
