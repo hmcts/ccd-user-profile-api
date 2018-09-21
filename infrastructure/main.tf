@@ -17,6 +17,8 @@ locals {
   nonPreviewResourceGroup = "${var.raw_product}-shared-${var.env}"
   sharedResourceGroup = "${(var.env == "preview" || var.env == "spreview") ? local.previewResourceGroup : local.nonPreviewResourceGroup}"
 
+  sharedAppServicePlan = "${var.raw_product}-${var.env}"
+
   s2s_url = "http://rpe-service-auth-provider-${local.env_ase_url}"
 }
 
@@ -26,7 +28,7 @@ data "azurerm_key_vault" "ccd_shared_key_vault" {
 }
 
 module "user-profile-api" {
-  source   = "git@github.com:contino/moj-module-webapp?ref=master"
+  source   = "git@github.com:hmcts/cnp-module-webapp?ref=master"
   product  = "${local.app_full_name}"
   location = "${var.location}"
   env      = "${var.env}"
@@ -34,6 +36,8 @@ module "user-profile-api" {
   subscription = "${var.subscription}"
   is_frontend = false
   common_tags  = "${var.common_tags}"
+  asp_name = "${(var.asp_name == "use_shared") ? local.sharedAppServicePlan : var.asp_name}"
+  asp_rg = "${(var.asp_rg == "use_shared") ? local.sharedResourceGroup : var.asp_rg}"
 
   app_settings = {
     USER_PROFILE_DB_HOST        = "${module.user-profile-db.host_name}"
@@ -51,7 +55,7 @@ module "user-profile-api" {
 }
 
 module "user-profile-db" {
-  source = "git@github.com:hmcts/moj-module-postgres?ref=master"
+  source = "git@github.com:hmcts/cnp-module-postgres?ref=master"
   product = "${local.app_full_name}-postgres-db"
   location = "${var.location}"
   env = "${var.env}"
