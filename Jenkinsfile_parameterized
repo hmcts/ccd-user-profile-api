@@ -24,4 +24,5 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 withParameterizedPipeline('java', 'ccd', 'user-profile-api', params.ENVIRONMENT, 'sandbox') {
     loadVaultSecrets(secrets)
     enableDbMigration()
+    enableSlackNotifications('#ccd-param-builds')
 }
