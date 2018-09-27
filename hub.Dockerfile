@@ -15,7 +15,7 @@ COPY --from=builder /home/gradle/src/build/libs/user-profile.jar /opt/app/
 
 WORKDIR /opt/app
 
-HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" wget -q http://localhost:4453/health || exit 1
+HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" curl --silent --fail http://localhost:4453/status/health
 
 EXPOSE 4453
 
