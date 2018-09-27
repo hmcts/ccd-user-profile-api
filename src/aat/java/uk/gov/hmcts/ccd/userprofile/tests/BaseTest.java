@@ -12,7 +12,6 @@ public abstract class BaseTest {
 
     protected BaseTest(AATHelper aat) {
         this.aat = aat;
-        RestAssured.baseURI = aat.getTestUrl();
         RestAssured.useRelaxedHTTPSValidation();
     }
 

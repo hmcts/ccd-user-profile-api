@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.endpoint.userprofile;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +28,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -34,12 +36,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@SuppressFBWarnings // added for avoiding overhead of null checks. CCD Policy: allowed only for test
 public class UserProfileEndpointIT extends BaseTest {
 
     private static final String CREATE_USER_PROFILE = "/user-profile/users";
     private static final String FIND_PROFILE_FOR_USER_1 = "/user-profile/users?uid=USER1";
     private static final String FIND_PROFILE_FOR_USER_2 = "/user-profile/users?uid=User2";
-    private static final String USER_PROFILE_USERS_DEFAULTS = "/user-profile/users";
+    private static final String USER_PROFILE_USERS_DEFAULTS = "/users";
+    private static final String GET_ALL_USER_PROFILES_FOR_JURISDICTION = "/users?jurisdiction=TEST1";
+    private static final String GET_ALL_USER_PROFILES = "/users";
+    private static final String SAVE_USER_PROFILE = "/users/save";
+    private static final String DELETE_NON_DEFAULT_JURISDICTION = "/users?uid=user1&jid=TEST1";
+    private static final String DELETE_DEFAULT_JURISDICTION = "/users?uid=user1&jid=TEST2";
+    private static final String DELETE_JURISDICTION_NOT_IN_USER_LIST = "/users?uid=user5&jid=TEST1";
+    private static final String DELETE_SOLE_JURISDICTION = "/users?uid=user5&jid=TEST2";
 
     private static final String USER_ID_1 = "user1";
     private static final String USER_ID_2 = "user2";
@@ -52,6 +62,13 @@ public class UserProfileEndpointIT extends BaseTest {
     private static final String COUNT_JURISDICTION_QUERY = "SELECT count(1) FROM jurisdiction where id = ?";
     private static final String COUNT_USER_PROFILE_JURISDICTION_QUERY
         = "SELECT count(1) FROM user_profile_jurisdiction where user_profile_id = ? and jurisdiction_id = ?";
+    private static final String COUNT_USER_PROFILE_ALL_JURISDICTIONS_QUERY
+        = "SELECT COUNT(1) FROM user_profile_jurisdiction WHERE user_profile_id = ?";
+    private static final String COUNT_ALL_JURISDICTIONS_QUERY = "SELECT COUNT(1) FROM jurisdiction";
+
+    private static final String DELETE_WORKBASKET_DEFAULT_JURISDICTION_ERROR = "Cannot delete user profile as the "
+        + "user's workbasket defaults are set to the Jurisdiction the user is being deleted from. Please update the "
+        + "user's workbasket default values to another Jurisdiction and try again.";
 
     @Autowired
     private WebApplicationContext wac;
@@ -118,7 +135,7 @@ public class UserProfileEndpointIT extends BaseTest {
         scripts = {"classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql"})
     public void createUsingExistingJurisdictions() throws Exception {
         // Given - a pre-existing UserProfile with Id = user1 which has 3
-        // Jurisdiction's associated.
+        // Jurisdictions associated.
         UserProfile userProfile = new UserProfile();
         userProfile.setId(USER_ID_3);
 
@@ -327,7 +344,12 @@ public class UserProfileEndpointIT extends BaseTest {
 
     @Test
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:sql/init_db.sql" })
-    public void testRetrievalOfUnknownProfile() throws Exception {
+    public void getJurisdictionsForNonExistentUserProfile() throws Exception {
+        // Given - there is no User Profile with id = user1
+        // When - attempting to find Jurisdictions for a User Profile iwth id =
+        // user1
+        // Then - assert that the expected error is returned
+        final MvcResult mvcResult = mockMvc.perform(get(FIND_JURISDICTION_FOR_USER_1)).andReturn();
 
         final MvcResult mvcResult = mockMvc.perform(get(FIND_PROFILE_FOR_USER_1)).andReturn();
 
@@ -341,7 +363,7 @@ public class UserProfileEndpointIT extends BaseTest {
         scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
     public void updateUserProfileDefaults() throws Exception {
 
-        // Given a listof user profile defaults
+        // Given a list of user profile defaults
         List<UserProfile> userProfiles = new ArrayList<>();
 
         // user exists, jurisdiction does not
@@ -360,7 +382,7 @@ public class UserProfileEndpointIT extends BaseTest {
         mockMvc.perform(put(USER_PROFILE_USERS_DEFAULTS)
             .contentType(contentType)
             .content(mapper.writeValueAsBytes(userProfiles)))
-            .andExpect(status().is(201))
+            .andExpect(status().is(200))
             .andReturn();
 
         // Then the user profile defaults are stored in the database
@@ -413,10 +435,229 @@ public class UserProfileEndpointIT extends BaseTest {
             "user1", "TEST1").intValue());
     }
 
-    static UserProfile createUserProfile(final String id,
-                                         final String caseType,
-                                         final String jurisdiction,
-                                         final String state) {
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
+        scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
+    public void getAllUserProfilesForJurisdiction() throws Exception {
+        // Given there are two User Profiles with Jurisdiction "TEST1"
+        // When attempting to find all User Profiles with the above Jurisdiction
+        final MvcResult mvcResult = mockMvc.perform(get(GET_ALL_USER_PROFILES_FOR_JURISDICTION)).andReturn();
+
+        assertEquals("Unexpected response status", 200, mvcResult.getResponse().getStatus());
+
+        final List<UserProfile> userProfiles =
+            Arrays.asList(mapper.readValue(mvcResult.getResponse().getContentAsString(), UserProfile[].class));
+
+        // Then a list with the two User Profiles is returned
+        assertEquals("Unexpected number of User Profiles", 2, userProfiles.size());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
+        scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
+    public void getAllUserProfiles() throws Exception {
+        // Given there are four User Profiles in total
+        // When attempting to find all User Profiles
+        final MvcResult mvcResult = mockMvc.perform(get(GET_ALL_USER_PROFILES)).andReturn();
+
+        assertEquals("Unexpected response status", 200, mvcResult.getResponse().getStatus());
+
+        final List<UserProfile> userProfiles =
+            Arrays.asList(mapper.readValue(mvcResult.getResponse().getContentAsString(), UserProfile[].class));
+
+        // Then a list with four User Profiles is returned
+        assertEquals("Unexpected number of User Profiles", 4, userProfiles.size());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:sql/init_db.sql" })
+    public void createUserProfileForNonExistentJurisdiction() throws Exception {
+        // Given the Jurisdiction "TEST1" does not exist
+        // When attempting to create a User Profile for the above Jurisdiction
+        UserProfile userProfile = createUserProfile("user@hmcts.net", null, "TEST1", null);
+        Jurisdiction jurisdiction = new Jurisdiction();
+        jurisdiction.setId("TEST1");
+        userProfile.addJurisdiction(jurisdiction);
+        mockMvc.perform(
+            put(SAVE_USER_PROFILE)
+                .contentType(contentType)
+                .content(mapper.writeValueAsBytes(userProfile)))
+            .andExpect(status().is(200));
+
+        // Then the Jurisdiction "TEST1" is created
+        assertEquals(1,
+            template.queryForObject(COUNT_JURISDICTION_QUERY, Integer.class, "TEST1").intValue());
+
+        // And the User Profile is created
+        final UserProfileEntity userProfileEntity =
+            template.queryForObject(GET_USER_PROFILE_QUERY, this::mapUserProfileData, "user@hmcts.net");
+        assertEquals("user@hmcts.net", userProfileEntity.getId());
+        assertEquals("TEST1", userProfileEntity.getWorkBasketDefaultJurisdiction());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
+        scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
+    public void updateUserProfileForNonExistentJurisdiction() throws Exception {
+        // Given the Jurisdiction "TEST4" does not exist
+        // When attempting to create a User Profile, for an existing user, for the above Jurisdiction
+        UserProfile userProfile = createUserProfile("user1", null, "TEST4", null);
+        Jurisdiction jurisdiction = new Jurisdiction();
+        jurisdiction.setId("TEST4");
+        userProfile.addJurisdiction(jurisdiction);
+        mockMvc.perform(
+            put(SAVE_USER_PROFILE)
+                .contentType(contentType)
+                .content(mapper.writeValueAsBytes(userProfile)))
+            .andExpect(status().is(200));
+
+        // Then the Jurisdiction "TEST4" is created
+        assertEquals(1,
+            template.queryForObject(COUNT_JURISDICTION_QUERY, Integer.class, "TEST4").intValue());
+
+        // And the User Profile is updated; the user should now belong to four Jurisdictions instead of three
+        final UserProfileEntity userProfileEntity =
+            template.queryForObject(GET_USER_PROFILE_QUERY, this::mapUserProfileData, "user1");
+        assertEquals("user1", userProfileEntity.getId());
+        assertEquals("TEST4", userProfileEntity.getWorkBasketDefaultJurisdiction());
+        assertEquals(4,
+            template.queryForObject(COUNT_USER_PROFILE_ALL_JURISDICTIONS_QUERY, Integer.class, "user1")
+                .intValue());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
+        scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
+    public void updateUserProfileForExistingUserAndJurisdiction() throws Exception {
+        // Given the Jurisdiction "TEST3" exists
+        // When attempting to create a User Profile, for an existing user, for the above Jurisdiction
+        UserProfile userProfile = createUserProfile("user4", null, "TEST3", null);
+        Jurisdiction jurisdiction = new Jurisdiction();
+        jurisdiction.setId("TEST3");
+        userProfile.addJurisdiction(jurisdiction);
+        mockMvc.perform(
+            put(SAVE_USER_PROFILE)
+                .contentType(contentType)
+                .content(mapper.writeValueAsBytes(userProfile)))
+            .andExpect(status().is(200));
+
+        // Then no new Jurisdiction is created (the total number remains the same)
+        assertEquals(3,
+            template.queryForObject(COUNT_ALL_JURISDICTIONS_QUERY, Integer.class).intValue());
+
+        // And the User Profile is updated; the user should now belong to two Jurisdictions instead of one
+        final UserProfileEntity userProfileEntity =
+            template.queryForObject(GET_USER_PROFILE_QUERY, this::mapUserProfileData, "user4");
+        assertEquals("user4", userProfileEntity.getId());
+        assertEquals("TEST3", userProfileEntity.getWorkBasketDefaultJurisdiction());
+        assertEquals(2,
+            template.queryForObject(COUNT_USER_PROFILE_ALL_JURISDICTIONS_QUERY, Integer.class, "user4")
+                .intValue());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
+        scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
+    public void updateUserProfileWithSameJurisdiction() throws Exception {
+        // Given the Jurisdiction "TEST2" exists, and the user "user1" already belongs to that Jurisdiction
+        // When attempting to update the User Profile for that user, with Jurisdiction "TEST2"
+        UserProfile userProfile = createUserProfile("user1", null, "TEST2", null);
+        Jurisdiction jurisdiction = new Jurisdiction();
+        jurisdiction.setId("TEST2");
+        userProfile.addJurisdiction(jurisdiction);
+        final MvcResult mvcResult = mockMvc.perform(
+            put(SAVE_USER_PROFILE)
+                .contentType(contentType)
+                .content(mapper.writeValueAsBytes(userProfile)))
+            .andReturn();
+
+        // Then an HTTP 400 (Bad Request) status should be returned
+        assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
+        assertEquals("Unexpected response message", "User with ID user1 is already a member of the "
+            + "TEST2 jurisdiction", mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
+        scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
+    public void deleteJurisdictionThatIsNotWorkbasketDefault() throws Exception {
+        // Given the user "user1" belongs to three Jurisdictions: "TEST1", "TEST2", and "TEST3"
+        // And the Jurisdiction "TEST1" is NOT the user's Workbasket default Jurisdiction
+        // When deleting the Jurisdiction "TEST1" from the User Profile
+        mockMvc.perform(
+            delete(DELETE_NON_DEFAULT_JURISDICTION))
+            .andExpect(status().is(204));
+
+        // Then the user should now belong to two Jurisdictions instead of three
+        final UserProfileEntity userProfileEntity =
+            template.queryForObject(GET_USER_PROFILE_QUERY, this::mapUserProfileData, "user1");
+        assertEquals("user1", userProfileEntity.getId());
+        assertEquals("TEST2", userProfileEntity.getWorkBasketDefaultJurisdiction());
+        assertEquals(2,
+            template.queryForObject(COUNT_USER_PROFILE_ALL_JURISDICTIONS_QUERY, Integer.class, "user1")
+                .intValue());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
+        scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
+    public void deleteJurisdictionThatIsWorkbasketDefault() throws Exception {
+        // Given the user "user1" belongs to three Jurisdictions: "TEST1", "TEST2", and "TEST3"
+        // And the Jurisdiction "TEST2" is the user's Workbasket default Jurisdiction
+        // When deleting the Jurisdiction "TEST2" from the User Profile
+        final MvcResult mvcResult = mockMvc.perform(
+            delete(DELETE_DEFAULT_JURISDICTION))
+            .andReturn();
+
+        // Then an HTTP 400 (Bad Request) status should be returned
+        assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
+        assertEquals("Unexpected response message", DELETE_WORKBASKET_DEFAULT_JURISDICTION_ERROR,
+            mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
+        scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
+    public void deleteJurisdictionThatIsNotInUserProfile() throws Exception {
+        // Given the user "user5" belongs to one Jurisdiction: "TEST2"
+        // When deleting the Jurisdiction "TEST1" from the User Profile
+        final MvcResult mvcResult = mockMvc.perform(
+            delete(DELETE_JURISDICTION_NOT_IN_USER_LIST))
+            .andReturn();
+
+        // Then an HTTP 400 (Bad Request) status should be returned
+        assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
+        assertEquals("Unexpected response message", "User with ID user5 is not a member of the TEST1 "
+            + "jurisdiction", mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
+        scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
+    public void deleteSoleJurisdictionForUserProfile() throws Exception {
+        // Given the user "user5" belongs to one Jurisdiction: "TEST2"
+        // When deleting the Jurisdiction "TEST2" from the User Profile
+        mockMvc.perform(
+            delete(DELETE_SOLE_JURISDICTION))
+            .andExpect(status().is(204));
+
+        // Then the user should now belong to zero Jurisdictions instead of one
+        // And all Workbasket defaults should be null
+        final UserProfileEntity userProfileEntity =
+            template.queryForObject(GET_USER_PROFILE_QUERY, this::mapUserProfileData, "user5");
+        assertEquals("user5", userProfileEntity.getId());
+        assertEquals(0,
+            template.queryForObject(COUNT_USER_PROFILE_ALL_JURISDICTIONS_QUERY, Integer.class, "user5")
+                .intValue());
+        assertNull(userProfileEntity.getWorkBasketDefaultJurisdiction());
+        assertNull(userProfileEntity.getWorkBasketDefaultCaseType());
+        assertNull(userProfileEntity.getWorkBasketDefaultState());
+    }
+
+    private static UserProfile createUserProfile(final String id,
+                                                 final String caseType,
+                                                 final String jurisdiction,
+                                                 final String state) {
         final UserProfile userDefault = new UserProfile();
         userDefault.setId(id.toLowerCase());
         userDefault.setWorkBasketDefaultCaseType(caseType);

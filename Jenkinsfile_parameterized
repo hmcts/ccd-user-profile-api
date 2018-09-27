@@ -3,13 +3,13 @@
 
 properties([
   parameters([
-    choice(name: 'ENVIRONMENT', choices: 'saat\nsprod', description: 'Environment where code should be build and deployed')
+    choice(name: 'ENVIRONMENT', choices: 'saat\nsprod\nsandbox', description: 'Environment where code should be build and deployed')
   ]),
   pipelineTriggers([[$class: 'GitHubPushTrigger']])
 ])
 
 List<LinkedHashMap<String, Object>> secrets = [
-    secret('microserviceDataStoreSecret', 'CCD_DS_SERVICE_SECRET')
+    secret('ccd-data-store-api-s2s-secret', 'CCD_DS_SERVICE_SECRET')
 ]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
@@ -24,4 +24,5 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 withParameterizedPipeline('java', 'ccd', 'user-profile-api', params.ENVIRONMENT, 'sandbox') {
     loadVaultSecrets(secrets)
     enableDbMigration()
+    enableSlackNotifications('#ccd-param-builds')
 }

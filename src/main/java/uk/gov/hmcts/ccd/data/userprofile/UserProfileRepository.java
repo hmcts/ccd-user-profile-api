@@ -9,10 +9,13 @@ import uk.gov.hmcts.ccd.domain.model.UserProfile;
 import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 @Repository
 public class UserProfileRepository {
@@ -61,12 +64,10 @@ public class UserProfileRepository {
         userProfileEntity.setWorkBasketDefaultJurisdiction(userProfile.getWorkBasketDefaultJurisdiction());
         userProfileEntity.setWorkBasketDefaultState(userProfile.getWorkBasketDefaultState());
 
-        final JurisdictionEntity jurisdictionEntity = jurisdictionRepository
-            .findEntityById(userProfile.getWorkBasketDefaultJurisdiction());
-        if (0 == userProfileEntity.getJurisdictions()
-            .stream()
-            .filter(j -> j.getId().equals(userProfile.getWorkBasketDefaultJurisdiction()))
-            .count()) {
+        if (userProfileEntity.getJurisdictions()
+            .stream().noneMatch(j -> j.getId().equals(userProfile.getWorkBasketDefaultJurisdiction()))) {
+            final JurisdictionEntity jurisdictionEntity = jurisdictionRepository
+                .findEntityById(userProfile.getWorkBasketDefaultJurisdiction());
             userProfileEntity.addJurisdiction(jurisdictionEntity);
         }
 
@@ -80,5 +81,89 @@ public class UserProfileRepository {
 
     private UserProfileEntity findEntityById(String id) {
         return em.find(UserProfileEntity.class, id.toLowerCase());
+    }
+
+    public List<UserProfile> findAll(String jurisdictionId) {
+        TypedQuery<UserProfileEntity> query = em.createNamedQuery("UserProfileEntity.findAllByJurisdiction",
+            UserProfileEntity.class);
+        query.setParameter("jurisdiction", findJurisdictionEntityById(jurisdictionId));
+        return query.getResultList()
+            .stream()
+            .map(UserProfileMapper::entityToModel)
+            .collect(Collectors.toList());
+    }
+
+    public List<UserProfile> findAll() {
+        TypedQuery<UserProfileEntity> query = em.createNamedQuery("UserProfileEntity.findAll", UserProfileEntity.class);
+        return query.getResultList()
+            .stream()
+            .map(UserProfileMapper::entityToModel)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Updates a User Profile when attempting to create a user for a given Jurisdiction, when that user already exists.
+     *
+     * @param userProfile The UserProfile with the updated data
+     * @return The updated UserProfile
+     * @throws BadRequestException If there is no such user, or if the user already belongs to the given Jurisdiction
+     */
+    public UserProfile updateUserProfileOnCreate(final UserProfile userProfile) throws BadRequestException {
+
+        final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId());
+        if (null == userProfileEntity) {
+            throw new BadRequestException("User does not exist with ID " + userProfile.getId());
+        }
+
+        userProfileEntity.setWorkBasketDefaultCaseType(userProfile.getWorkBasketDefaultCaseType());
+        userProfileEntity.setWorkBasketDefaultJurisdiction(userProfile.getWorkBasketDefaultJurisdiction());
+        userProfileEntity.setWorkBasketDefaultState(userProfile.getWorkBasketDefaultState());
+
+        if (userProfileEntity.getJurisdictions()
+            .stream().noneMatch(j -> j.getId().equals(userProfile.getWorkBasketDefaultJurisdiction()))) {
+            final JurisdictionEntity jurisdictionEntity = jurisdictionRepository
+                .findEntityById(userProfile.getWorkBasketDefaultJurisdiction());
+            userProfileEntity.addJurisdiction(jurisdictionEntity);
+
+            em.persist(userProfileEntity);
+            return UserProfileMapper.entityToModel(userProfileEntity);
+        } else {
+            throw new BadRequestException("User with ID " + userProfile.getId() + " is already a member of the "
+                + userProfile.getWorkBasketDefaultJurisdiction() + " jurisdiction");
+        }
+    }
+
+    /**
+     * Removes an association from a User Profile to a Jurisdiction. Additionally, sets all workbasket defaults to null
+     * if, after removing an association, the user no longer belongs to any Jurisdiction.
+     *
+     * @param userProfile UserProfile from which the Jurisdiction is to be removed
+     * @param jurisdiction Jurisdiction to be removed
+     * @return The updated UserProfile
+     * @throws BadRequestException If there is no such User Profile, or no such association to the Jurisdiction exists
+     */
+    public UserProfile deleteJurisdictionFromUserProfile(final UserProfile userProfile, final Jurisdiction jurisdiction)
+        throws BadRequestException {
+
+        final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId());
+        if (userProfileEntity == null) {
+            throw new BadRequestException("User does not exist with ID " + userProfile.getId());
+        }
+
+        userProfileEntity.getJurisdictions().remove(jurisdictionRepository.findEntityById(jurisdiction.getId()));
+
+        // Set all workbasket defaults to null if the user no longer belongs to any Jurisdiction
+        if (userProfileEntity.getJurisdictions().size() == 0) {
+            userProfileEntity.setWorkBasketDefaultJurisdiction(null);
+            userProfileEntity.setWorkBasketDefaultCaseType(null);
+            userProfileEntity.setWorkBasketDefaultState(null);
+        }
+
+        em.merge(userProfileEntity);
+        return UserProfileMapper.entityToModel(userProfileEntity);
+    }
+
+    private JurisdictionEntity findJurisdictionEntityById(String jurisdictionId) {
+        return em.find(JurisdictionEntity.class, jurisdictionId);
     }
 }

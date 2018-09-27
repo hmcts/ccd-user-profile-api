@@ -12,8 +12,6 @@ import static org.mockito.Mockito.when;
 
 public class ClientAuthorsationConfigurationTest {
 
-    private AuthCheckerConfiguration subject;
-
     @Test
     public void checkService() {
 
@@ -22,7 +20,7 @@ public class ClientAuthorsationConfigurationTest {
         allowableServices.add("reference");
         allowableServices.add("reference-2");
         when(services.getServices()).thenReturn(allowableServices);
-        subject = new AuthCheckerConfiguration(services);
+        AuthCheckerConfiguration subject = new AuthCheckerConfiguration(services);
 
         // this should return allowable services
         Collection<String> result = subject.authorizedServicesExtractor().apply(null);
