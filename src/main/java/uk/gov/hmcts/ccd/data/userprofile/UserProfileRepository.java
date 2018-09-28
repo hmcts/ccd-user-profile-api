@@ -80,7 +80,7 @@ public class UserProfileRepository {
     }
 
     private UserProfileEntity findEntityById(String id) {
-        return em.find(UserProfileEntity.class, id.toLowerCase());
+        return em.find(UserProfileEntity.class, id);
     }
 
     public List<UserProfile> findAll(String jurisdictionId) {

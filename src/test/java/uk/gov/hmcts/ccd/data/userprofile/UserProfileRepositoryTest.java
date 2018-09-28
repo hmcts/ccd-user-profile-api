@@ -65,6 +65,9 @@ public class UserProfileRepositoryTest {
         userProfileWithMultipleJurisdictions =
             createUserProfile("user4@hmcts.net", jurisdiction.getId(), "TEST5", "TEST6");
         saveUserProfileClearAndFlushSession(userProfileWithMultipleJurisdictions);
+        final UserProfile mixedCaseUserProfile =
+            createUserProfile("User@HMCTS.net", jurisdiction.getId());
+        saveUserProfileClearAndFlushSession(mixedCaseUserProfile);
     }
 
     @Test
@@ -115,9 +118,17 @@ public class UserProfileRepositoryTest {
     }
 
     @Test
+    public void findUserProfileByIdCaseSensitive() {
+        final UserProfile userProfile = classUnderTest.findById("User@HMCTS.net");
+        assertEquals("User@HMCTS.net", userProfile.getId());
+        assertEquals("TEST", userProfile.getWorkBasketDefaultJurisdiction());
+        assertNull(userProfile.getJurisdictions());
+    }
+
+    @Test
     public void findAllUserProfiles() {
         final List<UserProfile> userProfiles = classUnderTest.findAll();
-        assertEquals(3, userProfiles.size());
+        assertEquals(4, userProfiles.size());
     }
 
     @Test

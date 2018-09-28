@@ -351,8 +351,9 @@ public class UserProfileEndpointIT extends BaseTest {
         // Then - assert that the expected error is returned
         final MvcResult mvcResult = mockMvc.perform(get(FIND_PROFILE_FOR_USER_1)).andReturn();
 
-        assertEquals("Unexpected response status", 404, mvcResult.getResponse().getStatus());
+      assertEquals("Unexpected response status", 404, mvcResult.getResponse().getStatus());
         assertEquals("Unexpected response message", "Cannot find profile for user 'USER1'",
+
             mvcResult.getResponse().getContentAsString());
     }
 
