@@ -44,7 +44,7 @@ spec:
             memory: "512Mi"
             cpu: "200m"
           limits:
-            memory: "1024Mi"
+            memory: "854Mi"
             cpu: "2500m"
 
         # This is the port your process is listening on in the container
