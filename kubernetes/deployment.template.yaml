@@ -33,7 +33,7 @@ spec:
           - name: POSTGRES_SSL_MODE
             value: disable
           - name: POSTGRES_DATABASE
-            value: rhubarb
+            value: ccd_user_profile
         envFrom:
           - configMapRef:
               name: ${SERVICE_NAME}-config
@@ -60,7 +60,7 @@ spec:
         name: ${SERVICE_NAME}-postgres
         env:
           - name: POSTGRES_DB
-            value: rhubarb
+            value: ccd_user_profile
         envFrom:
           - configMapRef:
               name: ${SERVICE_NAME}-config
