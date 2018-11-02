@@ -1,0 +1,63 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="RDM-2761-User-Profile-Audit-Table_x" author="waihung.cho@hmcts.net">
+
+        <sql>
+            CREATE TYPE action_crud AS ENUM ('READ', 'CREATE', 'UPDATE', 'DELETE');
+        </sql>
+
+        <createTable tableName="user_profile_audit">
+            <column name="id" type="serial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column
+                    name="jurisdiction_id"
+                    type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column
+                    name="user_profile_id"
+                    type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column
+                    name="work_basket_default_jurisdiction"
+                    type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column
+                    name="work_basket_default_case_type"
+                    type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column
+                    name="work_basket_default_state"
+                    type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column
+                    name="timestamp"
+                    type="datetime"
+                    defaultValue="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column
+                    name="action"
+                    type="action_crud">
+                <constraints nullable="false"/>
+            </column>
+            <column
+                    name="actioned_by"
+                    type="text">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint constraintName="fk_user_profile__audit_jurisdiction"
+                                 baseTableName="user_profile_audit" baseColumnNames="jurisdiction_id"
+                                 referencedTableName="jurisdiction" referencedColumnNames="id"/>
+
+    </changeSet>
+</databaseChangeLog>
