@@ -50,4 +50,8 @@
         <gav regex="true">^com\.github\.alexarchambault:case-app-util_2\.11:.*$</gav>
         <cpe>cpe:/a:app_project:app</cpe>
     </suppress>
+    <suppress>
+        <notes>Temporary suppression while we investigate. See RDM-3324</notes>
+        <cve>CVE-2018-1000632</cve>
+    </suppress>
 </suppressions>
