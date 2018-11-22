@@ -43,6 +43,7 @@ module "user-profile-api" {
   capacity = "${var.capacity}"
 
   app_settings = {
+<<<<<<< HEAD
     USER_PROFILE_DB_HOST        = "${module.user-profile-db.host_name}"
     USER_PROFILE_DB_PORT        = "${module.user-profile-db.postgresql_listen_port}"
     USER_PROFILE_DB_NAME        = "${module.user-profile-db.postgresql_database}"
@@ -52,13 +53,34 @@ module "user-profile-api" {
     ENABLE_DB_MIGRATE = "false"
 
     IDAM_S2S_URL = "${local.s2s_url}"
+=======
+    USER_PROFILE_DB_HOST        = "${module.db-user-profile.host_name}"
+    USER_PROFILE_DB_PORT        = "${module.db-user-profile.postgresql_listen_port}"
+    USER_PROFILE_DB_NAME        = "${module.db-user-profile.postgresql_database}"
+    USER_PROFILE_DB_USERNAME    = "${module.db-user-profile.user_name}"
+    USER_PROFILE_DB_PASSWORD    = "${module.db-user-profile.postgresql_password}"
+    IDAM_S2S_URL = "${var.s2s_url}"
+>>>>>>> ee411bd... Try to destroy old DB, test lock
     USER_PROFILE_S2S_AUTHORISED_SERVICES = "${var.authorised-services}"
   }
 
 }
 
+<<<<<<< HEAD
 module "user-profile-db" {
   source = "git@github.com:hmcts/cnp-module-postgres?ref=master"
+=======
+//module "postgres-user-profile" {
+//  source              = "git@github.com:contino/moj-module-postgres?ref=master"
+//  product             = "${var.product}-user-profile"
+//  location            = "West Europe"
+//  env                 = "${var.env}"
+//  postgresql_user     = "ccd"
+//}
+
+module "db-user-profile" {
+  source = "git@github.com:hmcts/moj-module-postgres?ref=cnp-449-tactical"
+>>>>>>> ee411bd... Try to destroy old DB, test lock
   product = "${local.app_full_name}-postgres-db"
   location = "${var.location}"
   env = "${var.env}"
