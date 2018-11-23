@@ -18,13 +18,28 @@ import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+<<<<<<< HEAD
 import java.util.Collections;
+=======
+>>>>>>> 480165d... RDM-2425 Audit logs
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+<<<<<<< HEAD
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+=======
+import static java.util.Collections.emptyList;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.CREATE;
+import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.DELETE;
+import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.READ;
+import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.UPDATE;
+>>>>>>> 480165d... RDM-2425 Audit logs
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -34,6 +49,13 @@ import static org.junit.Assert.assertNull;
 @Transactional
 public class UserProfileRepositoryTest {
 
+<<<<<<< HEAD
+=======
+    private static final String ACTIONED_BY_EMAIL = "rtaashrie9j1otx@example.com";
+    private static final String DEFAULT_CASE_TYPE = "workBasketDefaultCaseType";
+    private static final String DEFAULT_STATE = "workBasketDefaultState";
+
+>>>>>>> 480165d... RDM-2425 Audit logs
     @Autowired
     private UserProfileRepository classUnderTest;
 
@@ -74,16 +96,37 @@ public class UserProfileRepositoryTest {
     public void createUserProfileWhenItAlreadyExists() {
         exceptionRule.expect(BadRequestException.class);
         exceptionRule.expectMessage("User already exists with Id " + userProfile.getId());
+<<<<<<< HEAD
         classUnderTest.createUserProfile(userProfile);
+=======
+        assertEquals(0, countUserProfitAudits());
+        classUnderTest.createUserProfile(userProfile, ACTIONED_BY_EMAIL);
+        assertEquals(0, countUserProfitAudits());
+>>>>>>> 480165d... RDM-2425 Audit logs
     }
 
     @Test
     public void createUserProfileWhenItDoesNotExist() {
         final UserProfile userProfile = createUserProfile("user2@hmcts.net", "TEST", "TEST", "TEST2");
+<<<<<<< HEAD
         final UserProfile retrievedUserProfile = classUnderTest.createUserProfile(userProfile);
         assertEquals(userProfile.getId(), retrievedUserProfile.getId());
         assertEquals("TEST", retrievedUserProfile.getWorkBasketDefaultJurisdiction());
         assertEquals(2, retrievedUserProfile.getJurisdictions().size());
+=======
+        assertEquals(0, countUserProfitAudits());
+        final UserProfile retrievedUserProfile = classUnderTest.createUserProfile(userProfile, ACTIONED_BY_EMAIL);
+        assertEquals(userProfile.getId(), retrievedUserProfile.getId());
+        assertEquals("TEST", retrievedUserProfile.getWorkBasketDefaultJurisdiction());
+        assertEquals(2, retrievedUserProfile.getJurisdictions().size());
+        assertAuditEntry("user2@hmcts.net",
+                         CREATE,
+                         ACTIONED_BY_EMAIL,
+                         "TEST",
+                         "TEST",
+                         DEFAULT_CASE_TYPE,
+                         DEFAULT_STATE);
+>>>>>>> 480165d... RDM-2425 Audit logs
     }
 
     @Test
@@ -91,7 +134,12 @@ public class UserProfileRepositoryTest {
         final UserProfile userProfile = createUserProfile("user2@hmcts.net", "TEST");
         exceptionRule.expect(BadRequestException.class);
         exceptionRule.expectMessage("User does not exist with Id " + userProfile.getId());
+<<<<<<< HEAD
         classUnderTest.updateUserProfile(userProfile);
+=======
+        classUnderTest.updateUserProfile(userProfile, "exceptionexpected@example.com");
+        assertEquals(0, countUserProfitAudits());
+>>>>>>> 480165d... RDM-2425 Audit logs
     }
 
     @Test
@@ -99,7 +147,11 @@ public class UserProfileRepositoryTest {
         final UserProfile userProfile = createUserProfile("user@hmcts.net", "TEST3");
         userProfile.setWorkBasketDefaultCaseType("Test case");
         userProfile.setWorkBasketDefaultState("Create case");
+<<<<<<< HEAD
         final UserProfile retrievedUserProfile = classUnderTest.updateUserProfile(userProfile);
+=======
+        final UserProfile retrievedUserProfile = classUnderTest.updateUserProfile(userProfile, ACTIONED_BY_EMAIL);
+>>>>>>> 480165d... RDM-2425 Audit logs
         assertEquals(userProfile.getId(), retrievedUserProfile.getId());
         assertEquals("TEST3", retrievedUserProfile.getWorkBasketDefaultJurisdiction());
         assertEquals("Test case", retrievedUserProfile.getWorkBasketDefaultCaseType());
@@ -107,10 +159,30 @@ public class UserProfileRepositoryTest {
         assertEquals(2, retrievedUserProfile.getJurisdictions().size());
         assertEquals("TEST2", retrievedUserProfile.getJurisdictions().get(0).getId());
         assertEquals("TEST3", retrievedUserProfile.getJurisdictions().get(1).getId());
+<<<<<<< HEAD
+=======
+        final List<UserProfileAuditEntity> audits = findUserProfitAudits("user@hmcts.net");
+        assertThat(audits.size(), is(2));
+        assertAuditEntry(audits.get(0),
+                         READ,
+                         ACTIONED_BY_EMAIL,
+                         "TEST",
+                         "TEST",
+                         DEFAULT_CASE_TYPE,
+                         DEFAULT_STATE);
+        assertAuditEntry(audits.get(1),
+                         UPDATE,
+                         ACTIONED_BY_EMAIL,
+                         "TEST",
+                         "TEST",
+                         DEFAULT_CASE_TYPE,
+                         DEFAULT_STATE);
+>>>>>>> 480165d... RDM-2425 Audit logs
     }
 
     @Test
     public void findUserProfileById() {
+<<<<<<< HEAD
         final UserProfile userProfile = classUnderTest.findById("user@hmcts.net");
         assertEquals("user@hmcts.net", userProfile.getId());
         assertEquals("TEST", userProfile.getWorkBasketDefaultJurisdiction());
@@ -152,6 +224,107 @@ public class UserProfileRepositoryTest {
         userProfile.setWorkBasketDefaultCaseType("Test case");
         userProfile.setWorkBasketDefaultState("Create case");
         final UserProfile retrievedUserProfile = classUnderTest.updateUserProfileOnCreate(userProfile);
+=======
+        assertEquals(0, countUserProfitAudits());
+        final UserProfile userProfile = classUnderTest.findById("user@hmcts.net", ACTIONED_BY_EMAIL);
+        assertEquals("user@hmcts.net", userProfile.getId());
+        assertEquals("TEST", userProfile.getWorkBasketDefaultJurisdiction());
+        assertEquals(1, userProfile.getJurisdictions().size());
+        assertAuditEntry("user@hmcts.net",
+                         READ,
+                         ACTIONED_BY_EMAIL,
+                         "TEST",
+                         "TEST",
+                         DEFAULT_CASE_TYPE,
+                         DEFAULT_STATE);
+    }
+
+    @Test
+    public void findUserProfileByIdWithNullDefaultJurisdiction () {
+        final String email = "icnfadso6fnulljurisdiction@example.com";
+        assertEquals(0, countUserProfitAudits());
+        final UserProfile another = shallowCopyUserProfile(userProfile, email);
+        another.setWorkBasketDefaultJurisdiction(null);
+        saveUserProfileClearAndFlushSession(another);
+        final UserProfile userProfile = classUnderTest.findById(email, ACTIONED_BY_EMAIL);
+        assertEquals(email, userProfile.getId());
+        assertNull(userProfile.getWorkBasketDefaultJurisdiction());
+        assertEquals(0, countUserProfitAudits());
+    }
+
+    @Test
+    public void findUserProfileByIdWithNullDefaultCaseType () {
+        final String email = "icnfadso6fnullcasetype@example.com";
+        assertEquals(0, countUserProfitAudits());
+        final UserProfile another = shallowCopyUserProfile(userProfile, email);
+        another.setWorkBasketDefaultCaseType(null);
+        saveUserProfileClearAndFlushSession(another);
+        final UserProfile found = classUnderTest.findById(email, ACTIONED_BY_EMAIL);
+        assertEquals(email, found.getId());
+        assertEquals("TEST", found.getWorkBasketDefaultJurisdiction());
+        assertEquals(0, countUserProfitAudits());
+    }
+
+    @Test
+    public void findUserProfileByIdWithNullDefaultState () {
+        final String email = "icnfadso6fnullstate@example.com";
+        assertEquals(0, countUserProfitAudits());
+        final UserProfile another = shallowCopyUserProfile(userProfile, email);
+        another.setWorkBasketDefaultState(null);
+        saveUserProfileClearAndFlushSession(another);
+        final UserProfile found = classUnderTest.findById(email, ACTIONED_BY_EMAIL);
+        assertEquals(email, found.getId());
+        assertEquals("TEST", found.getWorkBasketDefaultJurisdiction());
+        assertEquals(0, countUserProfitAudits());
+    }
+
+    @Test
+    public void findUserProfileByIdCaseSensitive () {
+        final UserProfile userProfile = classUnderTest.findById("User@HMCTS.net", ACTIONED_BY_EMAIL);
+        assertEquals("User@HMCTS.net", userProfile.getId());
+        assertEquals("TEST", userProfile.getWorkBasketDefaultJurisdiction());
+        assertNull(userProfile.getJurisdictions());
+        assertAuditEntry("User@HMCTS.net",
+                         READ,
+                         ACTIONED_BY_EMAIL,
+                         "TEST",
+                         "TEST",
+                         DEFAULT_CASE_TYPE,
+                         DEFAULT_STATE);
+    }
+
+    @Test
+    public void findAllUserProfiles () {
+        final List<UserProfile> userProfiles = classUnderTest.findAll();
+        assertEquals(4, userProfiles.size());
+        assertEquals(0, countUserProfitAudits());
+    }
+
+    @Test
+    public void findAllUserProfilesByJurisdiction () {
+        final List<UserProfile> userProfiles = classUnderTest.findAll("TEST2");
+        assertEquals(1, userProfiles.size());
+        assertEquals("user@hmcts.net", userProfiles.get(0).getId());
+        assertEquals(0, countUserProfitAudits());
+    }
+
+    @Test
+    public void updateUserProfileOnCreateWhenItDoesNotExist () {
+        final UserProfile userProfile = createUserProfile("user2@hmcts.net", "TEST");
+        exceptionRule.expect(BadRequestException.class);
+        exceptionRule.expectMessage("User does not exist with ID " + userProfile.getId());
+        classUnderTest.updateUserProfileOnCreate(userProfile, ACTIONED_BY_EMAIL);
+        assertEquals(0, countUserProfitAudits());
+    }
+
+    @Test
+    public void updateUserProfileOnCreateWhenItAlreadyExists () {
+        final UserProfile userProfile = createUserProfile("user@hmcts.net", "TEST3");
+        userProfile.setWorkBasketDefaultCaseType("Test case");
+        userProfile.setWorkBasketDefaultState("Create case");
+        final UserProfile retrievedUserProfile = classUnderTest.updateUserProfileOnCreate(userProfile,
+                                                                                          ACTIONED_BY_EMAIL);
+>>>>>>> 480165d... RDM-2425 Audit logs
         assertEquals(userProfile.getId(), retrievedUserProfile.getId());
         assertEquals("TEST3", retrievedUserProfile.getWorkBasketDefaultJurisdiction());
         assertEquals("Test case", retrievedUserProfile.getWorkBasketDefaultCaseType());
@@ -159,14 +332,27 @@ public class UserProfileRepositoryTest {
         assertEquals(2, retrievedUserProfile.getJurisdictions().size());
         assertEquals("TEST2", retrievedUserProfile.getJurisdictions().get(0).getId());
         assertEquals("TEST3", retrievedUserProfile.getJurisdictions().get(1).getId());
+<<<<<<< HEAD
     }
 
     @Test
     public void updateUserProfileOnCreateWhenUserAlreadyBelongsToJurisdiction() {
+=======
+
+        final List<UserProfileAuditEntity> audits = findUserProfitAudits("user@hmcts.net");
+        assertThat(audits.size(), is(2));
+        assertAuditEntry(audits.get(0), READ, ACTIONED_BY_EMAIL, "TEST", "TEST", DEFAULT_CASE_TYPE, DEFAULT_STATE);
+        assertAuditEntry(audits.get(1), UPDATE, ACTIONED_BY_EMAIL, "TEST", "TEST", DEFAULT_CASE_TYPE, DEFAULT_STATE);
+    }
+
+    @Test
+    public void updateUserProfileOnCreateWhenUserAlreadyBelongsToJurisdiction () {
+>>>>>>> 480165d... RDM-2425 Audit logs
         final UserProfile userProfile = createUserProfile("user@hmcts.net", "TEST2");
         userProfile.setWorkBasketDefaultCaseType("Test case");
         userProfile.setWorkBasketDefaultState("Create case");
         exceptionRule.expect(BadRequestException.class);
+<<<<<<< HEAD
         exceptionRule.expectMessage("User with ID " + userProfile.getId() + " is already a member of the "
             + userProfile.getWorkBasketDefaultJurisdiction() + " jurisdiction");
         classUnderTest.updateUserProfileOnCreate(userProfile);
@@ -174,11 +360,25 @@ public class UserProfileRepositoryTest {
 
     @Test
     public void deleteJurisdictionWhenUserProfileDoesNotExist() {
+=======
+        exceptionRule.expectMessage("User with ID " +
+                                        userProfile.getId() +
+                                        " is already a member of the " +
+                                        userProfile.getWorkBasketDefaultJurisdiction() +
+                                        " jurisdiction");
+        classUnderTest.updateUserProfileOnCreate(userProfile, ACTIONED_BY_EMAIL);
+        assertEquals(0, countUserProfitAudits());
+    }
+
+    @Test
+    public void deleteJurisdictionWhenUserProfileDoesNotExist () {
+>>>>>>> 480165d... RDM-2425 Audit logs
         final UserProfile userProfile = createUserProfile("user2@hmcts.net", "TEST");
         final Jurisdiction jurisdiction = new Jurisdiction();
         jurisdiction.setId(userProfile.getWorkBasketDefaultJurisdiction());
         exceptionRule.expect(BadRequestException.class);
         exceptionRule.expectMessage("User does not exist with ID " + userProfile.getId());
+<<<<<<< HEAD
         classUnderTest.deleteJurisdictionFromUserProfile(userProfile, jurisdiction);
     }
 
@@ -198,10 +398,41 @@ public class UserProfileRepositoryTest {
         jurisdiction.setId("TEST2");
         final UserProfile retrievedUserProfile =
             classUnderTest.deleteJurisdictionFromUserProfile(userProfile, jurisdiction);
+=======
+        classUnderTest.deleteJurisdictionFromUserProfile(userProfile, jurisdiction, ACTIONED_BY_EMAIL);
+        assertEquals(0, countUserProfitAudits());
+    }
+
+    @Test
+    public void deleteJurisdictionWhenUserBelongsToMultiple () {
+        final Jurisdiction jurisdiction = new Jurisdiction();
+        jurisdiction.setId("TEST5");
+        final UserProfile
+            retrievedUserProfile =
+            classUnderTest.deleteJurisdictionFromUserProfile(userProfileWithMultipleJurisdictions,
+                                                             jurisdiction,
+                                                             ACTIONED_BY_EMAIL);
+        assertEquals(1, retrievedUserProfile.getJurisdictions().size());
+        assertEquals("TEST6", retrievedUserProfile.getJurisdictions().get(0).getId());
+        final List<UserProfileAuditEntity> audits = findUserProfitAudits(userProfileWithMultipleJurisdictions.getId());
+        assertThat(audits.size(), is(2));
+        assertAuditEntry(audits.get(0), READ, ACTIONED_BY_EMAIL, "TEST", "TEST", DEFAULT_CASE_TYPE, DEFAULT_STATE);
+        assertAuditEntry(audits.get(1), DELETE, ACTIONED_BY_EMAIL, "TEST", "TEST", DEFAULT_CASE_TYPE, DEFAULT_STATE);
+    }
+
+    @Test
+    public void deleteJurisdictionWhenUserBelongsToSingle () {
+        final Jurisdiction jurisdiction = new Jurisdiction();
+        jurisdiction.setId("TEST2");
+        final UserProfile
+            retrievedUserProfile =
+            classUnderTest.deleteJurisdictionFromUserProfile(userProfile, jurisdiction, ACTIONED_BY_EMAIL);
+>>>>>>> 480165d... RDM-2425 Audit logs
         // The list of Jurisdictions will be null, rather than an empty list, because the entity is mapped back to a
         // model object and the mapper ignores the now empty JurisdictionEntity list
         assertNull(retrievedUserProfile.getJurisdictions());
         assertNull(retrievedUserProfile.getWorkBasketDefaultJurisdiction());
+<<<<<<< HEAD
     }
 
     private UserProfile createUserProfile(final String id, final String defaultJurisdiction, final String... jids) {
@@ -212,6 +443,32 @@ public class UserProfileRepositoryTest {
         // NullPointerException when the User Profile is saved
         if (jids.length == 0) {
             userProfile.setJurisdictions(Collections.emptyList());
+=======
+        final List<UserProfileAuditEntity> audits = findUserProfitAudits(userProfile.getId());
+        assertThat(audits.size(), is(2));
+        assertAuditEntry(audits.get(0), READ, ACTIONED_BY_EMAIL, "TEST", "TEST", DEFAULT_CASE_TYPE, DEFAULT_STATE);
+        assertAuditEntry(audits.get(1), DELETE, ACTIONED_BY_EMAIL, "TEST", "TEST", DEFAULT_CASE_TYPE, DEFAULT_STATE);
+    }
+
+    private UserProfile createUserProfile(final String id, final String defaultJurisdiction, final String... jids) {
+        return createFullUserProfile(id, defaultJurisdiction, DEFAULT_CASE_TYPE, DEFAULT_STATE, jids);
+    }
+
+    private UserProfile createFullUserProfile(final String id,
+                                              final String defaultJurisdiction,
+                                              final String workBasketDefaultCaseType,
+                                              final String workBasketDefaultState,
+                                              final String... jids) {
+        final UserProfile userProfile = new UserProfile();
+        userProfile.setId(id);
+        userProfile.setWorkBasketDefaultJurisdiction(defaultJurisdiction);
+        userProfile.setWorkBasketDefaultCaseType(workBasketDefaultCaseType);
+        userProfile.setWorkBasketDefaultState(workBasketDefaultState);
+        // If no Jurisdiction IDs are provided, set the User Profile's Jurisdictions to an empty list, to avoid a
+        // NullPointerException when the User Profile is saved
+        if (jids.length == 0) {
+            userProfile.setJurisdictions(emptyList());
+>>>>>>> 480165d... RDM-2425 Audit logs
         } else {
             for (String jid : jids) {
                 final Jurisdiction jurisdiction = new Jurisdiction();
@@ -239,4 +496,54 @@ public class UserProfileRepositoryTest {
         entityManager.flush();
         entityManager.clear();
     }
+<<<<<<< HEAD
+=======
+
+    private UserProfile shallowCopyUserProfile(final UserProfile orig, final String email) {
+        final UserProfile newProfile = new UserProfile();
+        newProfile.setId(email);
+        newProfile.setWorkBasketDefaultJurisdiction(orig.getWorkBasketDefaultJurisdiction());
+        newProfile.setWorkBasketDefaultCaseType(orig.getWorkBasketDefaultCaseType());
+        newProfile.setWorkBasketDefaultState(orig.getWorkBasketDefaultState());
+        newProfile.setJurisdictions(emptyList());
+        return newProfile;
+    }
+
+    private List<UserProfileAuditEntity> findUserProfitAudits(final String email) {
+        return entityManager.createQuery(
+            "select a from UserProfileAuditEntity a where userProfileId = :userProfileId order by a.timestamp ASC",
+            UserProfileAuditEntity.class).setParameter("userProfileId", email).getResultList();
+    }
+
+    private long countUserProfitAudits() {
+        return entityManager.createQuery(
+            "select count(a) from UserProfileAuditEntity a", Long.class).getSingleResult();
+    }
+
+    private void assertAuditEntry(final String email,
+                                  final AuditAction action,
+                                  final String actionedBy,
+                                  final String jurisdictionId,
+                                  final String defaultJurisdiction,
+                                  final String defaultCaseType,
+                                  final String defaultState) {
+        final UserProfileAuditEntity audit = findUserProfitAudits(email).get(0);
+        assertAuditEntry(audit, action, actionedBy, jurisdictionId, defaultJurisdiction, defaultCaseType, defaultState);
+    }
+
+    private void assertAuditEntry(final UserProfileAuditEntity auditObject,
+                                  final AuditAction action,
+                                  final String actionedBy,
+                                  final String jurisdictionId,
+                                  final String defaultJurisdiction,
+                                  final String defaultCaseType,
+                                  final String defaultState) {
+        assertThat(auditObject.getAction(), is(action));
+        assertThat(auditObject.getActionedBy(), is(actionedBy));
+        assertThat(auditObject.getJurisdictionId(), is(jurisdictionId));
+        assertThat(auditObject.getWorkBasketDefaultJurisdiction(), is(defaultJurisdiction));
+        assertThat(auditObject.getWorkBasketDefaultCaseType(), is(defaultCaseType));
+        assertThat(auditObject.getWorkBasketDefaultState(), is(defaultState));
+    }
+>>>>>>> 480165d... RDM-2425 Audit logs
 }

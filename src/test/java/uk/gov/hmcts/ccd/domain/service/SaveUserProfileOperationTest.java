@@ -59,7 +59,11 @@ class SaveUserProfileOperationTest {
             when(jurisdictionRepository.findEntityById(userProfile.getWorkBasketDefaultJurisdiction()))
                 .thenReturn(null);
 
+<<<<<<< HEAD
             classUnderTest.saveUserProfile(userProfile);
+=======
+            classUnderTest.saveUserProfile(userProfile, "TODO");
+>>>>>>> 480165d... RDM-2425 Audit logs
             verify(jurisdictionRepository).create(jurisdictionEntityArgCaptor.capture());
             assertEquals("TEST", jurisdictionEntityArgCaptor.getValue().getId());
         }
@@ -73,10 +77,17 @@ class SaveUserProfileOperationTest {
             jurisdiction.setId(userProfile.getWorkBasketDefaultJurisdiction());
             when(jurisdictionRepository.findEntityById(userProfile.getWorkBasketDefaultJurisdiction()))
                 .thenReturn(jurisdiction);
+<<<<<<< HEAD
             when(userProfileRepository.findById(userProfile.getId())).thenReturn(null);
 
             classUnderTest.saveUserProfile(userProfile);
             verify(createUserProfileOperation).execute(userProfileArgCaptor.capture());
+=======
+            when(userProfileRepository.findById(userProfile.getId(), "actionedBy")).thenReturn(null);
+
+            classUnderTest.saveUserProfile(userProfile, "TODO");
+            verify(createUserProfileOperation).execute(userProfileArgCaptor.capture(), "TODO");
+>>>>>>> 480165d... RDM-2425 Audit logs
             assertEquals("user@hmcts", userProfileArgCaptor.getValue().getId());
             assertEquals("TEST", userProfileArgCaptor.getValue().getWorkBasketDefaultJurisdiction());
             assertEquals(1, userProfileArgCaptor.getValue().getJurisdictions().size());
@@ -92,10 +103,17 @@ class SaveUserProfileOperationTest {
             jurisdictionEntity.setId(userProfile.getWorkBasketDefaultJurisdiction());
             when(jurisdictionRepository.findEntityById(userProfile.getWorkBasketDefaultJurisdiction()))
                 .thenReturn(jurisdictionEntity);
+<<<<<<< HEAD
             when(userProfileRepository.findById(userProfile.getId())).thenReturn(userProfile);
 
             classUnderTest.saveUserProfile(userProfile);
             verify(userProfileRepository).updateUserProfileOnCreate(userProfileArgCaptor.capture());
+=======
+            when(userProfileRepository.findById(userProfile.getId(), "actionedBy")).thenReturn(userProfile);
+
+            classUnderTest.saveUserProfile(userProfile, "TODO");
+            verify(userProfileRepository).updateUserProfileOnCreate(userProfileArgCaptor.capture(), "actionedBy");
+>>>>>>> 480165d... RDM-2425 Audit logs
             assertEquals("user@hmcts", userProfileArgCaptor.getValue().getId());
             assertEquals("TEST", userProfileArgCaptor.getValue().getWorkBasketDefaultJurisdiction());
         }
@@ -109,14 +127,24 @@ class SaveUserProfileOperationTest {
             jurisdictionEntity.setId(userProfile.getWorkBasketDefaultJurisdiction());
             when(jurisdictionRepository.findEntityById(userProfile.getWorkBasketDefaultJurisdiction()))
                 .thenReturn(jurisdictionEntity);
+<<<<<<< HEAD
             when(userProfileRepository.findById(userProfile.getId())).thenReturn(userProfile);
 
             when(userProfileRepository.updateUserProfileOnCreate(userProfile))
+=======
+            when(userProfileRepository.findById(userProfile.getId(), "actionedBy")).thenReturn(userProfile);
+
+            when(userProfileRepository.updateUserProfileOnCreate(userProfile, "actionedBy"))
+>>>>>>> 480165d... RDM-2425 Audit logs
                 .thenThrow(new BadRequestException("User with ID " + userProfile.getId() + " is already a member of "
                     + "the " + userProfile.getWorkBasketDefaultJurisdiction() + " jurisdiction"));
 
             BadRequestException exception =
+<<<<<<< HEAD
                 assertThrows(BadRequestException.class, () -> classUnderTest.saveUserProfile(userProfile));
+=======
+                assertThrows(BadRequestException.class, () -> classUnderTest.saveUserProfile(userProfile, "TODO"));
+>>>>>>> 480165d... RDM-2425 Audit logs
             assertEquals("User with ID " + userProfile.getId() + " is already a member of the "
                 + userProfile.getWorkBasketDefaultJurisdiction() + " jurisdiction", exception.getMessage());
         }

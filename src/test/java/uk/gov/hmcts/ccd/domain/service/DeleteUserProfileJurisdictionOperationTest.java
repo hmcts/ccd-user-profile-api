@@ -52,10 +52,17 @@ class DeleteUserProfileJurisdictionOperationTest {
         @Test
         @DisplayName("Should throw an exception if the user does not exist")
         void shouldThrowExceptionIfUserDoesNotExist() {
+<<<<<<< HEAD
             when(userProfileRepository.findById(USER_ID)).thenReturn(null);
 
             BadRequestException exception = assertThrows(BadRequestException.class,
                 () -> classUnderTest.deleteAssociation(USER_ID, JURISDICTION_ID));
+=======
+            when(userProfileRepository.findById(USER_ID, "actionedBy")).thenReturn(null);
+
+            BadRequestException exception = assertThrows(BadRequestException.class,
+                () -> classUnderTest.deleteAssociation(USER_ID, JURISDICTION_ID, "TODO"));
+>>>>>>> 480165d... RDM-2425 Audit logs
             assertEquals("User does not exist with ID " + USER_ID, exception.getMessage());
         }
 
@@ -63,10 +70,17 @@ class DeleteUserProfileJurisdictionOperationTest {
         @DisplayName("Should throw an exception if the user is not a member of the specified Jurisdiction")
         void shouldThrowExceptionIfUserIsNotMemberOfJurisdiction() {
             final UserProfile userProfile = createUserProfile(USER_ID, JURISDICTION_ID);
+<<<<<<< HEAD
             when(userProfileRepository.findById(USER_ID)).thenReturn(userProfile);
 
             BadRequestException exception = assertThrows(BadRequestException.class,
                 () -> classUnderTest.deleteAssociation(USER_ID, "TEST2"));
+=======
+            when(userProfileRepository.findById(USER_ID, "actionedBy")).thenReturn(userProfile);
+
+            BadRequestException exception = assertThrows(BadRequestException.class,
+                () -> classUnderTest.deleteAssociation(USER_ID, "TEST2", "TODO"));
+>>>>>>> 480165d... RDM-2425 Audit logs
             assertEquals("User with ID " + USER_ID + " is not a member of the TEST2 jurisdiction",
                 exception.getMessage());
         }
@@ -77,10 +91,17 @@ class DeleteUserProfileJurisdictionOperationTest {
         void shouldThrowExceptionIfJurisdictionMatchesWorkbasketDefault() {
             final UserProfile userProfile = createUserProfile(USER_ID, JURISDICTION_ID, "TEST2");
             userProfile.setWorkBasketDefaultJurisdiction(JURISDICTION_ID);
+<<<<<<< HEAD
             when(userProfileRepository.findById(USER_ID)).thenReturn(userProfile);
 
             BadRequestException exception = assertThrows(BadRequestException.class,
                 () -> classUnderTest.deleteAssociation(USER_ID, JURISDICTION_ID));
+=======
+            when(userProfileRepository.findById(USER_ID, "actionedBy")).thenReturn(userProfile);
+
+            BadRequestException exception = assertThrows(BadRequestException.class,
+                () -> classUnderTest.deleteAssociation(USER_ID, JURISDICTION_ID, "TODO"));
+>>>>>>> 480165d... RDM-2425 Audit logs
             assertEquals(WORKBASKET_DEFAULTS_ERROR, exception.getMessage());
         }
 
@@ -90,16 +111,30 @@ class DeleteUserProfileJurisdictionOperationTest {
         void shouldRemoveAssociationToJurisdiction() {
             final UserProfile userProfile = createUserProfile(USER_ID, JURISDICTION_ID, "TEST2");
             userProfile.setWorkBasketDefaultJurisdiction(JURISDICTION_ID);
+<<<<<<< HEAD
             when(userProfileRepository.findById(USER_ID)).thenReturn(userProfile);
+=======
+            when(userProfileRepository.findById(USER_ID, "actionedBy")).thenReturn(userProfile);
+>>>>>>> 480165d... RDM-2425 Audit logs
 
             final UserProfile expectedUserProfile = createUserProfile(USER_ID, JURISDICTION_ID);
             expectedUserProfile.setWorkBasketDefaultJurisdiction(JURISDICTION_ID);
             when(userProfileRepository.deleteJurisdictionFromUserProfile(userProfile,
+<<<<<<< HEAD
                 userProfile.getJurisdictions().get(1))).thenReturn(expectedUserProfile);
 
             final UserProfile updatedUserProfile = classUnderTest.deleteAssociation(USER_ID, "TEST2");
             verify(userProfileRepository)
                 .deleteJurisdictionFromUserProfile(userProfileArgCaptor.capture(), jurisdictionArgCaptor.capture());
+=======
+                                                                         userProfile.getJurisdictions().get(1),
+                                                                         "actionedBy")).thenReturn(expectedUserProfile);
+
+            final UserProfile updatedUserProfile = classUnderTest.deleteAssociation(USER_ID, "TEST2", "TODO");
+            verify(userProfileRepository)
+                .deleteJurisdictionFromUserProfile(userProfileArgCaptor.capture(), jurisdictionArgCaptor.capture(),
+                                                   "actionedBy");
+>>>>>>> 480165d... RDM-2425 Audit logs
             assertEquals(USER_ID, userProfileArgCaptor.getValue().getId());
             assertEquals("TEST2", jurisdictionArgCaptor.getValue().getId());
             assertEquals(1, updatedUserProfile.getJurisdictions().size());
@@ -113,16 +148,31 @@ class DeleteUserProfileJurisdictionOperationTest {
             userProfile.setWorkBasketDefaultJurisdiction(JURISDICTION_ID);
             userProfile.setWorkBasketDefaultCaseType("TestCaseType");
             userProfile.setWorkBasketDefaultState("State1");
+<<<<<<< HEAD
             when(userProfileRepository.findById(USER_ID)).thenReturn(userProfile);
+=======
+            when(userProfileRepository.findById(USER_ID, "actionedBy")).thenReturn(userProfile);
+>>>>>>> 480165d... RDM-2425 Audit logs
 
             final UserProfile expectedUserProfile = createUserProfile(USER_ID);
             expectedUserProfile.setJurisdictions(Collections.emptyList());
             when(userProfileRepository.deleteJurisdictionFromUserProfile(userProfile,
+<<<<<<< HEAD
                 userProfile.getJurisdictions().get(0))).thenReturn(expectedUserProfile);
 
             final UserProfile updatedUserProfile = classUnderTest.deleteAssociation(USER_ID, JURISDICTION_ID);
             verify(userProfileRepository)
                 .deleteJurisdictionFromUserProfile(userProfileArgCaptor.capture(), jurisdictionArgCaptor.capture());
+=======
+                                                                         userProfile.getJurisdictions().get(0),
+                                                                         "actionedBy")).thenReturn(expectedUserProfile);
+
+            final UserProfile updatedUserProfile = classUnderTest.deleteAssociation(USER_ID, JURISDICTION_ID, "TODO");
+            verify(userProfileRepository)
+                .deleteJurisdictionFromUserProfile(userProfileArgCaptor.capture(),
+                                                   jurisdictionArgCaptor.capture(),
+                                                   "actionedBy");
+>>>>>>> 480165d... RDM-2425 Audit logs
             assertEquals(USER_ID, userProfileArgCaptor.getValue().getId());
             assertEquals(JURISDICTION_ID, jurisdictionArgCaptor.getValue().getId());
             assertEquals(0, updatedUserProfile.getJurisdictions().size());
@@ -136,10 +186,17 @@ class DeleteUserProfileJurisdictionOperationTest {
         void shouldThrowExceptionIfUserIsNotMemberOfAnyJurisdictions() {
             final UserProfile userProfile = new UserProfile();
             userProfile.setId(USER_ID);
+<<<<<<< HEAD
             when(userProfileRepository.findById(USER_ID)).thenReturn(userProfile);
 
             BadRequestException exception = assertThrows(BadRequestException.class,
                 () -> classUnderTest.deleteAssociation(USER_ID, JURISDICTION_ID));
+=======
+            when(userProfileRepository.findById(USER_ID, "actionedBy")).thenReturn(userProfile);
+
+            BadRequestException exception = assertThrows(BadRequestException.class,
+                () -> classUnderTest.deleteAssociation(USER_ID, JURISDICTION_ID, "TODO"));
+>>>>>>> 480165d... RDM-2425 Audit logs
             assertEquals("User with ID " + USER_ID + " is not a member of any Jurisdictions",
                 exception.getMessage());
         }

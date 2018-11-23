@@ -7,6 +7,10 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
+<<<<<<< HEAD
+=======
+import org.springframework.web.bind.annotation.RequestHeader;
+>>>>>>> 480165d... RDM-2425 Audit logs
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,7 +60,13 @@ class UserProfileController {
     })
     public List<UserProfile> getUserProfiles(@ApiParam(value = "Jurisdiction ID")
                                              @RequestParam("jurisdiction")
+<<<<<<< HEAD
                                              final Optional<String> jurisdictionOptional) {
+=======
+                                             final Optional<String> jurisdictionOptional,
+                                             @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
+                                             final String actionedBy) {
+>>>>>>> 480165d... RDM-2425 Audit logs
         Instant start = Instant.now();
         List<UserProfile> userProfiles = jurisdictionOptional.map(findAllUserProfilesOperation::getAll)
             .orElse(findAllUserProfilesOperation.getAll());
@@ -73,8 +83,15 @@ class UserProfileController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Updated User Profile defaults")
     })
+<<<<<<< HEAD
     public void populateUserProfiles(@RequestBody final List<UserProfile> userProfiles) {
         userProfileOperation.execute(userProfiles);
+=======
+    public void populateUserProfiles(@RequestBody final List<UserProfile> userProfiles,
+                                     @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
+                                     final String actionedBy) {
+        userProfileOperation.execute(userProfiles, actionedBy);
+>>>>>>> 480165d... RDM-2425 Audit logs
     }
 
     @Transactional
@@ -88,8 +105,15 @@ class UserProfileController {
         @ApiResponse(code = 200, message = "Saved User Profile"),
         @ApiResponse(code = 400, message = "User Profile does not exist, or user already belongs to given Jurisdiction")
     })
+<<<<<<< HEAD
     public UserProfile saveUserProfile(@RequestBody final UserProfile userProfile) {
         return saveUserProfileOperation.saveUserProfile(userProfile);
+=======
+    public UserProfile saveUserProfile(@RequestBody final UserProfile userProfile,
+                                       @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
+                                       final String actionedBy) {
+        return saveUserProfileOperation.saveUserProfile(userProfile, actionedBy);
+>>>>>>> 480165d... RDM-2425 Audit logs
     }
 
     @Transactional
@@ -111,7 +135,14 @@ class UserProfileController {
                                                   final String uid,
                                                   @ApiParam(value = "Jurisdiction ID")
                                                   @RequestParam("jid")
+<<<<<<< HEAD
                                                   final String jid) {
         deleteUserProfileJurisdictionOperation.deleteAssociation(uid, jid);
+=======
+                                                  final String jid,
+                                                  @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
+                                                      final String actionedBy) {
+        deleteUserProfileJurisdictionOperation.deleteAssociation(uid, jid, actionedBy);
+>>>>>>> 480165d... RDM-2425 Audit logs
     }
 }

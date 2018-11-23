@@ -12,9 +12,14 @@ import uk.gov.hmcts.ccd.data.userprofile.UserProfileRepository;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 
+<<<<<<< HEAD
 import java.util.List;
 
 import javax.inject.Inject;
+=======
+import javax.inject.Inject;
+import java.util.List;
+>>>>>>> 480165d... RDM-2425 Audit logs
 
 @Service
 public class UserProfileOperation {
@@ -33,7 +38,11 @@ public class UserProfileOperation {
         this.createUserProfileOperation = createUserProfileOperation;
     }
 
+<<<<<<< HEAD
     public void execute(final List<UserProfile> userProfiles) {
+=======
+    public void execute(final List<UserProfile> userProfiles, final String actionedBy) {
+>>>>>>> 480165d... RDM-2425 Audit logs
         for (UserProfile userProfile : userProfiles) {
 
             // ensure that jurisdiction entity exists
@@ -50,18 +59,30 @@ public class UserProfileOperation {
             userProfile.setId(userProfile.getId().toLowerCase());
 
             // finds user profile entity
+<<<<<<< HEAD
             final UserProfile userProfileFound = userProfileRepository.findById(userProfile.getId());
 
             if (null == userProfileFound) {
                 LOG.info("User profile for {} not found. Creating one...", userProfile.getId());
                 createUserProfileOperation.execute(populateProfileJurisdiction(userProfile));
+=======
+            final UserProfile userProfileFound = userProfileRepository.findById(userProfile.getId(), actionedBy);
+
+            if (null == userProfileFound) {
+                LOG.info("User profile for {} not found. Creating one...", userProfile.getId());
+                createUserProfileOperation.execute(populateProfileJurisdiction(userProfile), actionedBy);
+>>>>>>> 480165d... RDM-2425 Audit logs
             } else {
                 if (isUpdateRequired(userProfileFound, userProfile)) {
                     LOG.info("User profile for {} found. Updating...", userProfile.getId());
                     userProfileFound.setWorkBasketDefaultCaseType(userProfile.getWorkBasketDefaultCaseType());
                     userProfileFound.setWorkBasketDefaultJurisdiction(userProfile.getWorkBasketDefaultJurisdiction());
                     userProfileFound.setWorkBasketDefaultState(userProfile.getWorkBasketDefaultState());
+<<<<<<< HEAD
                     userProfileRepository.updateUserProfile(userProfileFound);
+=======
+                    userProfileRepository.updateUserProfile(userProfileFound, actionedBy);
+>>>>>>> 480165d... RDM-2425 Audit logs
                 }
             }
         }

@@ -21,10 +21,16 @@ public class FindUserProfileOperation {
         this.userProfileRepository = userProfileRepository;
     }
 
+<<<<<<< HEAD
     public UserProfile execute(String userProfileId) {
         LOG.info("Finding user with id {}", userProfileId);
         final UserProfile userProfile = userProfileRepository.findById(userProfileId);
         return Optional.ofNullable(userProfile)
+=======
+    public UserProfile execute(String userProfileId, String actionedBy) {
+        LOG.info("Finding user with id {}", userProfileId);
+        return Optional.ofNullable(userProfileRepository.findById(userProfileId, actionedBy))
+>>>>>>> 480165d... RDM-2425 Audit logs
             .orElseThrow(() -> new BadRequestException("No user exists with the Id '" + userProfileId + "'"));
     }
 }

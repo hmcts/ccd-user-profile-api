@@ -25,8 +25,13 @@ public class DeleteUserProfileJurisdictionOperation {
         this.userProfileRepository = userProfileRepository;
     }
 
+<<<<<<< HEAD
     public UserProfile deleteAssociation(final String userId, final String jurisdictionId) throws BadRequestException {
         final UserProfile userProfile = Optional.ofNullable(userProfileRepository.findById(userId))
+=======
+    public UserProfile deleteAssociation(final String userId, final String jurisdictionId, final String actionedBy) {
+        final UserProfile userProfile = Optional.ofNullable(userProfileRepository.findById(userId, actionedBy))
+>>>>>>> 480165d... RDM-2425 Audit logs
             .orElseThrow(() -> new BadRequestException("User does not exist with ID " + userId));
 
         // Throw an exception if the user is not a member of any Jurisdictions
@@ -51,6 +56,10 @@ public class DeleteUserProfileJurisdictionOperation {
 
 
         LOG.info("Deleting association to {} jurisdiction for User Profile {}...", jurisdictionId, userId);
+<<<<<<< HEAD
         return userProfileRepository.deleteJurisdictionFromUserProfile(userProfile, jurisdiction);
+=======
+        return userProfileRepository.deleteJurisdictionFromUserProfile(userProfile, jurisdiction, actionedBy);
+>>>>>>> 480165d... RDM-2425 Audit logs
     }
 }
