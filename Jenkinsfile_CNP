@@ -1,0 +1,42 @@
+#!groovy
+properties(
+        [[$class: 'GithubProjectProperty', projectUrlStr: 'https://git.reform.hmcts.net/case-management/user-profile-app'],
+         pipelineTriggers([[$class: 'GitHubPushTrigger']])]
+)
+
+@Library("Infrastructure")
+
+def type = "java"
+
+def product = "ccd"
+
+def component = "user-profile-api"
+
+List<LinkedHashMap<String, Object>> secrets = [
+    secret('ccd-data-store-api-s2s-secret', 'CCD_DS_SERVICE_SECRET')
+]
+
+static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
+    [ $class: 'AzureKeyVaultSecret',
+      secretType: 'Secret',
+      name: secretName,
+      version: '',
+      envVariable: envVar
+    ]
+}
+
+withPipeline(type, product, component) {
+    onMaster {
+        enableSlackNotifications('#ccd-master-builds')
+    }
+    onDemo {
+        enableSlackNotifications('#ccd-demo-builds')
+    }
+    onPR {
+        enableSlackNotifications('#ccd-pr-builds')
+    }
+
+    enableDbMigration()
+    enableDockerBuild()
+    loadVaultSecrets(secrets)
+}

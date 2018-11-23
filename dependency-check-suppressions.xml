@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
+
+    <suppress>
+        <notes>From transitive dependency scala-compiler-2.11.8.jar;  we do not use scala in the project</notes>
+        <cve>CVE-2016-5725</cve>
+    </suppress>
+    <suppress>
+        <notes>
+            ldap and groovy related and they are not used in production
+        </notes>
+        <cve>CVE-2016-6497</cve>
+    </suppress>
+    <suppress>
+        <notes>From transitive dependency scala-compiler-2.11.8.jar;  we do not use scala in the project</notes>
+        <cve>CVE-2017-15288</cve>
+    </suppress>
+    <suppress>
+        <notes>postgresql-42.2.2.jar (org.postgresql:postgresql:42.2.2, cpe:/a:postgresql:postgresql:42.2.2, cpe:/a:postgresql:postgresql_jdbc_driver:42.2.2) : CVE-2018-1115</notes>
+        <cve>CVE-2018-1115</cve>
+    </suppress>
+    <suppress>
+        <notes>CVE-2016-7048: only for Postgres lt 9.6 and we use 9.6 on Azure.  Also only impacts the installer.</notes>
+        <cve>CVE-2016-7048</cve>
+    </suppress>
+    <suppress>
+        <notes>h2database is not used in production</notes>
+        <cve>CVE-2018-10054</cve>
+    </suppress>
+    <suppress>
+        <notes>h2database is pulled in by liquibase, it is not used in development or production</notes>
+        <cve>CVE-2018-14335</cve>
+    </suppress>
+    <suppress>
+        <notes>We do not use: Spring Framework 5.0.5.RELEASE + Spring Security (any version), see https://pivotal.io/security/cve-2018-1258</notes>
+        <cve>CVE-2018-1258</cve>
+    </suppress>
+    <suppress>
+        <notes>CVE-2018-13661: case-app_2.11-1.2.0.jar is brought in via codacy for test coverage reporting, thus unimpacted in production</notes>
+        <gav regex="true">^com\.github\.alexarchambault:case-app_2\.11:.*$</gav>
+        <cpe>cpe:/a:app_project:app</cpe>
+    </suppress>
+    <suppress>
+        <notes>CVE-2018-13661: case-app-annotations_2.11-1.2.0.jar is brought in via codacy for test coverage reporting, thus unimpacted in production</notes>
+        <gav regex="true">^com\.github\.alexarchambault:case-app-annotations_2\.11:.*$</gav>
+        <cpe>cpe:/a:app_project:app</cpe>
+    </suppress>
+    <suppress>
+        <notes>CVE-2018-13661: case-app-util_2.11-1.2.0.jar is brought in via codacy for test coverage reporting, thus unimpacted in production</notes>
+        <gav regex="true">^com\.github\.alexarchambault:case-app-util_2\.11:.*$</gav>
+        <cpe>cpe:/a:app_project:app</cpe>
+    </suppress>
+    <suppress>
+        <notes>Temporary suppression while we investigate. See RDM-3324</notes>
+        <cve>CVE-2018-1000632</cve>
+    </suppress>
+    <suppress>
+        <notes>Temporary suppression to ignore CVE with com.google.guava. See RDM-3372</notes>
+        <cve>CVE-2018-10237</cve>
+    </suppress>
+</suppressions>

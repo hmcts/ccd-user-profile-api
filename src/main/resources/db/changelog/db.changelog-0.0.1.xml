@@ -1,0 +1,37 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1" author="Jonathan Mitchell">
+
+        <createTable tableName="user_profile">
+            <column name="id"  type="varchar(64)" >
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="user_profile_jurisdiction">
+            <column name="user_profile_id"  type="varchar(64)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="jurisdiction_id"  type="varchar(64)" >
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="jurisdiction">
+            <column name="id"  type="varchar(64)" >
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint constraintName="fk_user_profile_jurisidction_jurisdiction"
+                                 baseTableName="user_profile_jurisdiction" baseColumnNames="user_profile_id"
+                                 referencedTableName="user_profile" referencedColumnNames="id" />
+        <addForeignKeyConstraint constraintName="fk_user_profile_jurisidction_user_profile"
+                                 baseTableName="user_profile_jurisdiction" baseColumnNames="jurisdiction_id"
+                                 referencedTableName="jurisdiction" referencedColumnNames="id" />
+
+    </changeSet>
+</databaseChangeLog>
+

@@ -1,0 +1,42 @@
+---
+version: '3'
+
+services:
+  ccd-user-profile-api:
+    build:
+      context: .
+    image: hmcts/ccd-user-profile-api
+    environment:
+      - USER_PROFILE_DB_HOST=ccd-user-profile-database
+      - USER_PROFILE_DB_PORT=5432
+      - USER_PROFILE_DB_USERNAME
+      - USER_PROFILE_DB_PASSWORD
+      - IDAM_S2S_URL
+      - REFORM_SERVICE_NAME=ccd-user-profile-api
+      - REFORM_TEAM=ccd
+      - REFORM_ENVIRONMENT=local
+    ports:
+      - 4453:4453
+    depends_on:
+      - ccd-user-profile-database
+    links:
+      - ccd-user-profile-database
+
+  ccd-user-profile-database:
+    build:
+      context: docker/database
+    image: hmcts/ccd-user-profile-database
+    healthcheck:
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    environment:
+      - USER_PROFILE_DB_USERNAME
+      - USER_PROFILE_DB_PASSWORD
+    ports:
+      - 5453:5432
+    volumes:
+      - ccd-user-profile-database-data:/var/lib/postgresql/data
+
+volumes:
+  ccd-user-profile-database-data:
