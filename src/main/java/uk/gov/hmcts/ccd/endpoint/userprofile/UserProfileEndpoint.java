@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,10 +18,10 @@ import uk.gov.hmcts.ccd.domain.service.CreateUserProfileOperation;
 import uk.gov.hmcts.ccd.domain.service.FindUserProfileOperation;
 import uk.gov.hmcts.ccd.domain.service.UserProfileOperation;
 
+import javax.transaction.Transactional;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
-import javax.transaction.Transactional;
 
 @RestController
 @RequestMapping(value = "/user-profile")
@@ -49,8 +50,10 @@ public class UserProfileEndpoint {
             @ApiResponse(code = 201, message = "Created User Profile"),
             @ApiResponse(code = 400, message = "Unable to create User Profile")
     })
-    public UserProfile createUserProfile(@RequestBody final UserProfile userProfile) {
-        return createUserProfileOperation.execute(userProfile);
+    public UserProfile createUserProfile(@RequestBody final UserProfile userProfile,
+                                         @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
+                                         final String actionedBy) {
+        return createUserProfileOperation.execute(userProfile, actionedBy);
     }
 
     @Transactional
@@ -61,8 +64,10 @@ public class UserProfileEndpoint {
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "Updated User Profile defaults")
     })
-    public void populateUserProfiles(@RequestBody final List<UserProfile> userProfiles) {
-        userProfileOperation.execute(userProfiles);
+    public void populateUserProfiles(@RequestBody final List<UserProfile> userProfiles,
+                                     @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
+                                     final String actionedBy) {
+        userProfileOperation.execute(userProfiles, actionedBy);
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
@@ -72,9 +77,11 @@ public class UserProfileEndpoint {
         @ApiResponse(code = 200, message = "Found user profile default settings"),
         @ApiResponse(code = 400, message = "Unable to find User Profile")
     })
-    public UserProfile userProfileGet(@RequestParam("uid") final String uid) {
+    public UserProfile userProfileGet(@RequestParam("uid") final String uid,
+                                      @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
+                                      final String actionedBy) {
         Instant start = Instant.now();
-        UserProfile userProfile = findUserProfileOperation.execute(uid);
+        UserProfile userProfile = findUserProfileOperation.execute(uid, actionedBy);
         final Duration between = Duration.between(start, Instant.now());
         appInsights.trackRequest(between, true);
         return userProfile;

@@ -8,7 +8,6 @@ import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionEntity;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionRepository;
 import uk.gov.hmcts.ccd.data.userprofile.UserProfileRepository;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
-import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
 
 @Service
 public class SaveUserProfileOperation {
@@ -27,7 +26,7 @@ public class SaveUserProfileOperation {
         this.createUserProfileOperation = createUserProfileOperation;
     }
 
-    public UserProfile saveUserProfile(final UserProfile userProfile) throws BadRequestException {
+    public UserProfile saveUserProfile(final UserProfile userProfile, final String actionedBy) {
         final JurisdictionEntity existingJurisdiction = jurisdictionRepository.findEntityById(
             userProfile.getWorkBasketDefaultJurisdiction());
         if (existingJurisdiction == null) {
@@ -40,15 +39,15 @@ public class SaveUserProfileOperation {
         // Ensure the User Profile ID (i.e. email address) is in lowercase
         userProfile.setId(userProfile.getId().toLowerCase());
 
-        final UserProfile foundUserProfile = userProfileRepository.findById(userProfile.getId());
+        final UserProfile foundUserProfile = userProfileRepository.findById(userProfile.getId(), actionedBy);
 
         if (foundUserProfile == null) {
             LOG.info("No User Profile for {} found. Creating new User Profile...", userProfile.getId());
-            return createUserProfileOperation.execute(userProfile);
+            return createUserProfileOperation.execute(userProfile, actionedBy);
         } else {
             // Attempt to update the user profile (UserProfileRepository will throw an exception if the user is being
             // added to a Jurisdiction they already belong to)
-            return userProfileRepository.updateUserProfileOnCreate(userProfile);
+            return userProfileRepository.updateUserProfileOnCreate(userProfile, actionedBy);
         }
     }
 }

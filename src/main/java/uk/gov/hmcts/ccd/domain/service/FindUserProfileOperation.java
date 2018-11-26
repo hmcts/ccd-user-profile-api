@@ -21,10 +21,9 @@ public class FindUserProfileOperation {
         this.userProfileRepository = userProfileRepository;
     }
 
-    public UserProfile execute(String userProfileId) {
+    public UserProfile execute(String userProfileId, String actionedBy) {
         LOG.info("Finding user with id {}", userProfileId);
-        final UserProfile userProfile = userProfileRepository.findById(userProfileId);
-        return Optional.ofNullable(userProfile)
+        return Optional.ofNullable(userProfileRepository.findById(userProfileId, actionedBy))
             .orElseThrow(() -> new BadRequestException("No user exists with the Id '" + userProfileId + "'"));
     }
 }
