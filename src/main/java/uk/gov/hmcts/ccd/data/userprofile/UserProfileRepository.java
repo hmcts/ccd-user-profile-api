@@ -22,12 +22,14 @@ import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.DELETE;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.READ;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.UPDATE;
 
-@Repository public class UserProfileRepository {
+@Repository
+public class UserProfileRepository {
 
     private final JurisdictionRepository jurisdictionRepository;
     private final UserProfileAuditEntityRepository userProfileAuditEntityRepository;
 
-    @PersistenceContext private EntityManager em;
+    @PersistenceContext
+    private EntityManager em;
 
     @Autowired
     public UserProfileRepository(JurisdictionRepository jurisdictionRepository,
