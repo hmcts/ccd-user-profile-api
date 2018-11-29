@@ -6,7 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import uk.gov.hmcts.ccd.repository.*;
+import uk.gov.hmcts.ccd.repository.PostgreSQLEnumType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
