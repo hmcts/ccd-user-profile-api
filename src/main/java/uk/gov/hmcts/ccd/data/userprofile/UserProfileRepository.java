@@ -153,7 +153,7 @@ public class UserProfileRepository {
         final List<UserProfile>
             list =
             query.getResultList().stream().map(UserProfileMapper::entityToModel).collect(Collectors.toList());
-        userProfileAuditEntityRepository.createUserProfileAuditEntity(audit_find_all(),
+        userProfileAuditEntityRepository.createUserProfileAuditEntity(auditFindAll(),
                                                                       READ,
                                                                       actionedBy,
                                                                       jurisdictionId);
@@ -265,7 +265,7 @@ public class UserProfileRepository {
         return em.find(JurisdictionEntity.class, jurisdictionId);
     }
 
-    private UserProfile audit_find_all() {
+    private UserProfile auditFindAll() {
         final UserProfile profile = new UserProfile();
         profile.setId(NOT_APPLICABLE);
         profile.setWorkBasketDefaultState(NOT_APPLICABLE);
