@@ -31,6 +31,7 @@ import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.CREATE;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.DELETE;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.READ;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.UPDATE;
+import static uk.gov.hmcts.ccd.data.userprofile.UserProfileRepository.NOT_APPLICABLE;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -129,15 +130,8 @@ public class UserProfileRepositoryTest {
         assertEquals("TEST2", retrievedUserProfile.getJurisdictions().get(0).getId());
         assertEquals("TEST3", retrievedUserProfile.getJurisdictions().get(1).getId());
         final List<UserProfileAuditEntity> audits = findUserProfitAudits("user@hmcts.net");
-        assertThat(audits.size(), is(2));
+        assertThat(audits.size(), is(1));
         assertAuditEntry(audits.get(0),
-                         READ,
-                         ACTIONED_BY_EMAIL,
-                         "TEST",
-                         "TEST",
-                         DEFAULT_CASE_TYPE,
-                         DEFAULT_STATE);
-        assertAuditEntry(audits.get(1),
                          UPDATE,
                          ACTIONED_BY_EMAIL,
                          "TEST",
@@ -225,10 +219,17 @@ public class UserProfileRepositoryTest {
 
     @Test
     public void findAllUserProfilesByJurisdiction() {
-        final List<UserProfile> userProfiles = classUnderTest.findAll("TEST2");
+        final List<UserProfile> userProfiles = classUnderTest.findAll("TEST2", ACTIONED_BY_EMAIL);
         assertEquals(1, userProfiles.size());
         assertEquals("user@hmcts.net", userProfiles.get(0).getId());
-        assertEquals(0, countUserProfitAudits());
+        assertEquals(1, countUserProfitAudits());
+        assertAuditEntry(NOT_APPLICABLE,
+                         READ,
+                         ACTIONED_BY_EMAIL,
+                         "TEST2",
+                         NOT_APPLICABLE,
+                         NOT_APPLICABLE,
+                         NOT_APPLICABLE);
     }
 
     @Test
@@ -256,9 +257,8 @@ public class UserProfileRepositoryTest {
         assertEquals("TEST3", retrievedUserProfile.getJurisdictions().get(1).getId());
 
         final List<UserProfileAuditEntity> audits = findUserProfitAudits("user@hmcts.net");
-        assertThat(audits.size(), is(2));
-        assertAuditEntry(audits.get(0), READ, ACTIONED_BY_EMAIL, "TEST", "TEST", DEFAULT_CASE_TYPE, DEFAULT_STATE);
-        assertAuditEntry(audits.get(1), UPDATE, ACTIONED_BY_EMAIL, "TEST", "TEST", DEFAULT_CASE_TYPE, DEFAULT_STATE);
+        assertThat(audits.size(), is(1));
+        assertAuditEntry(audits.get(0), UPDATE, ACTIONED_BY_EMAIL, "TEST", "TEST", DEFAULT_CASE_TYPE, DEFAULT_STATE);
     }
 
     @Test
@@ -296,9 +296,8 @@ public class UserProfileRepositoryTest {
         assertEquals(1, retrievedUserProfile.getJurisdictions().size());
         assertEquals("TEST6", retrievedUserProfile.getJurisdictions().get(0).getId());
         final List<UserProfileAuditEntity> audits = findUserProfitAudits(userProfileWithMultipleJurisdictions.getId());
-        assertThat(audits.size(), is(2));
-        assertAuditEntry(audits.get(0), READ, ACTIONED_BY_EMAIL, "TEST", "TEST", DEFAULT_CASE_TYPE, DEFAULT_STATE);
-        assertAuditEntry(audits.get(1), DELETE, ACTIONED_BY_EMAIL, "TEST", "TEST", DEFAULT_CASE_TYPE, DEFAULT_STATE);
+        assertThat(audits.size(), is(1));
+        assertAuditEntry(audits.get(0), DELETE, ACTIONED_BY_EMAIL, "TEST", "TEST", DEFAULT_CASE_TYPE, DEFAULT_STATE);
     }
 
     @Test
@@ -313,9 +312,8 @@ public class UserProfileRepositoryTest {
         assertNull(retrievedUserProfile.getJurisdictions());
         assertNull(retrievedUserProfile.getWorkBasketDefaultJurisdiction());
         final List<UserProfileAuditEntity> audits = findUserProfitAudits(userProfile.getId());
-        assertThat(audits.size(), is(2));
-        assertAuditEntry(audits.get(0), READ, ACTIONED_BY_EMAIL, "TEST", "TEST", DEFAULT_CASE_TYPE, DEFAULT_STATE);
-        assertAuditEntry(audits.get(1), DELETE, ACTIONED_BY_EMAIL, "TEST", "TEST", DEFAULT_CASE_TYPE, DEFAULT_STATE);
+        assertThat(audits.size(), is(1));
+        assertAuditEntry(audits.get(0), DELETE, ACTIONED_BY_EMAIL, "TEST", "TEST", DEFAULT_CASE_TYPE, DEFAULT_STATE);
     }
 
     private UserProfile createUserProfile(final String id, final String defaultJurisdiction, final String... jids) {

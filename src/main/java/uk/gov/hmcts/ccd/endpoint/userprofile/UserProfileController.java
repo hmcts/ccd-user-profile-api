@@ -61,7 +61,8 @@ class UserProfileController {
                                              @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
                                                  final String actionedBy) {
         Instant start = Instant.now();
-        List<UserProfile> userProfiles = jurisdictionOptional.map(findAllUserProfilesOperation::getAll)
+        List<UserProfile> userProfiles = jurisdictionOptional
+            .map(j -> findAllUserProfilesOperation.getAll(j, actionedBy))
             .orElse(findAllUserProfilesOperation.getAll());
         final Duration between = Duration.between(start, Instant.now());
         appInsights.trackRequest(between, true);

@@ -25,6 +25,7 @@ import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.UPDATE;
 @Repository
 public class UserProfileRepository {
 
+    public static final String NOT_APPLICABLE = "N/A";
     private final JurisdictionRepository jurisdictionRepository;
     private final UserProfileAuditEntityRepository userProfileAuditEntityRepository;
 
@@ -46,7 +47,7 @@ public class UserProfileRepository {
      * @return UserProfile
      */
     public UserProfile createUserProfile(UserProfile userProfile, final String actionedBy) {
-        if (null != findEntityById(userProfile.getId(), actionedBy)) {
+        if (null != findEntityById(userProfile.getId(), actionedBy, false)) {
             throw new BadRequestException("User already exists with Id " + userProfile.getId());
         }
 
@@ -78,7 +79,7 @@ public class UserProfileRepository {
      */
     public UserProfile updateUserProfile(final UserProfile userProfile, final String actionedBy) {
 
-        final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy);
+        final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
         if (null == userProfileEntity) {
             throw new BadRequestException("User does not exist with Id " + userProfile.getId());
         }
@@ -121,14 +122,14 @@ public class UserProfileRepository {
      * @return UserProfile
      */
     public UserProfile findById(String id, final String actionedBy) {
-        return UserProfileMapper.entityToModel(findEntityById(id, actionedBy));
+        return UserProfileMapper.entityToModel(findEntityById(id, actionedBy, true));
     }
 
-    private UserProfileEntity findEntityById(String id, final String actionedBy) {
+    private UserProfileEntity findEntityById(String id, final String actionedBy, final Boolean toAudit) {
         final UserProfileEntity userProfileEntity = em.find(UserProfileEntity.class, id);
 
         // check whether we need to audit
-        if (isAuditable(userProfileEntity)) {
+        if (toAudit && isAuditable(userProfileEntity)) {
             final UserProfile audit = UserProfileMapper.entityToModel(userProfileEntity);
             userProfileAuditEntityRepository.createUserProfileAuditEntity(audit,
                                                                           READ,
@@ -144,12 +145,19 @@ public class UserProfileRepository {
                                                 entity.getWorkBasketDefaultState());
     }
 
-    public List<UserProfile> findAll(String jurisdictionId) {
+    public List<UserProfile> findAll(String jurisdictionId, final String actionedBy) {
         TypedQuery<UserProfileEntity>
             query =
             em.createNamedQuery("UserProfileEntity.findAllByJurisdiction", UserProfileEntity.class);
         query.setParameter("jurisdiction", findJurisdictionEntityById(jurisdictionId));
-        return query.getResultList().stream().map(UserProfileMapper::entityToModel).collect(Collectors.toList());
+        final List<UserProfile>
+            list =
+            query.getResultList().stream().map(UserProfileMapper::entityToModel).collect(Collectors.toList());
+        userProfileAuditEntityRepository.createUserProfileAuditEntity(audit_find_all(),
+                                                                      READ,
+                                                                      actionedBy,
+                                                                      jurisdictionId);
+        return list;
     }
 
     public List<UserProfile> findAll() {
@@ -170,7 +178,7 @@ public class UserProfileRepository {
      */
     public UserProfile updateUserProfileOnCreate(final UserProfile userProfile, final String actionedBy) {
 
-        final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy);
+        final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
         if (null == userProfileEntity) {
             throw new BadRequestException("User does not exist with ID " + userProfile.getId());
         }
@@ -230,7 +238,7 @@ public class UserProfileRepository {
     public UserProfile deleteJurisdictionFromUserProfile(final UserProfile userProfile,
                                                          final Jurisdiction jurisdiction,
                                                          final String actionedBy) {
-        final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy);
+        final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
         if (userProfileEntity == null) {
             throw new BadRequestException("User does not exist with ID " + userProfile.getId());
         }
@@ -255,5 +263,14 @@ public class UserProfileRepository {
 
     private JurisdictionEntity findJurisdictionEntityById(String jurisdictionId) {
         return em.find(JurisdictionEntity.class, jurisdictionId);
+    }
+
+    private UserProfile audit_find_all() {
+        final UserProfile profile = new UserProfile();
+        profile.setId(NOT_APPLICABLE);
+        profile.setWorkBasketDefaultState(NOT_APPLICABLE);
+        profile.setWorkBasketDefaultCaseType(NOT_APPLICABLE);
+        profile.setWorkBasketDefaultJurisdiction(NOT_APPLICABLE);
+        return profile;
     }
 }

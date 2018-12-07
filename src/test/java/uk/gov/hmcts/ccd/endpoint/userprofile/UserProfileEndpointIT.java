@@ -482,7 +482,7 @@ public class UserProfileEndpointIT extends BaseTest {
         final int auditRow1 = JdbcTestUtils.countRowsInTableWhere(template,
                                                                   "user_profile_audit",
                                                                   "action = 'READ' and user_profile_id = 'user1'");
-        assertEquals("Unexpected number of audit roles", 2, auditRow1);
+        assertEquals("Unexpected number of audit roles", 1, auditRow1);
 
         final int
             auditRow2 =
@@ -572,7 +572,7 @@ public class UserProfileEndpointIT extends BaseTest {
 
 
         final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
-        assertEquals("Unexpected number of audit roles", 0, auditRows);
+        assertEquals("Unexpected number of audit roles", 1, auditRows);
     }
 
     @Test
@@ -663,7 +663,7 @@ public class UserProfileEndpointIT extends BaseTest {
         final int auditRowRead = JdbcTestUtils.countRowsInTableWhere(template,
                                                                      "user_profile_audit",
                                                                      "action = 'READ' and user_profile_id = 'user1'");
-        assertEquals("Unexpected number of audit roles", 2, auditRowRead);
+        assertEquals("Unexpected number of audit roles", 1, auditRowRead);
 
         final int auditRowUpdate = JdbcTestUtils.countRowsInTableWhere(template,
                                                                      "user_profile_audit",
@@ -754,7 +754,7 @@ public class UserProfileEndpointIT extends BaseTest {
         final int auditRowRead = JdbcTestUtils.countRowsInTableWhere(template,
                                                                      "user_profile_audit",
                                                                      "action = 'READ' and user_profile_id = 'user1'");
-        assertEquals("Unexpected number of audit roles", 2, auditRowRead);
+        assertEquals("Unexpected number of audit roles", 1, auditRowRead);
 
         final int
             auditRowUpdate =
