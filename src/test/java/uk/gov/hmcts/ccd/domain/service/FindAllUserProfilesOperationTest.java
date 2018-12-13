@@ -57,7 +57,6 @@ class FindAllUserProfilesOperationTest {
             assertEquals("TEST", userProfiles.get(1).getWorkBasketDefaultJurisdiction());
             assertEquals("CT2", userProfiles.get(1).getWorkBasketDefaultCaseType());
             assertThat(userProfiles, not(hasItem(userProfile2)));
-            assertAuditEntry("TEST");
         }
 
         @Test
@@ -86,10 +85,6 @@ class FindAllUserProfilesOperationTest {
 
             List<UserProfile> userProfiles = classUnderTest.getAll("TEST3", ACTIONED_BY_EMAIL);
             assertEquals(0, userProfiles.size());
-            assertAuditEntry("TEST3");
-        }
-
-        private void assertAuditEntry(final String jurisdiction) {
         }
 
         private UserProfile createUserProfile(String id, String jurisdiction, String caseType) {
