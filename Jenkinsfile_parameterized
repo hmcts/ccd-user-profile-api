@@ -23,7 +23,13 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     ]
 }
 
+def vaultOverrides = [
+    'preview': 'aat',
+    'spreview': 'saat'
+]
+
 withParameterizedPipeline('java', 'ccd', 'user-profile-api', params.ENVIRONMENT, 'sandbox') {
+    overrideVaultEnvironments(vaultOverrides)
     loadVaultSecrets(secrets)
     enableDbMigration()
     enableSlackNotifications('#ccd-param-builds')
