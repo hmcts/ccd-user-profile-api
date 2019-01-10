@@ -11,8 +11,10 @@ def type = "java"
 def product = "ccd"
 def component = "user-profile-api"
 
-List<LinkedHashMap<String, Object>> secrets = [
-    secret('ccd-data-store-api-s2s-secret', 'CCD_DS_SERVICE_SECRET')
+def secrets = [
+    's2s-${env}': [
+        secret('microservicekey-ccd-data', 'CCD_DS_SERVICE_SECRET')
+    ]
 ]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
@@ -25,7 +27,7 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 }
 
 withNightlyPipeline(type, product, component) {
-    //loadVaultSecrets(secrets)
+    loadVaultSecrets(secrets)
     enableDbMigration()
     enableSlackNotifications('#ccd-nightly-builds')
 }
