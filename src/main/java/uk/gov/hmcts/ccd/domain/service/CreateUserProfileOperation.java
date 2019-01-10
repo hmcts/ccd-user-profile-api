@@ -19,7 +19,7 @@ public class CreateUserProfileOperation {
         this.userProfileRepository = userProfileRepository;
     }
 
-    public UserProfile execute(UserProfile userProfile) {
+    public UserProfile execute(UserProfile userProfile, String actionedBy) {
         if (null == userProfile.getId()) {
             throw new BadRequestException("A User Profile must have an Id");
         }
@@ -34,6 +34,6 @@ public class CreateUserProfileOperation {
             }
         }
         LOG.info("Creating user profile for {}", userProfile.getId());
-        return userProfileRepository.createUserProfile(userProfile);
+        return userProfileRepository.createUserProfile(userProfile, actionedBy);
     }
 }

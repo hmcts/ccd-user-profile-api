@@ -17,10 +17,13 @@ import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class SaveUserProfileOperationTest {
+
+    private static final String ACTIONED_BY = "nush5mfvzc@example.com";
 
     @Mock
     private UserProfileRepository userProfileRepository;
@@ -49,7 +52,7 @@ class SaveUserProfileOperationTest {
     }
 
     @Nested
-    class CreateOrUpdateUserProfileTests {
+    class SaveUserProfileTests {
 
         @Test
         @DisplayName("Should create the Jurisdiction if the user is being added to one that doesn't exist")
@@ -59,7 +62,7 @@ class SaveUserProfileOperationTest {
             when(jurisdictionRepository.findEntityById(userProfile.getWorkBasketDefaultJurisdiction()))
                 .thenReturn(null);
 
-            classUnderTest.saveUserProfile(userProfile);
+            classUnderTest.saveUserProfile(userProfile, ACTIONED_BY);
             verify(jurisdictionRepository).create(jurisdictionEntityArgCaptor.capture());
             assertEquals("TEST", jurisdictionEntityArgCaptor.getValue().getId());
         }
@@ -73,10 +76,10 @@ class SaveUserProfileOperationTest {
             jurisdiction.setId(userProfile.getWorkBasketDefaultJurisdiction());
             when(jurisdictionRepository.findEntityById(userProfile.getWorkBasketDefaultJurisdiction()))
                 .thenReturn(jurisdiction);
-            when(userProfileRepository.findById(userProfile.getId())).thenReturn(null);
+            when(userProfileRepository.findById(userProfile.getId(), ACTIONED_BY)).thenReturn(null);
 
-            classUnderTest.saveUserProfile(userProfile);
-            verify(createUserProfileOperation).execute(userProfileArgCaptor.capture());
+            classUnderTest.saveUserProfile(userProfile, ACTIONED_BY);
+            verify(createUserProfileOperation).execute(userProfileArgCaptor.capture(), eq(ACTIONED_BY));
             assertEquals("user@hmcts", userProfileArgCaptor.getValue().getId());
             assertEquals("TEST", userProfileArgCaptor.getValue().getWorkBasketDefaultJurisdiction());
             assertEquals(1, userProfileArgCaptor.getValue().getJurisdictions().size());
@@ -92,10 +95,10 @@ class SaveUserProfileOperationTest {
             jurisdictionEntity.setId(userProfile.getWorkBasketDefaultJurisdiction());
             when(jurisdictionRepository.findEntityById(userProfile.getWorkBasketDefaultJurisdiction()))
                 .thenReturn(jurisdictionEntity);
-            when(userProfileRepository.findById(userProfile.getId())).thenReturn(userProfile);
+            when(userProfileRepository.findById(userProfile.getId(), ACTIONED_BY)).thenReturn(userProfile);
 
-            classUnderTest.saveUserProfile(userProfile);
-            verify(userProfileRepository).updateUserProfileOnCreate(userProfileArgCaptor.capture());
+            classUnderTest.saveUserProfile(userProfile, ACTIONED_BY);
+            verify(userProfileRepository).updateUserProfileOnCreate(userProfileArgCaptor.capture(), eq(ACTIONED_BY));
             assertEquals("user@hmcts", userProfileArgCaptor.getValue().getId());
             assertEquals("TEST", userProfileArgCaptor.getValue().getWorkBasketDefaultJurisdiction());
         }
@@ -109,14 +112,14 @@ class SaveUserProfileOperationTest {
             jurisdictionEntity.setId(userProfile.getWorkBasketDefaultJurisdiction());
             when(jurisdictionRepository.findEntityById(userProfile.getWorkBasketDefaultJurisdiction()))
                 .thenReturn(jurisdictionEntity);
-            when(userProfileRepository.findById(userProfile.getId())).thenReturn(userProfile);
+            when(userProfileRepository.findById(userProfile.getId(), ACTIONED_BY)).thenReturn(userProfile);
 
-            when(userProfileRepository.updateUserProfileOnCreate(userProfile))
+            when(userProfileRepository.updateUserProfileOnCreate(userProfile, ACTIONED_BY))
                 .thenThrow(new BadRequestException("User with ID " + userProfile.getId() + " is already a member of "
                     + "the " + userProfile.getWorkBasketDefaultJurisdiction() + " jurisdiction"));
 
             BadRequestException exception =
-                assertThrows(BadRequestException.class, () -> classUnderTest.saveUserProfile(userProfile));
+                assertThrows(BadRequestException.class, () -> classUnderTest.saveUserProfile(userProfile, ACTIONED_BY));
             assertEquals("User with ID " + userProfile.getId() + " is already a member of the "
                 + userProfile.getWorkBasketDefaultJurisdiction() + " jurisdiction", exception.getMessage());
         }

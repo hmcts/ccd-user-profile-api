@@ -27,7 +27,6 @@ import java.util.List;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -83,7 +82,8 @@ public class UserProfileEndpointIT extends BaseTest {
     }
 
     @Test
-    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:sql/init_db.sql" })
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+         scripts = {"classpath:sql/init_db.sql", "classpath:sql/create_jurisdiction.sql"})
     public void createUserProfileTest() throws Exception {
         // Given - a valid User Profile linked to 3 Jurisdictions
         UserProfile userProfile = new UserProfile();
@@ -99,6 +99,8 @@ public class UserProfileEndpointIT extends BaseTest {
         userProfile.addJurisdiction(jurisdiction1);
         userProfile.addJurisdiction(jurisdiction2);
         userProfile.addJurisdiction(jurisdiction3);
+
+        populateUserProfileDefaults(userProfile, JURISDICTION_ID_1);
 
         // When - trying to Create the User Profile
         // Then - assert that the User Profile is correctly saved
@@ -128,6 +130,13 @@ public class UserProfileEndpointIT extends BaseTest {
 
         rows = JdbcTestUtils.countRowsInTable(template, "jurisdiction");
         assertEquals("Unexpected number of Jurisdictions", 3, rows);
+
+        final int
+            auditRows =
+            JdbcTestUtils.countRowsInTableWhere(template,
+                                                "user_profile_audit",
+                                                "user_profile_id = '" + USER_ID_1 + "'");
+        assertEquals("Unexpected number of audit roles", 1, auditRows);
     }
 
     @Test
@@ -146,6 +155,8 @@ public class UserProfileEndpointIT extends BaseTest {
 
         userProfile.addJurisdiction(jurisdiction1);
         userProfile.addJurisdiction(jurisdiction2);
+
+        populateUserProfileDefaults(userProfile, JURISDICTION_ID_1);
 
         // When - attempting to create a new UserProfile against the existing
         // Jurisdictions
@@ -168,6 +179,13 @@ public class UserProfileEndpointIT extends BaseTest {
                 "user_profile_jurisdiction",
                 "user_profile_id = '" + USER_ID_3 + "'");
         assertEquals("Unexpected number of User/Jurisdiction joins", 2, rows);
+
+        final int
+            auditRows =
+            JdbcTestUtils.countRowsInTableWhere(template,
+                                                "user_profile_audit",
+                                                "user_profile_id = '" + USER_ID_3 + "'");
+        assertEquals("Unexpected number of audit roles", 1, auditRows);
     }
 
     @Test
@@ -195,6 +213,9 @@ public class UserProfileEndpointIT extends BaseTest {
         assertEquals("Unexpected response message",
                      "User already exists with Id " + USER_ID_1,
                      mvcResult.getResponse().getContentAsString());
+
+        final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
+        assertEquals("Unexpected number of audit roles", 0, auditRows);
     }
 
     @Test
@@ -220,6 +241,9 @@ public class UserProfileEndpointIT extends BaseTest {
         assertEquals("Unexpected response message",
                      "A User Profile must have an Id",
                      mvcResult.getResolvedException().getMessage());
+
+        final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
+        assertEquals("Unexpected number of audit roles", 0, auditRows);
     }
 
     @Test
@@ -241,6 +265,9 @@ public class UserProfileEndpointIT extends BaseTest {
         assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
         assertEquals("Unexpected response message", "A User Profile must have at least one associated Jurisdiction",
                 mvcResult.getResolvedException().getMessage());
+
+        final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
+        assertEquals("Unexpected number of audit roles", 0, auditRows);
     }
 
     @Test
@@ -261,6 +288,9 @@ public class UserProfileEndpointIT extends BaseTest {
         assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
         assertEquals("Unexpected response message", "A User Profile must have at least one associated Jurisdiction",
                 mvcResult.getResponse().getContentAsString());
+
+        final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
+        assertEquals("Unexpected number of audit roles", 0, auditRows);
     }
 
     @Test
@@ -286,6 +316,9 @@ public class UserProfileEndpointIT extends BaseTest {
         assertEquals("Unexpected response message",
                      "A Jurisdiction must have an Id",
                      mvcResult.getResponse().getContentAsString());
+
+        final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
+        assertEquals("Unexpected number of audit roles", 0, auditRows);
     }
 
     @Test
@@ -302,7 +335,7 @@ public class UserProfileEndpointIT extends BaseTest {
         final UserProfile profile = mapper.readValue(mvcResult.getResponse().getContentAsString(), UserProfile.class);
 
         // Then correct user profile information is returned
-        assertEquals("user1", profile.getId());
+        assertEquals(USER_ID_1, profile.getId());
         assertEquals("TEST2", profile.getWorkBasketDefaultJurisdiction());
         assertEquals("state", profile.getWorkBasketDefaultState());
         assertEquals("case", profile.getWorkBasketDefaultCaseType());
@@ -319,6 +352,13 @@ public class UserProfileEndpointIT extends BaseTest {
                    expectedJurisdictions.contains(jurisdictionsFromResponse.get(1).getId()));
         assertTrue("Unexpected Jurisdiction Id",
                    expectedJurisdictions.contains(jurisdictionsFromResponse.get(2).getId()));
+
+        final int
+            auditRows =
+            JdbcTestUtils.countRowsInTableWhere(template,
+                                                "user_profile_audit",
+                                                "user_profile_id = '" + USER_ID_1 + "'");
+        assertEquals("Unexpected number of audit roles", 1, auditRows);
     }
 
     @Test
@@ -339,7 +379,10 @@ public class UserProfileEndpointIT extends BaseTest {
 
         final UserProfile profile = mapper.readValue(mvcResult.getResponse().getContentAsString(), UserProfile.class);
         assertNull(profile.getJurisdictions());
-        assertEquals("user2", profile.getId());
+        assertEquals(USER_ID_2, profile.getId());
+
+        final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
+        assertEquals("Unexpected number of audit roles", 0, auditRows);
     }
 
     @Test
@@ -354,6 +397,9 @@ public class UserProfileEndpointIT extends BaseTest {
         assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
         assertEquals("Unexpected response message", "No user exists with the Id '" + USER_ID_1 + "'",
             mvcResult.getResponse().getContentAsString());
+
+        final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
+        assertEquals("Unexpected number of audit roles", 0, auditRows);
     }
 
     @Test
@@ -431,6 +477,81 @@ public class UserProfileEndpointIT extends BaseTest {
         // And existing user profile jurisdiction link is intact
         assertEquals(1, template.queryForObject(COUNT_USER_PROFILE_JURISDICTION_QUERY, Integer.class,
             "user1", "TEST1").intValue());
+
+
+        final int auditRow1 = JdbcTestUtils.countRowsInTableWhere(template,
+                                                                  "user_profile_audit",
+                                                                  "action = 'READ' and user_profile_id = 'user1'");
+        assertEquals("Unexpected number of audit roles", 1, auditRow1);
+
+        final int
+            auditRow2 =
+            JdbcTestUtils.countRowsInTableWhere(template,
+                                                "user_profile_audit",
+                                                "action = 'READ' and user_profile_id = 'user2@hmcts.net'");
+        assertEquals("Unexpected number of audit roles", 0, auditRow2);
+
+        final int
+            auditRow3 =
+            JdbcTestUtils.countRowsInTableWhere(template,
+                                                "user_profile_audit",
+                                                "action = 'READ' and user_profile_id = 'user3@hmcts.net'");
+        assertEquals("Unexpected number of audit roles", 0, auditRow3);
+
+        final int auditRow4 = JdbcTestUtils.countRowsInTableWhere(template,
+                                                                  "user_profile_audit",
+                                                                  "action = 'READ' and user_profile_id = 'user2'");
+        assertEquals("Unexpected number of audit roles", 0, auditRow4);
+
+        final int
+            auditRowUpdate1 =
+            JdbcTestUtils.countRowsInTableWhere(template,
+                                                "user_profile_audit",
+                                                "action = 'UPDATE' and user_profile_id = 'user1'");
+        assertEquals("Unexpected number of audit roles", 1, auditRowUpdate1);
+
+        final int
+            auditRowUpdate2 =
+            JdbcTestUtils.countRowsInTableWhere(template,
+                                                "user_profile_audit",
+                                                "action = 'UPDATE' and user_profile_id = 'user2@hmcts.net'");
+        assertEquals("Unexpected number of audit roles", 0, auditRowUpdate2);
+
+        final int
+            auditRowUpdate3 =
+            JdbcTestUtils.countRowsInTableWhere(template,
+                                                "user_profile_audit",
+                                                "action = 'UPDATE' and user_profile_id = 'user3@hmcts.net'");
+        assertEquals("Unexpected number of audit roles", 0, auditRowUpdate3);
+
+        final int
+            auditRowUpdate4 =
+            JdbcTestUtils.countRowsInTableWhere(template,
+                                                "user_profile_audit",
+                                                "action = 'UPDATE' and user_profile_id = 'user2'");
+        assertEquals("Unexpected number of audit roles", 0, auditRowUpdate4);
+
+        final int
+            auditRowCreate2 =
+            JdbcTestUtils.countRowsInTableWhere(template,
+                                                "user_profile_audit",
+                                                "action = 'CREATE' and user_profile_id = 'user2@hmcts.net'");
+        assertEquals("Unexpected number of audit roles", 1, auditRowCreate2);
+
+        final int
+            auditRowCreate3 =
+            JdbcTestUtils.countRowsInTableWhere(template,
+                                                "user_profile_audit",
+                                                "action = 'CREATE' and user_profile_id = 'user3@hmcts.net'");
+        assertEquals("Unexpected number of audit roles", 1, auditRowCreate3);
+
+        final int
+            auditRowCreate4 =
+            JdbcTestUtils.countRowsInTableWhere(template,
+                                                "user_profile_audit",
+                                                "action = 'CREATE' and user_profile_id = 'user2'");
+        assertEquals("Unexpected number of audit roles", 0, auditRowCreate4);
+
     }
 
     @Test
@@ -448,6 +569,10 @@ public class UserProfileEndpointIT extends BaseTest {
 
         // Then a list with the two User Profiles is returned
         assertEquals("Unexpected number of User Profiles", 2, userProfiles.size());
+
+
+        final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
+        assertEquals("Unexpected number of audit roles", 1, auditRows);
     }
 
     @Test
@@ -465,16 +590,22 @@ public class UserProfileEndpointIT extends BaseTest {
 
         // Then a list with four User Profiles is returned
         assertEquals("Unexpected number of User Profiles", 4, userProfiles.size());
+
+        final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
+        assertEquals("Unexpected number of audit roles", 0, auditRows);
     }
 
     @Test
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:sql/init_db.sql" })
     public void createUserProfileForNonExistentJurisdiction() throws Exception {
-        // Given the Jurisdiction "TEST1" does not exist
+        // Given the Jurisdiction JURISDICTION_ID_1 does not exist
         // When attempting to create a User Profile for the above Jurisdiction
-        UserProfile userProfile = createUserProfile("user@hmcts.net", null, "TEST1", null);
+        UserProfile userProfile = createUserProfile("user@hmcts.net",
+                                                    "defaultCaseType",
+                                                    JURISDICTION_ID_1,
+                                                    "defaultCaseState");
         Jurisdiction jurisdiction = new Jurisdiction();
-        jurisdiction.setId("TEST1");
+        jurisdiction.setId(JURISDICTION_ID_1);
         userProfile.addJurisdiction(jurisdiction);
         mockMvc.perform(
             put(SAVE_USER_PROFILE)
@@ -484,13 +615,20 @@ public class UserProfileEndpointIT extends BaseTest {
 
         // Then the Jurisdiction "TEST1" is created
         assertEquals(1,
-            template.queryForObject(COUNT_JURISDICTION_QUERY, Integer.class, "TEST1").intValue());
+            template.queryForObject(COUNT_JURISDICTION_QUERY, Integer.class, JURISDICTION_ID_1).intValue());
 
         // And the User Profile is created
         final UserProfileEntity userProfileEntity =
             template.queryForObject(GET_USER_PROFILE_QUERY, this::mapUserProfileData, "user@hmcts.net");
         assertEquals("user@hmcts.net", userProfileEntity.getId());
         assertEquals("TEST1", userProfileEntity.getWorkBasketDefaultJurisdiction());
+
+        final int
+            auditRows =
+            JdbcTestUtils.countRowsInTableWhere(template,
+                                                "user_profile_audit",
+                                                "action = 'CREATE' and user_profile_id = 'user@hmcts.net'");
+        assertEquals("Unexpected number of audit roles", 1, auditRows);
     }
 
     @Test
@@ -521,6 +659,16 @@ public class UserProfileEndpointIT extends BaseTest {
         assertEquals(4,
             template.queryForObject(COUNT_USER_PROFILE_ALL_JURISDICTIONS_QUERY, Integer.class, "user1")
                 .intValue());
+
+        final int auditRowRead = JdbcTestUtils.countRowsInTableWhere(template,
+                                                                     "user_profile_audit",
+                                                                     "action = 'READ' and user_profile_id = 'user1'");
+        assertEquals("Unexpected number of audit roles", 1, auditRowRead);
+
+        final int auditRowUpdate = JdbcTestUtils.countRowsInTableWhere(template,
+                                                                     "user_profile_audit",
+                                                                     "action = 'UPDATE' and user_profile_id = 'user1'");
+        assertEquals("Unexpected number of audit roles", 1, auditRowUpdate);
     }
 
     @Test
@@ -529,9 +677,9 @@ public class UserProfileEndpointIT extends BaseTest {
     public void updateUserProfileForExistingUserAndJurisdiction() throws Exception {
         // Given the Jurisdiction "TEST3" exists
         // When attempting to create a User Profile, for an existing user, for the above Jurisdiction
-        UserProfile userProfile = createUserProfile("user4", null, "TEST3", null);
+        UserProfile userProfile = createUserProfile("user4", "defaultCaseType", JURISDICTION_ID_3, "defaultCaseState");
         Jurisdiction jurisdiction = new Jurisdiction();
-        jurisdiction.setId("TEST3");
+        jurisdiction.setId(JURISDICTION_ID_3);
         userProfile.addJurisdiction(jurisdiction);
         mockMvc.perform(
             put(SAVE_USER_PROFILE)
@@ -551,6 +699,9 @@ public class UserProfileEndpointIT extends BaseTest {
         assertEquals(2,
             template.queryForObject(COUNT_USER_PROFILE_ALL_JURISDICTIONS_QUERY, Integer.class, "user4")
                 .intValue());
+
+        final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
+        assertEquals("Unexpected number of audit roles", 1, auditRows);
     }
 
     @Test
@@ -573,6 +724,11 @@ public class UserProfileEndpointIT extends BaseTest {
         assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
         assertEquals("Unexpected response message", "User with ID user1 is already a member of the "
             + "TEST2 jurisdiction", mvcResult.getResponse().getContentAsString());
+
+        final int auditRowRead = JdbcTestUtils.countRowsInTableWhere(template,
+                                                                       "user_profile_audit",
+                                                                       "action = 'READ' and user_profile_id = 'user1'");
+        assertEquals("Unexpected number of audit roles", 0, auditRowRead);
     }
 
     @Test
@@ -594,6 +750,18 @@ public class UserProfileEndpointIT extends BaseTest {
         assertEquals(2,
             template.queryForObject(COUNT_USER_PROFILE_ALL_JURISDICTIONS_QUERY, Integer.class, "user1")
                 .intValue());
+
+        final int auditRowRead = JdbcTestUtils.countRowsInTableWhere(template,
+                                                                     "user_profile_audit",
+                                                                     "action = 'READ' and user_profile_id = 'user1'");
+        assertEquals("Unexpected number of audit roles", 1, auditRowRead);
+
+        final int
+            auditRowUpdate =
+            JdbcTestUtils.countRowsInTableWhere(template,
+                                                "user_profile_audit",
+                                                "action = 'DELETE' and user_profile_id = 'user1'");
+        assertEquals("Unexpected number of audit roles", 1, auditRowUpdate);
     }
 
     @Test
@@ -611,6 +779,9 @@ public class UserProfileEndpointIT extends BaseTest {
         assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
         assertEquals("Unexpected response message", DELETE_WORKBASKET_DEFAULT_JURISDICTION_ERROR,
             mvcResult.getResponse().getContentAsString());
+
+        final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
+        assertEquals("Unexpected number of audit roles", 0, auditRows);
     }
 
     @Test
@@ -627,6 +798,9 @@ public class UserProfileEndpointIT extends BaseTest {
         assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
         assertEquals("Unexpected response message", "User with ID user5 is not a member of the TEST1 "
             + "jurisdiction", mvcResult.getResponse().getContentAsString());
+
+        final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
+        assertEquals("Unexpected number of audit roles", 0, auditRows);
     }
 
     @Test
@@ -650,6 +824,11 @@ public class UserProfileEndpointIT extends BaseTest {
         assertNull(userProfileEntity.getWorkBasketDefaultJurisdiction());
         assertNull(userProfileEntity.getWorkBasketDefaultCaseType());
         assertNull(userProfileEntity.getWorkBasketDefaultState());
+
+        final int auditRows = JdbcTestUtils.countRowsInTableWhere(template,
+                                                                  "user_profile_audit",
+                                                                  "action = 'DELETE' and user_profile_id = 'user5'");
+        assertEquals("Unexpected number of audit roles", 1, auditRows);
     }
 
     private static UserProfile createUserProfile(final String id,
@@ -662,6 +841,12 @@ public class UserProfileEndpointIT extends BaseTest {
         userDefault.setWorkBasketDefaultJurisdiction(jurisdiction);
         userDefault.setWorkBasketDefaultState(state);
         return userDefault;
+    }
+
+    private void populateUserProfileDefaults(final UserProfile userProfile, final String defaultJurisdiction) {
+        userProfile.setWorkBasketDefaultJurisdiction(defaultJurisdiction);
+        userProfile.setWorkBasketDefaultCaseType("Default-Case-Type");
+        userProfile.setWorkBasketDefaultState("Default-state");
     }
 
 }
