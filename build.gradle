@@ -111,7 +111,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 ext {
-    reformLogging= '3.0.2'
+    reformLogging= '3.0.4'
     junitJupiterVersion = '5.2.0'
     junitVintageVersion = '5.2.0'
     hibernateVersion = '5.2.12.Final'
