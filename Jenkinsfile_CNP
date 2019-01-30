@@ -41,10 +41,16 @@ withPipeline(type, product, component) {
     }
     onPR {
         enableSlackNotifications('#ccd-pr-builds')
+
+        env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
+        env.CCD_DS_SERVICE_NAME = "ccd_data"
     }
 
     enableDbMigration()
     enableDockerBuild()
+
     overrideVaultEnvironments(vaultOverrides)
     loadVaultSecrets(secrets)
+
+    installCharts()
 }

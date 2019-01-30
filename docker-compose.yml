@@ -15,6 +15,7 @@ services:
       - REFORM_SERVICE_NAME=ccd-user-profile-api
       - REFORM_TEAM=ccd
       - REFORM_ENVIRONMENT=local
+      - USER_PROFILE_DB_USE_SSL=false
     ports:
       - 4453:4453
     depends_on:
