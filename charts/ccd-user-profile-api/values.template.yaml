@@ -7,7 +7,7 @@ postgresql:
   persistence:
     enabled: false
 
-ccd-user-profile-api:
+java:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
   applicationPort: 4453
