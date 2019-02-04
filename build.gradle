@@ -162,12 +162,6 @@ dependencies {
 }
 // end::dependencies[]
 
-// tag::wrapper[]
-wrapper {
-    gradleVersion = '4.9'
-}
-// end::wrapper[]
-
 checkstyle {
     maxWarnings = 0
 
