@@ -1,7 +1,7 @@
 description: Helm chart for the HMCTS CCD User Profile
 name: ccd-user-profile-api
 home: https://github.com/hmcts/ccd-user-profile-api
-version: 0.0.2
+version: 0.0.3
 maintainers:
   - name: HMCTS CCD Dev Team
     email: ccd-devops@HMCTS.NET
