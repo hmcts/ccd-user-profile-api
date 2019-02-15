@@ -138,8 +138,8 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     compile("org.springframework.boot:spring-boot-starter-actuator")
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.0'
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.0'
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     compile group: 'org.liquibase', name: 'liquibase-core', version: '3.6.1'
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.2.0'
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.2'
