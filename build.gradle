@@ -126,7 +126,7 @@ ext {
 }
 
 dependencies {
-    compile('org.projectlombok:lombok:1.18.2')
+    compile('org.projectlombok:lombok:1.18.6')
     annotationProcessor 'org.projectlombok:lombok:1.18.2'
     compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: reformLogging
     compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: reformLogging
