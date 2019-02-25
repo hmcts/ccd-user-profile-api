@@ -169,6 +169,9 @@ checkstyle {
     // need to set configDir to rootDir otherwise submodule will use submodule/config/checkstyle
     configDir = new File(rootDir, 'config/checkstyle')
 }
+pmd {
+    toolVersion = '6.11.0'
+}
 
 checkstyleMain.shouldRunAfter(compileJava)
 test.shouldRunAfter(checkstyleTest)
