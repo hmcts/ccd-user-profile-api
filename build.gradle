@@ -111,7 +111,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 ext {
-    reformLogging= '3.0.4'
+    reformLogging= '5.0.1'
     junitJupiterVersion = '5.2.0'
     junitVintageVersion = '5.3.2'
     hibernateVersion = '5.2.12.Final'
@@ -151,6 +151,9 @@ dependencies {
     compile group: 'io.rest-assured', name: 'rest-assured', version: '3.1.0'
     compile 'net.jcip:jcip-annotations:1.0'
     compile 'com.github.spotbugs:spotbugs-annotations:3.1.10'
+
+    compile 'uk.gov.hmcts.reform:properties-volume-spring-boot-starter:0.0.4'
+
     aatCompile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '0.6.0'
     testCompile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
     testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
@@ -256,7 +259,7 @@ jacocoTestReport {
 }
 
 test {
-    environment("APPINSIGHTS_INSTRUMENTATIONKEY", "some-key")
+    environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
 
     useJUnitPlatform()
 
@@ -283,7 +286,7 @@ sourceSets {
     }
 }
 task smoke(type: Test) {
-    environment("APPINSIGHTS_INSTRUMENTATIONKEY", "some-key")
+    environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
     logger.quiet("TODO: Add smoke tests")
 //    group = 'Delivery pipeline'
 //    description = 'Executes functional tests against an AAT UserProfile instance'
@@ -295,7 +298,7 @@ task smoke(type: Test) {
 }
 
 task functional(type: Test) {
-    environment("APPINSIGHTS_INSTRUMENTATIONKEY", "some-key")
+    environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
 
     group = 'Delivery pipeline'
     description = 'Executes functional tests against the User Profile instance'
