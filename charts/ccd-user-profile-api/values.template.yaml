@@ -21,3 +21,6 @@ java:
     USER_PROFILE_DB_NAME: ccd_user_profile
     USER_PROFILE_DB_USERNAME: ccd
     USER_PROFILE_DB_PASSWORD: ccd
+
+tags:
+  postgresql-pod: true
