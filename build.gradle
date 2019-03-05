@@ -321,6 +321,7 @@ sonarqube {
     properties {
         property "sonar.projectName", "ccd-user-profile-api"
         property "sonar.projectKey", "ccd-user-profile-api"
+        property "sonar.exclusions", "**/PostgreSQLEnumType.java"
     }
 }
 
