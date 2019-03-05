@@ -20,11 +20,11 @@ import uk.gov.hmcts.ccd.domain.service.FindAllUserProfilesOperation;
 import uk.gov.hmcts.ccd.domain.service.SaveUserProfileOperation;
 import uk.gov.hmcts.ccd.domain.service.UserProfileOperation;
 
-import javax.transaction.Transactional;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import javax.transaction.Transactional;
 
 @RestController
 class UserProfileController {
@@ -55,7 +55,7 @@ class UserProfileController {
         @ApiResponse(code = 200, message = "Found User Profiles"),
         @ApiResponse(code = 400, message = "Unable to find User Profiles")
     })
-    public List<UserProfile> getUserProfiles(@ApiParam(value = "Jurisdiction ID")
+    public List<UserProfile> getUserProfiles(@ApiParam("Jurisdiction ID")
                                              @RequestParam("jurisdiction")
                                                  final Optional<String> jurisdictionOptional,
                                              @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
@@ -114,10 +114,10 @@ class UserProfileController {
                                     + "Jurisdiction, or user's Workbasket defaults are for the Jurisdiction being "
                                     + "removed")
     })
-    public void deleteJurisdictionFromUserProfile(@ApiParam(value = "User Profile ID")
+    public void deleteJurisdictionFromUserProfile(@ApiParam("User Profile ID")
                                                   @RequestParam("uid")
                                                   final String uid,
-                                                  @ApiParam(value = "Jurisdiction ID")
+                                                  @ApiParam("Jurisdiction ID")
                                                   @RequestParam("jid")
                                                   final String jid,
                                                   @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")

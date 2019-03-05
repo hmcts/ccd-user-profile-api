@@ -18,13 +18,13 @@ import uk.gov.hmcts.ccd.domain.service.CreateUserProfileOperation;
 import uk.gov.hmcts.ccd.domain.service.FindUserProfileOperation;
 import uk.gov.hmcts.ccd.domain.service.UserProfileOperation;
 
-import javax.transaction.Transactional;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import javax.transaction.Transactional;
 
 @RestController
-@RequestMapping(value = "/user-profile")
+@RequestMapping("/user-profile")
 public class UserProfileEndpoint {
     private final CreateUserProfileOperation createUserProfileOperation;
     private final UserProfileOperation userProfileOperation;
@@ -45,7 +45,7 @@ public class UserProfileEndpoint {
     @Transactional
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "Create a new User Profile")
+    @ApiOperation("Create a new User Profile")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created User Profile"),
             @ApiResponse(code = 400, message = "Unable to create User Profile")
@@ -72,7 +72,7 @@ public class UserProfileEndpoint {
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get a user profile")
+    @ApiOperation("Get a user profile")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Found user profile default settings"),
         @ApiResponse(code = 400, message = "Unable to find User Profile")

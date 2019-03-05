@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.data.userprofile;
 
-import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionEntity;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionMapper;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
@@ -8,8 +7,8 @@ import uk.gov.hmcts.ccd.domain.model.UserProfile;
 
 import java.util.Map;
 
-@Component
-public class UserProfileMapper {
+@SuppressWarnings("PMD.ClassNamingConventions") // name is appropriate
+public final class UserProfileMapper {
 
     private UserProfileMapper() {}
 

@@ -13,6 +13,7 @@ import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -47,7 +48,7 @@ public class UserProfileOperation {
             }
 
             // We deals with lower case user profile Id only
-            userProfile.setId(userProfile.getId().toLowerCase());
+            userProfile.setId(userProfile.getId().toLowerCase(Locale.UK));
 
             // finds user profile entity
             final UserProfile userProfileFound = userProfileRepository.findById(userProfile.getId(), actionedBy);

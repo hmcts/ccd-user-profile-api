@@ -9,21 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@ApiModel(description = "")
+@ApiModel
 public class UserProfile {
 
     private String id;
     private List<Jurisdiction> jurisdictions;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @JsonProperty("work_basket_default_jurisdiction")
     private String workBasketDefaultJurisdiction;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @JsonProperty("work_basket_default_case_type")
     private String workBasketDefaultCaseType;
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @JsonProperty("work_basket_default_state")
     private String workBasketDefaultState;
 
