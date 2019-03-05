@@ -23,7 +23,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         this.appInsights = appInsights;
     }
 
-    @ExceptionHandler(value = {Exception.class})
+    @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleException(final RuntimeException e, final WebRequest request) {
         final StringBuilder errorMsg = new StringBuilder(e.getMessage());
         HttpHeaders headers = new HttpHeaders();

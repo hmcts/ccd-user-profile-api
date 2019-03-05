@@ -9,6 +9,8 @@ import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionRepository;
 import uk.gov.hmcts.ccd.data.userprofile.UserProfileRepository;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 
+import java.util.Locale;
+
 @Service
 public class SaveUserProfileOperation {
 
@@ -37,7 +39,7 @@ public class SaveUserProfileOperation {
         }
 
         // Ensure the User Profile ID (i.e. email address) is in lowercase
-        userProfile.setId(userProfile.getId().toLowerCase());
+        userProfile.setId(userProfile.getId().toLowerCase(Locale.UK));
 
         final UserProfile foundUserProfile = userProfileRepository.findById(userProfile.getId(), actionedBy);
 

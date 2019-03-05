@@ -1,4 +1,4 @@
-FROM gradle:4.10-jdk8 as builder
+FROM gradle:5.2.1-jdk8 as builder
 LABEL maintainer="https://github.com/hmcts/ccd-user-profile-api"
 
 COPY . /home/gradle/src

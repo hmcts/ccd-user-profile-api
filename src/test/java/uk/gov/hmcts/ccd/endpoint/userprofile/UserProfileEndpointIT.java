@@ -23,6 +23,7 @@ import uk.gov.hmcts.ccd.domain.model.UserProfile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -836,7 +837,7 @@ public class UserProfileEndpointIT extends BaseTest {
                                                  final String jurisdiction,
                                                  final String state) {
         final UserProfile userDefault = new UserProfile();
-        userDefault.setId(id.toLowerCase());
+        userDefault.setId(id.toLowerCase(Locale.UK));
         userDefault.setWorkBasketDefaultCaseType(caseType);
         userDefault.setWorkBasketDefaultJurisdiction(jurisdiction);
         userDefault.setWorkBasketDefaultState(state);

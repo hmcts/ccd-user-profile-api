@@ -1,10 +1,9 @@
 package uk.gov.hmcts.ccd.data.jurisdiction;
 
-import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 
-@Component
-public class JurisdictionMapper {
+@SuppressWarnings("PMD.ClassNamingConventions") // name is appropriate
+public final class JurisdictionMapper {
 
     private JurisdictionMapper() {}
 

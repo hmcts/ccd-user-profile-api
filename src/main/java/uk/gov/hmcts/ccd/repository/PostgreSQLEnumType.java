@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Locale;
 import java.util.Properties;
 
 public class PostgreSQLEnumType<T extends Enum<T>> extends EnumType {
@@ -52,6 +53,6 @@ public class PostgreSQLEnumType<T extends Enum<T>> extends EnumType {
         if (enumConstant == null) {
             throw new IllegalArgumentException("Enum constant argument cannot be null");
         }
-        return Enum.valueOf(c, enumConstant.toUpperCase());
+        return Enum.valueOf(c, enumConstant.toUpperCase(Locale.UK));
     }
 }
