@@ -53,6 +53,8 @@ module "user-profile-api" {
     USER_PROFILE_DB_USERNAME    = "${module.user-profile-db.user_name}"
     USER_PROFILE_DB_PASSWORD    = "${module.user-profile-db.postgresql_password}"
 
+    USER_PROFILE_DB_USE_SSL     = "require"
+
     ENABLE_DB_MIGRATE = "false"
 
     IDAM_S2S_URL = "${local.s2s_url}"
