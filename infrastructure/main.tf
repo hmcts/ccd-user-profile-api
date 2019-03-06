@@ -53,7 +53,6 @@ module "user-profile-api" {
     USER_PROFILE_DB_USERNAME    = "${module.user-profile-db.user_name}"
     USER_PROFILE_DB_PASSWORD    = "${module.user-profile-db.postgresql_password}"
 
-    USER_PROFILE_DB_USE_SSL     = "require"
     USER_PROFILE_DB_OPTIONS     = "?sslmode=require"
 
     ENABLE_DB_MIGRATE = "false"

@@ -14,7 +14,6 @@ java:
   applicationInsightsInstrumentKey: "fake-key"
   environment:
     ENABLE_DB_MIGRATE: true
-    USER_PROFILE_DB_USE_SSL: false
     USER_PROFILE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_definition,ccd_admin
     USER_PROFILE_DB_HOST: ${SERVICE_NAME}-postgres
     USER_PROFILE_DB_PORT: 5432
