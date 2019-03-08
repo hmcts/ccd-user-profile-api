@@ -9,12 +9,13 @@ services:
     environment:
       - USER_PROFILE_DB_HOST=ccd-user-profile-database
       - USER_PROFILE_DB_PORT=5432
-      - USER_PROFILE_DB_USERNAME
-      - USER_PROFILE_DB_PASSWORD
+      - USER_PROFILE_DB_USERNAME=user_profile
+      - USER_PROFILE_DB_PASSWORD=user_profile
       - IDAM_S2S_URL
       - REFORM_SERVICE_NAME=ccd-user-profile-api
       - REFORM_TEAM=ccd
       - REFORM_ENVIRONMENT=local
+      - AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY
     ports:
       - 4453:4453
     depends_on:
@@ -31,8 +32,8 @@ services:
       timeout: 10s
       retries: 10
     environment:
-      - USER_PROFILE_DB_USERNAME
-      - USER_PROFILE_DB_PASSWORD
+      - USER_PROFILE_DB_USERNAME=user_profile
+      - USER_PROFILE_DB_PASSWORD=user_profile
     ports:
       - 5453:5432
     volumes:
