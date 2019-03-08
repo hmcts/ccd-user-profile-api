@@ -45,6 +45,7 @@ module "user-profile-api" {
   asp_rg = "${(var.asp_rg == "use_shared") ? local.sharedASPResourceGroup : var.asp_rg}"
   website_local_cache_sizeinmb = 1000
   capacity = "${var.capacity}"
+  appinsights_instrumentation_key = "${var.appinsights_instrumentation_key}"
 
   app_settings = {
     USER_PROFILE_DB_HOST        = "${module.user-profile-db.host_name}"
