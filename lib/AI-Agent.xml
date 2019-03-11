@@ -4,6 +4,25 @@
     <Instrumentation>
         <BuiltIn enabled="true">
             <HTTP enabled="true"/>
+            <JDBC enabled="true"/>
+            <MaxStatementQueryLimitInMS>1000</MaxStatementQueryLimitInMS>
         </BuiltIn>
+        <Class name="uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionRepository" type="Data">
+            <Method name="findEntityById"/>
+            <Method name="create"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.data.userprofile.UserProfileAuditEntityRepository" type="Data">
+            <Method name="createUserProfileAuditEntity"/>
+        </Class>
+        <Class name="uk.gov.hmcts.ccd.data.userprofile.UserProfileRepository" type="Data">
+            <Method name="createUserProfile"/>
+            <Method name="updateUserProfile"/>
+            <Method name="findById"/>
+            <Method name="findEntityById"/>
+            <Method name="findAll"/>
+            <Method name="updateUserProfileOnCreate"/>
+            <Method name="deleteJurisdictionFromUserProfile"/>
+            <Method name="findJurisdictionEntityById"/>
+        </Class>
     </Instrumentation>
 </ApplicationInsightsAgent>
