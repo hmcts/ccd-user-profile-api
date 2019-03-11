@@ -7,21 +7,12 @@
             <JDBC enabled="true"/>
             <MaxStatementQueryLimitInMS>1000</MaxStatementQueryLimitInMS>
         </BuiltIn>
-        <Class name="uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionEntity" type="Data">
-            <Method name="getId"/>
-            <Method name="setId"/>
-        </Class>
         <Class name="uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionRepository" type="Data">
             <Method name="findEntityById"/>
             <Method name="create"/>
         </Class>
-        <Class name="uk.gov.hmcts.ccd.data.userprofile.UserProfileEntity" type="Data">
-            <Method name="getId"/>
-            <Method name="setId"/>
-            <Method name="getJurisdictions"/>
-            <Method name="setJurisdictions"/>
-            <Method name="getWorkBasketDefaultJurisdiction"/>
-            <Method name="setWorkBasketDefaultJurisdiction"/>
+        <Class name="uk.gov.hmcts.ccd.data.userprofile.UserProfileAuditEntityRepository" type="Data">
+            <Method name="createUserProfileAuditEntity"/>
         </Class>
         <Class name="uk.gov.hmcts.ccd.data.userprofile.UserProfileRepository" type="Data">
             <Method name="createUserProfile"/>
@@ -32,25 +23,6 @@
             <Method name="updateUserProfileOnCreate"/>
             <Method name="deleteJurisdictionFromUserProfile"/>
             <Method name="findJurisdictionEntityById"/>
-        </Class>
-        <Class name="src/main/java/uk/gov/hmcts/ccd/domain/service/CreateUserProfileOperation" type="Service">
-            <Method name="execute"/>
-        </Class>
-        <Class name="src/main/java/uk/gov/hmcts/ccd/domain/service/DeleteUserProfileJurisdictionOperation" type="Service">
-            <Method name="deleteAssociation"/>
-        </Class>
-        <Class name="src/main/java/uk/gov/hmcts/ccd/domain/service/FindAllUserProfilesOperation" type="Service">
-            <Method name="getAll"/>
-        </Class>
-        <Class name="src/main/java/uk/gov/hmcts/ccd/domain/service/FindUserProfileOperation" type="Service">
-            <Method name="execute"/>
-        </Class>
-        <Class name="src/main/java/uk/gov/hmcts/ccd/domain/service/SaveUserProfileOperation" type="Service">
-            <Method name="saveUserProfile"/>
-        </Class>
-        <Class name="src/main/java/uk/gov/hmcts/ccd/domain/service/UserProfileOperation" type="Service">
-            <Method name="execute"/>
-            <Method name="populateProfileJurisdiction"/>
         </Class>
     </Instrumentation>
 </ApplicationInsightsAgent>
