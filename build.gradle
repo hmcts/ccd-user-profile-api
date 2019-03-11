@@ -112,7 +112,7 @@ targetCompatibility = 1.8
 
 ext {
     reformLogging= '5.0.1'
-    hibernateVersion = '5.2.17.Final'
+    hibernateVersion = '5.4.1.Final'
     springCloudVersion = 'Greenwich.RELEASE'
     limits = [
             'instruction': 86,
