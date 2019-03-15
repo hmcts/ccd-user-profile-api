@@ -19,7 +19,8 @@
             <Method name="updateUserProfile"/>
             <Method name="findById"/>
             <Method name="findEntityById"/>
-            <Method name="findAll"/>
+            <Method name="findAll" signature="()Ljava/util/List"/>
+            <Method name="findAll" signature="(Ljava/lang/String;Ljava/lang/String)Ljava/util/List"/>
             <Method name="updateUserProfileOnCreate"/>
             <Method name="deleteJurisdictionFromUserProfile"/>
             <Method name="findJurisdictionEntityById"/>
