@@ -41,7 +41,7 @@ public class UserProfileEndpointIT extends BaseTest {
 
     private static final String CREATE_USER_PROFILE = "/user-profile/users";
     private static final String FIND_JURISDICTION_FOR_USER_1 = "/user-profile/users?uid=user1";
-    private static final String FIND_JURISDICTION_FOR_USER_2 = "/user-profile/users?uid=user2";
+    private static final String FIND_JURISDICTION_FOR_USER_2 = "/user-profile/users?uid=user2%2Ba%40example.com";
     private static final String USER_PROFILE_USERS_DEFAULTS = "/users";
     private static final String GET_ALL_USER_PROFILES_FOR_JURISDICTION = "/users?jurisdiction=TEST1";
     private static final String GET_ALL_USER_PROFILES = "/users";
@@ -52,7 +52,7 @@ public class UserProfileEndpointIT extends BaseTest {
     private static final String DELETE_SOLE_JURISDICTION = "/users?uid=user5&jid=TEST2";
 
     private static final String USER_ID_1 = "user1";
-    private static final String USER_ID_2 = "user2";
+    private static final String USER_ID_2 = "user2+a@example.com";
     private static final String USER_ID_3 = "user3";
     private static final String JURISDICTION_ID_1 = "TEST1";
     private static final String JURISDICTION_ID_2 = "TEST2";
@@ -366,7 +366,7 @@ public class UserProfileEndpointIT extends BaseTest {
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
         scripts = {"classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql"})
     public void noJurisdictionsForUserProfile() throws Exception {
-        // Given - a User Profile (id = user2) with 0 Jurisdictions
+        // Given - a User Profile (id = user2+a@example.com) with 0 Jurisdictions
         int rows = JdbcTestUtils.countRowsInTableWhere(template,
                 "user_profile_jurisdiction",
                 "user_profile_id = '" + USER_ID_2 + "'");
@@ -550,7 +550,7 @@ public class UserProfileEndpointIT extends BaseTest {
             auditRowCreate4 =
             JdbcTestUtils.countRowsInTableWhere(template,
                                                 "user_profile_audit",
-                                                "action = 'CREATE' and user_profile_id = 'user2'");
+                                                "action = 'CREATE' and user_profile_id = 'user2+a@example.com'");
         assertEquals("Unexpected number of audit roles", 0, auditRowCreate4);
 
     }
