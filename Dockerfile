@@ -7,8 +7,7 @@ LABEL maintainer="https://github.com/hmcts/ccd-user-profile-api"
 COPY build/libs/user-profile.jar  /opt/app/
 COPY lib/AI-Agent.xml /opt/app
 
-HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" curl --silent --fail http://localhost:4453/status/health
-
+HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" wget -q --spider http://localhost:4553/status/health || exit 1
 EXPOSE 4453
 
 CMD ["user-profile.jar"]
