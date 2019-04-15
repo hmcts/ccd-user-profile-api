@@ -11,4 +11,3 @@ HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" wget -q 
 EXPOSE 4453
 
 CMD ["user-profile.jar"]
-
