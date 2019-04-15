@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriUtils;
 import uk.gov.hmcts.ccd.AppInsights;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 import uk.gov.hmcts.ccd.domain.service.CreateUserProfileOperation;
@@ -81,7 +82,8 @@ public class UserProfileEndpoint {
                                       @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
                                       final String actionedBy) {
         Instant start = Instant.now();
-        UserProfile userProfile = findUserProfileOperation.execute(uid, actionedBy);
+        String decodedUid = UriUtils.decode(uid, "UTF-8");
+        UserProfile userProfile = findUserProfileOperation.execute(decodedUid, actionedBy);
         final Duration between = Duration.between(start, Instant.now());
         appInsights.trackRequest(between, true);
         return userProfile;
