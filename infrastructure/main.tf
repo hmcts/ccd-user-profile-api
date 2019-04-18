@@ -46,6 +46,7 @@ module "user-profile-api" {
   website_local_cache_sizeinmb = 1000
   capacity = "${var.capacity}"
   appinsights_instrumentation_key = "${var.appinsights_instrumentation_key}"
+  java_container_version = "9.0"
 
   app_settings = {
     USER_PROFILE_DB_HOST        = "${module.user-profile-db.host_name}"
