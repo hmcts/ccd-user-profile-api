@@ -22,7 +22,7 @@ public class FindUserProfileOperation {
     }
 
     public UserProfile execute(String userProfileId, String actionedBy) {
-        LOG.info("Finding user with id {}", userProfileId);
+        LOG.debug("Finding user with id {}", userProfileId);
         return Optional.ofNullable(userProfileRepository.findById(userProfileId, actionedBy))
             .orElseThrow(() -> new BadRequestException("No user exists with the Id '" + userProfileId + "'"));
     }
