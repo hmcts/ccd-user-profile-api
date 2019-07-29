@@ -210,10 +210,9 @@ public class UserProfileEndpointIT extends BaseTest {
                         .content(mapper.writeValueAsBytes(userProfile)))
                 .andReturn();
 
-        assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
-        assertEquals("Unexpected response message",
-                     "User already exists with Id " + USER_ID_1,
-                     mvcResult.getResponse().getContentAsString());
+        assertEquals(201, mvcResult.getResponse().getStatus());
+        JsonNode createdUserProfile = mapper.readTree(mvcResult.getResponse().getContentAsString());
+        assertEquals(USER_ID_1, createdUserProfile.get("id").asText());
 
         final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
         assertEquals("Unexpected number of audit roles", 0, auditRows);

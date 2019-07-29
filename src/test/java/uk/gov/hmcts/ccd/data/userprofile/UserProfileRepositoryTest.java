@@ -24,9 +24,7 @@ import java.util.Map;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.CREATE;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.DELETE;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.READ;
@@ -82,12 +80,9 @@ public class UserProfileRepositoryTest {
     }
 
     @Test
-    public void createUserProfileWhenItAlreadyExists() {
-        exceptionRule.expect(BadRequestException.class);
-        exceptionRule.expectMessage("User already exists with Id " + userProfile.getId());
-        assertEquals(0, countUserProfitAudits());
-        classUnderTest.createUserProfile(userProfile, ACTIONED_BY_EMAIL);
-        assertEquals(0, countUserProfitAudits());
+    public void shouldNotCreateAUserProfileIfAlreadyExists() {
+        UserProfile result = classUnderTest.createUserProfile(this.userProfile, ACTIONED_BY_EMAIL);
+        assertSame(result, this.userProfile);
     }
 
     @Test

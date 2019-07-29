@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.data.userprofile;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionEntity;
@@ -25,6 +27,8 @@ import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.UPDATE;
 @Repository
 public class UserProfileRepository {
 
+    private static final Logger LOG = LoggerFactory.getLogger(UserProfileRepository.class);
+
     public static final String NOT_APPLICABLE = "N/A";
     private final JurisdictionRepository jurisdictionRepository;
     private final UserProfileAuditEntityRepository userProfileAuditEntityRepository;
@@ -48,7 +52,8 @@ public class UserProfileRepository {
      */
     public UserProfile createUserProfile(UserProfile userProfile, final String actionedBy) {
         if (null != findEntityById(userProfile.getId(), actionedBy, false)) {
-            throw new BadRequestException("User already exists with Id " + userProfile.getId());
+            LOG.warn("User already exists with id:{} so not creating again", userProfile.getId());
+            return userProfile;
         }
 
         Map<String, JurisdictionEntity> existingJurisdictions = new HashMap<>();
@@ -64,8 +69,12 @@ public class UserProfileRepository {
         userProfileAuditEntityRepository.createUserProfileAuditEntity(userProfile,
                                                                       CREATE,
                                                                       actionedBy,
-                                                                      userProfile.getWorkBasketDefaultJurisdiction());
+                                                                      getFirstJurisdiction(userProfile));
         return UserProfileMapper.entityToModel(userProfileEntity);
+    }
+
+    private String getFirstJurisdiction(UserProfile userProfile) {
+        return userProfile.getJurisdictions().stream().findFirst().map(Jurisdiction::getId).orElse(null);
     }
 
     /**
