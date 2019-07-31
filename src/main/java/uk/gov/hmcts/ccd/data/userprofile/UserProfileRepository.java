@@ -101,9 +101,7 @@ public class UserProfileRepository {
         final boolean auditable = isAuditable(userProfileEntity);
         final UserProfile audit = UserProfileMapper.entityToModel(userProfileEntity);
 
-        userProfileEntity.setWorkBasketDefaultCaseType(userProfile.getWorkBasketDefaultCaseType());
-        userProfileEntity.setWorkBasketDefaultJurisdiction(userProfile.getWorkBasketDefaultJurisdiction());
-        userProfileEntity.setWorkBasketDefaultState(userProfile.getWorkBasketDefaultState());
+        updateDefaults(userProfile, userProfileEntity);
 
         if (userProfileEntity.getJurisdictions()
                              .stream()
