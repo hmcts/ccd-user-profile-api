@@ -42,26 +42,31 @@ public class UserProfileRepository {
     }
 
     public UserProfile createUserProfile(UserProfile userProfile, final String actionedBy) {
-        Map<String, JurisdictionEntity> existingJurisdictions = userProfile.getJurisdictions().stream()
-            .map(jurisdiction -> jurisdictionRepository.findEntityById(jurisdiction.getId()))
-            .filter(Objects::nonNull)
-            .collect(Collectors.toMap(JurisdictionEntity::getId, Function.identity()));
+        AuditAction auditAction;
+        Map<String, JurisdictionEntity> existingJurisdictions = existingJurisdictions(userProfile);
 
-        AuditAction auditAction = CREATE;
         UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
         if (userProfileEntity == null) {
+            auditAction = CREATE;
             userProfileEntity = UserProfileMapper.modelToEntity(userProfile, existingJurisdictions);
         } else {
+            auditAction = UPDATE;
             List<JurisdictionEntity> jurisdictionEntities = userProfile.getJurisdictions().stream()
                 .map(jurisdiction -> getAssociatedJurisdictionEntity(existingJurisdictions, jurisdiction))
                 .collect(Collectors.toList());
             userProfileEntity.setJurisdictions(jurisdictionEntities);
-            auditAction = UPDATE;
         }
         em.persist(userProfileEntity);
         userProfileAuditEntityRepository.createUserProfileAuditEntity(userProfile, auditAction, actionedBy,
             getFirstJurisdiction(userProfile));
         return UserProfileMapper.entityToModel(userProfileEntity);
+    }
+
+    private Map<String, JurisdictionEntity> existingJurisdictions(UserProfile userProfile) {
+        return userProfile.getJurisdictions().stream()
+            .map(jurisdiction -> jurisdictionRepository.findEntityById(jurisdiction.getId()))
+            .filter(Objects::nonNull)
+            .collect(Collectors.toMap(JurisdictionEntity::getId, Function.identity()));
     }
 
     private JurisdictionEntity getAssociatedJurisdictionEntity(
