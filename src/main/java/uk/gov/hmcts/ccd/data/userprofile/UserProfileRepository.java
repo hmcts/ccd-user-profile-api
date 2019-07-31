@@ -55,6 +55,7 @@ public class UserProfileRepository {
                 .map(jurisdiction -> getAssociatedJurisdictionEntity(existingJurisdictions, jurisdiction))
                 .collect(Collectors.toList());
             userProfileEntity.setJurisdictions(jurisdictionEntities);
+            updateDefaults(userProfile, userProfileEntity);
         }
         em.persist(userProfileEntity);
         userProfileAuditEntityRepository.createUserProfileAuditEntity(userProfile, auditAction, actionedBy,
@@ -197,9 +198,7 @@ public class UserProfileRepository {
         }
 
         final UserProfile audit = UserProfileMapper.entityToModel(userProfileEntity);
-        userProfileEntity.setWorkBasketDefaultCaseType(userProfile.getWorkBasketDefaultCaseType());
-        userProfileEntity.setWorkBasketDefaultJurisdiction(userProfile.getWorkBasketDefaultJurisdiction());
-        userProfileEntity.setWorkBasketDefaultState(userProfile.getWorkBasketDefaultState());
+        updateDefaults(userProfile, userProfileEntity);
 
         if (userProfileEntity.getJurisdictions()
                              .stream()
@@ -285,5 +284,11 @@ public class UserProfileRepository {
         profile.setWorkBasketDefaultCaseType(NOT_APPLICABLE);
         profile.setWorkBasketDefaultJurisdiction(NOT_APPLICABLE);
         return profile;
+    }
+
+    private void updateDefaults(UserProfile userProfile, UserProfileEntity userProfileEntity) {
+        userProfileEntity.setWorkBasketDefaultCaseType(userProfile.getWorkBasketDefaultCaseType());
+        userProfileEntity.setWorkBasketDefaultJurisdiction(userProfile.getWorkBasketDefaultJurisdiction());
+        userProfileEntity.setWorkBasketDefaultState(userProfile.getWorkBasketDefaultState());
     }
 }
