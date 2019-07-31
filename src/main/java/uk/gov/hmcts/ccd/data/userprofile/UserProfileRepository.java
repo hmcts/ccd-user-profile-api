@@ -1,10 +1,9 @@
 package uk.gov.hmcts.ccd.data.userprofile;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionEntity;
+import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionMapper;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionRepository;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
@@ -13,9 +12,10 @@ import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.ObjectUtils.allNotNull;
@@ -26,8 +26,6 @@ import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.UPDATE;
 
 @Repository
 public class UserProfileRepository {
-
-    private static final Logger LOG = LoggerFactory.getLogger(UserProfileRepository.class);
 
     public static final String NOT_APPLICABLE = "N/A";
     private final JurisdictionRepository jurisdictionRepository;
@@ -43,34 +41,35 @@ public class UserProfileRepository {
         this.userProfileAuditEntityRepository = userProfileAuditEntityRepository;
     }
 
-    /**
-     * Creates a user profile.
-     *
-     * @param userProfile user profile
-     * @param actionedBy for audit trail
-     * @return UserProfile
-     */
     public UserProfile createUserProfile(UserProfile userProfile, final String actionedBy) {
-        if (null != findEntityById(userProfile.getId(), actionedBy, false)) {
-            LOG.warn("User already exists with id:{} so not creating again", userProfile.getId());
-            return userProfile;
-        }
+        Map<String, JurisdictionEntity> existingJurisdictions = userProfile.getJurisdictions().stream()
+            .map(jurisdiction -> jurisdictionRepository.findEntityById(jurisdiction.getId()))
+            .filter(Objects::nonNull)
+            .collect(Collectors.toMap(JurisdictionEntity::getId, Function.identity()));
 
-        Map<String, JurisdictionEntity> existingJurisdictions = new HashMap<>();
-        for (Jurisdiction jurisdiction : userProfile.getJurisdictions()) {
-            JurisdictionEntity jurisdictionEntity = jurisdictionRepository.findEntityById(jurisdiction.getId());
-            if (null != jurisdictionEntity) {
-                existingJurisdictions.put(jurisdiction.getId(), jurisdictionEntity);
-            }
+        AuditAction auditAction = CREATE;
+        UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
+        if (userProfileEntity == null) {
+            userProfileEntity = UserProfileMapper.modelToEntity(userProfile, existingJurisdictions);
+        } else {
+            List<JurisdictionEntity> jurisdictionEntities = userProfile.getJurisdictions().stream()
+                .map(jurisdiction -> getAssociatedJurisdictionEntity(existingJurisdictions, jurisdiction))
+                .collect(Collectors.toList());
+            userProfileEntity.setJurisdictions(jurisdictionEntities);
+            auditAction = UPDATE;
         }
-
-        UserProfileEntity userProfileEntity = UserProfileMapper.modelToEntity(userProfile, existingJurisdictions);
         em.persist(userProfileEntity);
-        userProfileAuditEntityRepository.createUserProfileAuditEntity(userProfile,
-                                                                      CREATE,
-                                                                      actionedBy,
-                                                                      getFirstJurisdiction(userProfile));
+        userProfileAuditEntityRepository.createUserProfileAuditEntity(userProfile, auditAction, actionedBy,
+            getFirstJurisdiction(userProfile));
         return UserProfileMapper.entityToModel(userProfileEntity);
+    }
+
+    private JurisdictionEntity getAssociatedJurisdictionEntity(
+        Map<String, JurisdictionEntity> existingJurisdictions, Jurisdiction jurisdiction) {
+        if (existingJurisdictions.containsKey(jurisdiction.getId())) {
+            return existingJurisdictions.get(jurisdiction.getId());
+        }
+        return JurisdictionMapper.modelToEntity(jurisdiction);
     }
 
     private String getFirstJurisdiction(UserProfile userProfile) {

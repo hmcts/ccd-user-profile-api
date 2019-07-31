@@ -80,9 +80,20 @@ public class UserProfileRepositoryTest {
     }
 
     @Test
-    public void shouldNotCreateAUserProfileIfAlreadyExists() {
-        UserProfile result = classUnderTest.createUserProfile(this.userProfile, ACTIONED_BY_EMAIL);
-        assertSame(result, this.userProfile);
+    public void shouldUpdateUserProfileIfAlreadyExists() {
+        final Jurisdiction anotherJurisdiction = new Jurisdiction();
+        anotherJurisdiction.setId("TEST3");
+        this.userProfile.addJurisdiction(anotherJurisdiction);
+        UserProfile retrievedUserProfile = classUnderTest.createUserProfile(this.userProfile, ACTIONED_BY_EMAIL);
+
+        assertEquals(userProfile.getId(), retrievedUserProfile.getId());
+        assertEquals(2, retrievedUserProfile.getJurisdictions().size());
+        assertEquals("TEST2", retrievedUserProfile.getJurisdictions().get(0).getId());
+        assertEquals("TEST3", retrievedUserProfile.getJurisdictions().get(1).getId());
+
+        final List<UserProfileAuditEntity> audits = findUserProfitAudits("user@hmcts.net");
+        assertThat(audits.size(), is(1));
+        assertThat(audits.get(0).getAction(), is(UPDATE));
     }
 
     @Test
