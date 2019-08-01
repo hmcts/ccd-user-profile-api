@@ -200,23 +200,31 @@ public class UserProfileEndpointIT extends BaseTest {
         Jurisdiction jurisdiction1 = new Jurisdiction();
         jurisdiction1.setId(JURISDICTION_ID_1);
 
+        Jurisdiction jurisdiction2 = new Jurisdiction();
+        jurisdiction2.setId(JURISDICTION_ID_2);
+
         userProfile.addJurisdiction(jurisdiction1);
+        userProfile.addJurisdiction(jurisdiction2);
 
         // When - attempting to create a new UserProfile with Id = user1
-        // Then - assert that the creation fails with the expected exception
         final MvcResult mvcResult = mockMvc.perform(
                 post(CREATE_USER_PROFILE)
                         .contentType(contentType)
                         .content(mapper.writeValueAsBytes(userProfile)))
                 .andReturn();
 
-        assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
-        assertEquals("Unexpected response message",
-                     "User already exists with Id " + USER_ID_1,
-                     mvcResult.getResponse().getContentAsString());
+        assertEquals(201, mvcResult.getResponse().getStatus());
+        JsonNode createdUserProfile = mapper.readTree(mvcResult.getResponse().getContentAsString());
+        assertEquals(USER_ID_1, createdUserProfile.get("id").asText());
+
+        int rows = JdbcTestUtils.countRowsInTableWhere(template,
+            "user_profile_jurisdiction",
+            "user_profile_id = '" + USER_ID_1 + "'");
+
+        assertEquals(2, rows);
 
         final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
-        assertEquals("Unexpected number of audit roles", 0, auditRows);
+        assertEquals("Unexpected number of audit roles", 1, auditRows);
     }
 
     @Test
