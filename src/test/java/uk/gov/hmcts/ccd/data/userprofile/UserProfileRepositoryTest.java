@@ -24,9 +24,7 @@ import java.util.Map;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.CREATE;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.DELETE;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.READ;
@@ -82,12 +80,20 @@ public class UserProfileRepositoryTest {
     }
 
     @Test
-    public void createUserProfileWhenItAlreadyExists() {
-        exceptionRule.expect(BadRequestException.class);
-        exceptionRule.expectMessage("User already exists with Id " + userProfile.getId());
-        assertEquals(0, countUserProfitAudits());
-        classUnderTest.createUserProfile(userProfile, ACTIONED_BY_EMAIL);
-        assertEquals(0, countUserProfitAudits());
+    public void shouldUpdateUserProfileIfAlreadyExists() {
+        final Jurisdiction anotherJurisdiction = new Jurisdiction();
+        anotherJurisdiction.setId("TEST3");
+        this.userProfile.addJurisdiction(anotherJurisdiction);
+        UserProfile retrievedUserProfile = classUnderTest.createUserProfile(this.userProfile, ACTIONED_BY_EMAIL);
+
+        assertEquals(userProfile.getId(), retrievedUserProfile.getId());
+        assertEquals(2, retrievedUserProfile.getJurisdictions().size());
+        assertEquals("TEST2", retrievedUserProfile.getJurisdictions().get(0).getId());
+        assertEquals("TEST3", retrievedUserProfile.getJurisdictions().get(1).getId());
+
+        final List<UserProfileAuditEntity> audits = findUserProfitAudits("user@hmcts.net");
+        assertThat(audits.size(), is(1));
+        assertThat(audits.get(0).getAction(), is(UPDATE));
     }
 
     @Test
