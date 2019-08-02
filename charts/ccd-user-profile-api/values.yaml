@@ -1,0 +1,13 @@
+java:
+  applicationPort: 4453
+  environment:
+    USER_PROFILE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_definition,ccd_admin
+    IDAM_S2S_URL: http://rpe-service-auth-provider-aat.service.core-compute-aat.internal
+    USER_PROFILE_DB_HOST: "{{ .Release.Name }}-postgresql"
+    USER_PROFILE_DB_PORT: 5432
+    USER_PROFILE_DB_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
+    USER_PROFILE_DB_USERNAME: "{{ .Values.postgresql.postgresqlUsername}}"
+    USER_PROFILE_DB_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
+    LOGBACK_REQUIRE_ALERT_LEVEL: 'false'
+    LOGBACK_REQUIRE_ERROR_CODE: 'false'    
+  image: 'hmctspublic.azurecr.io/ccd/user-profile-api:latest'
