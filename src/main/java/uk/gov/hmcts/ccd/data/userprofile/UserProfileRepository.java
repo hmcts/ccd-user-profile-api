@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.data.userprofile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionEntity;
+import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionMapper;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionRepository;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
@@ -11,9 +12,10 @@ import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.ObjectUtils.allNotNull;
@@ -39,33 +41,45 @@ public class UserProfileRepository {
         this.userProfileAuditEntityRepository = userProfileAuditEntityRepository;
     }
 
-    /**
-     * Creates a user profile.
-     *
-     * @param userProfile user profile
-     * @param actionedBy for audit trail
-     * @return UserProfile
-     */
     public UserProfile createUserProfile(UserProfile userProfile, final String actionedBy) {
-        if (null != findEntityById(userProfile.getId(), actionedBy, false)) {
-            throw new BadRequestException("User already exists with Id " + userProfile.getId());
-        }
+        AuditAction auditAction;
+        Map<String, JurisdictionEntity> existingJurisdictions = existingJurisdictions(userProfile);
 
-        Map<String, JurisdictionEntity> existingJurisdictions = new HashMap<>();
-        for (Jurisdiction jurisdiction : userProfile.getJurisdictions()) {
-            JurisdictionEntity jurisdictionEntity = jurisdictionRepository.findEntityById(jurisdiction.getId());
-            if (null != jurisdictionEntity) {
-                existingJurisdictions.put(jurisdiction.getId(), jurisdictionEntity);
-            }
+        UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
+        if (userProfileEntity == null) {
+            auditAction = CREATE;
+            userProfileEntity = UserProfileMapper.modelToEntity(userProfile, existingJurisdictions);
+        } else {
+            auditAction = UPDATE;
+            List<JurisdictionEntity> jurisdictionEntities = userProfile.getJurisdictions().stream()
+                .map(jurisdiction -> getAssociatedJurisdictionEntity(existingJurisdictions, jurisdiction))
+                .collect(Collectors.toList());
+            userProfileEntity.setJurisdictions(jurisdictionEntities);
+            updateDefaults(userProfile, userProfileEntity);
         }
-
-        UserProfileEntity userProfileEntity = UserProfileMapper.modelToEntity(userProfile, existingJurisdictions);
         em.persist(userProfileEntity);
-        userProfileAuditEntityRepository.createUserProfileAuditEntity(userProfile,
-                                                                      CREATE,
-                                                                      actionedBy,
-                                                                      userProfile.getWorkBasketDefaultJurisdiction());
+        userProfileAuditEntityRepository.createUserProfileAuditEntity(userProfile, auditAction, actionedBy,
+            getFirstJurisdiction(userProfile));
         return UserProfileMapper.entityToModel(userProfileEntity);
+    }
+
+    private Map<String, JurisdictionEntity> existingJurisdictions(UserProfile userProfile) {
+        return userProfile.getJurisdictions().stream()
+            .map(jurisdiction -> jurisdictionRepository.findEntityById(jurisdiction.getId()))
+            .filter(Objects::nonNull)
+            .collect(Collectors.toMap(JurisdictionEntity::getId, Function.identity()));
+    }
+
+    private JurisdictionEntity getAssociatedJurisdictionEntity(
+        Map<String, JurisdictionEntity> existingJurisdictions, Jurisdiction jurisdiction) {
+        if (existingJurisdictions.containsKey(jurisdiction.getId())) {
+            return existingJurisdictions.get(jurisdiction.getId());
+        }
+        return JurisdictionMapper.modelToEntity(jurisdiction);
+    }
+
+    private String getFirstJurisdiction(UserProfile userProfile) {
+        return userProfile.getJurisdictions().stream().findFirst().map(Jurisdiction::getId).orElse(null);
     }
 
     /**
@@ -87,9 +101,7 @@ public class UserProfileRepository {
         final boolean auditable = isAuditable(userProfileEntity);
         final UserProfile audit = UserProfileMapper.entityToModel(userProfileEntity);
 
-        userProfileEntity.setWorkBasketDefaultCaseType(userProfile.getWorkBasketDefaultCaseType());
-        userProfileEntity.setWorkBasketDefaultJurisdiction(userProfile.getWorkBasketDefaultJurisdiction());
-        userProfileEntity.setWorkBasketDefaultState(userProfile.getWorkBasketDefaultState());
+        updateDefaults(userProfile, userProfileEntity);
 
         if (userProfileEntity.getJurisdictions()
                              .stream()
@@ -184,9 +196,7 @@ public class UserProfileRepository {
         }
 
         final UserProfile audit = UserProfileMapper.entityToModel(userProfileEntity);
-        userProfileEntity.setWorkBasketDefaultCaseType(userProfile.getWorkBasketDefaultCaseType());
-        userProfileEntity.setWorkBasketDefaultJurisdiction(userProfile.getWorkBasketDefaultJurisdiction());
-        userProfileEntity.setWorkBasketDefaultState(userProfile.getWorkBasketDefaultState());
+        updateDefaults(userProfile, userProfileEntity);
 
         if (userProfileEntity.getJurisdictions()
                              .stream()
@@ -272,5 +282,11 @@ public class UserProfileRepository {
         profile.setWorkBasketDefaultCaseType(NOT_APPLICABLE);
         profile.setWorkBasketDefaultJurisdiction(NOT_APPLICABLE);
         return profile;
+    }
+
+    private void updateDefaults(UserProfile userProfile, UserProfileEntity userProfileEntity) {
+        userProfileEntity.setWorkBasketDefaultCaseType(userProfile.getWorkBasketDefaultCaseType());
+        userProfileEntity.setWorkBasketDefaultJurisdiction(userProfile.getWorkBasketDefaultJurisdiction());
+        userProfileEntity.setWorkBasketDefaultState(userProfile.getWorkBasketDefaultState());
     }
 }
