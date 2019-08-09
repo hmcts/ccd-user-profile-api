@@ -106,8 +106,16 @@
         <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
         <cve>CVE-2018-1000873</cve>
     </suppress>
-
-
+    <suppress>
+        <notes>Temporarily suppress jackson-databind CVE see RDM-3796</notes>
+        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
+        <cve>CVE-2019-14379</cve>
+    </suppress>
+    <suppress>
+        <notes>Temporarily suppress jackson-databind CVE see RDM-3796</notes>
+        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
+        <cve>CVE-2019-14439</cve>
+    </suppress>
     <suppress>
         <notes><![CDATA[
             Suppressing as it seems a false positive as per https://github.com/jeremylong/DependencyCheck/issues/1573
