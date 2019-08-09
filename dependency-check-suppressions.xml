@@ -107,6 +107,7 @@
         <cve>CVE-2018-1000873</cve>
     </suppress>
 
+
     <suppress>
         <notes><![CDATA[
             Suppressing as it seems a false positive as per https://github.com/jeremylong/DependencyCheck/issues/1573
