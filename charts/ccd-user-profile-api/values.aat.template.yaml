@@ -1,4 +1,12 @@
 java:
+  image: ${IMAGE_NAME}
+  ingressHost: ${SERVICE_FQDN}
   environment:
+    ENABLE_DB_MIGRATE: true
+    USER_PROFILE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_definition,ccd_admin
     IDAM_S2S_URL: http://rpe-service-auth-provider-aat.service.core-compute-aat.internal
-
+  keyVaults:
+  "ccd-aat":
+     resourceGroup: ccd-user-profile-api
+     secrets:
+      - service-POSTGRES-PASS
