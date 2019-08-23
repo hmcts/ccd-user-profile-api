@@ -9,8 +9,6 @@ COPY build/libs/user-profile.jar  /opt/app/
 COPY lib/AI-Agent.xml /opt/app
 COPY lib/applicationinsights-agent-2.3.1-SNAPSHOT.jar lib/AI-Agent.xml /opt/app/
 
-HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" wget -q --spider http://localhost:4553/status/health || exit 1
-
 EXPOSE 4453
 
 CMD ["user-profile.jar"]
