@@ -3,4 +3,4 @@ spring:
     propertiesvolume:
       paths: /mnt/secrets/ccd
       aliases:
-        ccd.ccd-user-profile-api-POSTGRES-PASS: USER_PROFILE_DB_PASSWORD
+        ccd.user-profile-api-POSTGRES-PASS: USER_PROFILE_DB_PASSWORD
