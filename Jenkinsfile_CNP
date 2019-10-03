@@ -46,7 +46,6 @@ withPipeline(type, product, component) {
 
    
     enableDockerBuild()
-    disableLegacyDeploymentOnAAT()
     enableSlackNotifications(channel)
     overrideVaultEnvironments(vaultOverrides)
     enableAksStagingDeployment()
