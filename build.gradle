@@ -111,7 +111,8 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 ext {
-    reformLogging= '5.0.1'
+    reformLogging= '5.1.0'
+    appInsightsVersion = '2.4.1'
     hibernateVersion = '5.2.17.Final'
     springCloudVersion = 'Greenwich.RELEASE'
     limits = [
@@ -130,8 +131,8 @@ ext['junit-vintage.version'] = '5.4.0'
 dependencies {
     compile('org.projectlombok:lombok:1.18.6')
     annotationProcessor 'org.projectlombok:lombok:1.18.6'
-    compile group: 'uk.gov.hmcts.reform', name: 'java-logging', version: reformLogging
-    compile group: 'uk.gov.hmcts.reform', name: 'java-logging-appinsights', version: reformLogging
+    compile group: 'uk.gov.hmcts.reform', name: 'logging', version: reformLogging
+    compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: reformLogging
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     compile "org.hibernate:hibernate-core:${hibernateVersion}"
     compile('org.springframework.boot:spring-boot-starter-data-jpa') {
@@ -157,6 +158,11 @@ dependencies {
     compile group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0'
     compile 'net.jcip:jcip-annotations:1.0'
     compile 'com.github.spotbugs:spotbugs-annotations:3.1.12'
+
+    // redefining with version 2.4.1 as applicationinsights-agent-2.5.0 has an open issue
+    // https://github.com/glowroot/instrumentation/issues/1
+    compile group: 'com.microsoft.azure', name: 'applicationinsights-logging-logback', version: appInsightsVersion
+    compile group: 'com.microsoft.azure', name: 'applicationinsights-spring-boot-starter', version: appInsightsVersion
 
     compile 'uk.gov.hmcts.reform:properties-volume-spring-boot-starter:0.0.4'
     compile 'uk.gov.hmcts.reform:health-spring-boot-starter:0.0.3'

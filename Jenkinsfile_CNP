@@ -7,9 +7,7 @@ properties(
 @Library("Infrastructure")
 
 def type = "java"
-
 def product = "ccd"
-
 def component = "user-profile-api"
 
 def secrets = [
@@ -31,6 +29,9 @@ def vaultOverrides = [
     'preview': 'aat',
     'spreview': 'saat'
 ]
+// Vars needed for AKS functional and smoke tests
+env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
+env.CCD_DS_SERVICE_NAME = "ccd_data"
 
 withPipeline(type, product, component) {
     onMaster {
@@ -41,16 +42,14 @@ withPipeline(type, product, component) {
     }
     onPR {
         enableSlackNotifications('#ccd-pr-builds')
-
-        env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
-        env.CCD_DS_SERVICE_NAME = "ccd_data"
     }
 
-    enableDbMigration('ccd')
+   
     enableDockerBuild()
-
+    enableSlackNotifications(channel)
     overrideVaultEnvironments(vaultOverrides)
+    enableAksStagingDeployment()
     loadVaultSecrets(secrets)
-
+    enableDbMigration('ccd')
     installCharts()
 }
