@@ -46,7 +46,6 @@ withPipeline(type, product, component) {
 
    
     enableDockerBuild()
-    enableSlackNotifications(channel)
     overrideVaultEnvironments(vaultOverrides)
     enableAksStagingDeployment()
     loadVaultSecrets(secrets)
