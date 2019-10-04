@@ -169,6 +169,7 @@ dependencies {
 
     // CVE-2019-12086 - force update of jackson-databind - remove when dependencies move off <2.9.9
     compile "com.fasterxml.jackson.core:jackson-databind:2.9.10"
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.10'
 
     aatCompile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0'
     testCompile "org.junit.jupiter:junit-jupiter-api"
@@ -194,6 +195,18 @@ dependencyManagement {
             entry 'commons-beanutils'
         }
     }
+}
+configurations.all {
+     resolutionStrategy {
+         eachDependency { DependencyResolveDetails details ->
+             if (details.requested.group in ['com.fasterxml.jackson.core', 'com.fasterxml.jackson.module', 'com.fasterxml.jackson.datatype']) {
+                 details.useVersion '2.9.10'
+             }
+             if (details.requested.name == 'jackson-databind') {
+                 details.useVersion '2.9.10'
+             }
+         }
+     }
 }
 
 checkstyle {
