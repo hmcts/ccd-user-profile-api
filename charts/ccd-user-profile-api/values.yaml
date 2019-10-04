@@ -12,7 +12,7 @@ java:
     LOGBACK_REQUIRE_ERROR_CODE: 'false'    
   image: 'hmctspublic.azurecr.io/ccd/user-profile-api:latest'
   keyVaults:
-    "user-profile":
+    ccd:
       secrets:
         - user-profile-api-POSTGRES-PASS
         - AppInsightsInstrumentationKey
