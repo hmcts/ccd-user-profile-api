@@ -2,12 +2,6 @@ java:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
   aadIdentityName:
-  keyVaults:
-    ccd:
-      resourceGroup: ccd-shared
-      secrets:
-        - user-profile-api-POSTGRES-PASS
-        - AppInsightsInstrumentationKey
   environment:
     USER_PROFILE_DB_HOST: "{{ .Release.Name }}-postgresql"
     USER_PROFILE_DB_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
