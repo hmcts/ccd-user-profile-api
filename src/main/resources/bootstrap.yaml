@@ -1,6 +1,7 @@
 spring:
   cloud:
     propertiesvolume:
+      prefixed: false
       paths: /mnt/secrets/ccd
       aliases:
         user-profile-api-POSTGRES-PASS: USER_PROFILE_DB_PASSWORD
