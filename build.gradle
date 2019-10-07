@@ -112,7 +112,6 @@ targetCompatibility = 1.8
 
 ext {
     reformLogging= '5.1.1-BETA'
-    appInsightsVersion = '2.4.1'
     hibernateVersion = '5.2.17.Final'
     springCloudVersion = 'Greenwich.RELEASE'
     limits = [
@@ -159,9 +158,6 @@ dependencies {
     compile 'net.jcip:jcip-annotations:1.0'
     compile 'com.github.spotbugs:spotbugs-annotations:3.1.12'
 
-    // https://github.com/glowroot/instrumentation/issues/1
-    compile group: 'com.microsoft.azure', name: 'applicationinsights-logging-logback', version: appInsightsVersion
-    compile group: 'com.microsoft.azure', name: 'applicationinsights-spring-boot-starter', version: appInsightsVersion
 
     compile 'uk.gov.hmcts.reform:properties-volume-spring-boot-starter:0.0.4'
     compile 'uk.gov.hmcts.reform:health-spring-boot-starter:0.0.3'
