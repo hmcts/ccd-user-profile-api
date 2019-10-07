@@ -2,12 +2,17 @@ java:
   applicationPort: 4453
   environment:
     USER_PROFILE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_definition,ccd_admin
-    IDAM_S2S_URL: http://rpe-service-auth-provider-aat.service.core-compute-aat.internal
-    USER_PROFILE_DB_HOST: "{{ .Release.Name }}-postgresql"
+    IDAM_S2S_URL: http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
+    ENABLE_DB_MIGRATE: false
+    USER_PROFILE_DB_HOST: ccd-user-profile-api-postgres-db-{{ .Values.global.environment }}.postgres.database.azure.com
     USER_PROFILE_DB_PORT: 5432
-    USER_PROFILE_DB_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
-    USER_PROFILE_DB_USERNAME: "{{ .Values.postgresql.postgresqlUsername}}"
-    USER_PROFILE_DB_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
+    USER_PROFILE_DB_NAME: ccd_user_profile
+    USER_PROFILE_DB_USERNAME: ccd@ccd-user-profile-api-postgres-db-{{ .Values.global.environment }}
     LOGBACK_REQUIRE_ALERT_LEVEL: 'false'
     LOGBACK_REQUIRE_ERROR_CODE: 'false'    
   image: 'hmctspublic.azurecr.io/ccd/user-profile-api:latest'
+  keyVaults:
+    ccd:
+      secrets:
+        - user-profile-api-POSTGRES-PASS
+        - AppInsightsInstrumentationKey
