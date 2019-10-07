@@ -1,5 +1,6 @@
 java:
   applicationPort: 4453
+  aadIdentityName: ccd
   environment:
     USER_PROFILE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_definition,ccd_admin
     IDAM_S2S_URL: http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
