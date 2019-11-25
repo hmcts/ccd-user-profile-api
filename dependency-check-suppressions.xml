@@ -50,5 +50,9 @@
         <cve>CVE-2014-3488</cve>
         <cve>CVE-2015-2156</cve>
     </suppress>
-
+    <suppress>
+        <notes><![CDATA[file name: jackson-databind-2.9.10.jar]]></notes>
+    <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson-databind@.*$</packageUrl>
+    <cpe>cpe:/a:fasterxml:jackson</cpe>
+    </suppress>
 </suppressions>
