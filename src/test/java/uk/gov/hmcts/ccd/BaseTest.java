@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
@@ -23,11 +24,12 @@ import javax.sql.DataSource;
 public abstract class BaseTest {
 
     protected static final MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-        MediaType.APPLICATION_JSON.getSubtype(),
-        Charset.forName("utf8"));
+                                                                 MediaType.APPLICATION_JSON.getSubtype(),
+                                                                 Charset.forName("utf8"));
     protected static final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
+    @Qualifier("EmbeddedPostgres")
     protected DataSource db;
 
     @BeforeClass
