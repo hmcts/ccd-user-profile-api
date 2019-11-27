@@ -7,10 +7,9 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import uk.gov.hmcts.ccd.BaseTest;
 import uk.gov.hmcts.ccd.data.SanityCheckApplication;
+import uk.gov.hmcts.ccd.data.TestConfiguration;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionEntity;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionMapper;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
@@ -34,12 +33,11 @@ import static uk.gov.hmcts.ccd.data.userprofile.UserProfileRepository.NOT_APPLIC
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
-    SanityCheckApplication.class
+    SanityCheckApplication.class,
+    TestConfiguration.class
 })
 @Transactional
-@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
-    scripts = { "classpath:sql/init_db.sql"})
-public class UserProfileRepositoryTest extends BaseTest  {
+public class UserProfileRepositoryTest {
 
     private static final String ACTIONED_BY_EMAIL = "rtaashrie9j1otx@example.com";
     private static final String DEFAULT_CASE_TYPE = "workBasketDefaultCaseType";
