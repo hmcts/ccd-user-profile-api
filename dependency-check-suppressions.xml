@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
-
-    <suppress>
-        <notes>From transitive dependency scala-compiler-2.11.8.jar;  we do not use scala in the project</notes>
-        <cve>CVE-2016-5725</cve>
-    </suppress>
     <suppress>
         <notes>
             ldap and groovy related and they are not used in production
         </notes>
         <cve>CVE-2016-6497</cve>
-    </suppress>
-    <suppress>
-        <notes>From transitive dependency scala-compiler-2.11.8.jar;  we do not use scala in the project</notes>
-        <cve>CVE-2017-15288</cve>
     </suppress>
     <suppress>
         <notes>postgresql-42.2.2.jar (org.postgresql:postgresql:42.2.2, cpe:/a:postgresql:postgresql:42.2.2, cpe:/a:postgresql:postgresql_jdbc_driver:42.2.2) : CVE-2018-1115</notes>
@@ -36,21 +27,6 @@
         <cve>CVE-2018-1258</cve>
     </suppress>
     <suppress>
-        <notes>CVE-2018-13661: case-app_2.11-1.2.0.jar is brought in via codacy for test coverage reporting, thus unimpacted in production</notes>
-        <gav regex="true">^com\.github\.alexarchambault:case-app_2\.11:.*$</gav>
-        <cpe>cpe:/a:app_project:app</cpe>
-    </suppress>
-    <suppress>
-        <notes>CVE-2018-13661: case-app-annotations_2.11-1.2.0.jar is brought in via codacy for test coverage reporting, thus unimpacted in production</notes>
-        <gav regex="true">^com\.github\.alexarchambault:case-app-annotations_2\.11:.*$</gav>
-        <cpe>cpe:/a:app_project:app</cpe>
-    </suppress>
-    <suppress>
-        <notes>CVE-2018-13661: case-app-util_2.11-1.2.0.jar is brought in via codacy for test coverage reporting, thus unimpacted in production</notes>
-        <gav regex="true">^com\.github\.alexarchambault:case-app-util_2\.11:.*$</gav>
-        <cpe>cpe:/a:app_project:app</cpe>
-    </suppress>
-    <suppress>
         <notes>Temporary suppression while we investigate. See RDM-3324</notes>
         <cve>CVE-2018-1000632</cve>
     </suppress>
@@ -67,56 +43,6 @@
         <cpe>cpe:/a:slf4j:slf4j:1.7.25</cpe>
     </suppress>
     <suppress>
-        <notes>Temporarily suppress jackson-databind CVE see RDM-3796</notes>
-        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
-        <cve>CVE-2018-14718</cve>
-    </suppress>
-    <suppress>
-        <notes>Temporarily suppress jackson-databind CVE see RDM-3796</notes>
-        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
-        <cve>CVE-2018-14719</cve>
-    </suppress>
-    <suppress>
-        <notes>Temporarily suppress jackson-databind CVE see RDM-3796</notes>
-        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
-        <cve>CVE-2018-14720</cve>
-    </suppress>
-    <suppress>
-        <notes>Temporarily suppress jackson-databind CVE see RDM-3796</notes>
-        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
-        <cve>CVE-2018-14721</cve>
-    </suppress>
-    <suppress>
-        <notes>Temporarily suppress jackson-databind CVE see RDM-3796</notes>
-        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
-        <cve>CVE-2018-19360</cve>
-    </suppress>
-    <suppress>
-        <notes>Temporarily suppress jackson-databind CVE see RDM-3796</notes>
-        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
-        <cve>CVE-2018-19361</cve>
-    </suppress>
-    <suppress>
-        <notes>Temporarily suppress jackson-databind CVE see RDM-3796</notes>
-        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
-        <cve>CVE-2018-19362</cve>
-    </suppress>
-    <suppress>
-        <notes>Temporarily suppress jackson-databind CVE see RDM-3796</notes>
-        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
-        <cve>CVE-2018-1000873</cve>
-    </suppress>
-    <suppress>
-        <notes>Temporarily suppress jackson-databind CVE see RDM-3796</notes>
-        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
-        <cve>CVE-2019-14379</cve>
-    </suppress>
-    <suppress>
-        <notes>Temporarily suppress jackson-databind CVE see RDM-3796</notes>
-        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:.*$</gav>
-        <cve>CVE-2019-14439</cve>
-    </suppress>
-    <suppress>
         <notes><![CDATA[
             Suppressing as it seems a false positive as per https://github.com/jeremylong/DependencyCheck/issues/1573
     ]]></notes>
@@ -125,27 +51,8 @@
         <cve>CVE-2015-2156</cve>
     </suppress>
     <suppress>
-        <notes><![CDATA[
-            file name: jackson-databind-2.9.8.jar
-            We've upgraded to jackson-databind 2.9.9 but the dependecy check keeps flagging it, thus mark as false positive.
-        ]]></notes>
-        <gav regex="true">^com\.fasterxml\.jackson\.core:jackson-databind:2\.9\.8$</gav>
-        <cve>CVE-2019-12086</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-           no fix available, not affected anyway
-           ]]></notes>
-        <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson-databind@.*$</packageUrl>
-        <cve>CVE-2019-12814</cve>
-        <cve>CVE-2019-12384</cve>
-    </suppress>
-     <!-- RDM-6147 - should remove these suppressions -->
-    <suppress until="2019-10-31">
-        <notes><![CDATA[ file name: jackson-databind-2.9.10.jar ]]></notes>
-        <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson\-databind@.*$</packageUrl>
-        <cve>CVE-2019-16942</cve>
-        <cve>CVE-2019-16943</cve>
-        <cve>CVE-2019-17531</cve>
+        <notes><![CDATA[file name: jackson-databind-2.9.10.jar]]></notes>
+    <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson-databind@.*$</packageUrl>
+    <cpe>cpe:/a:fasterxml:jackson</cpe>
     </suppress>
 </suppressions>
