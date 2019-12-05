@@ -48,6 +48,7 @@ withPipeline(type, product, component) {
     enableDockerBuild()
     overrideVaultEnvironments(vaultOverrides)
     enableAksStagingDeployment()
+    disableLegacyDeploymentOnAAT
     loadVaultSecrets(secrets)
     enableDbMigration('ccd')
     installCharts()
