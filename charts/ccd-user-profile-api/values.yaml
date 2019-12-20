@@ -12,6 +12,7 @@ java:
     LOGBACK_REQUIRE_ALERT_LEVEL: 'false'
     LOGBACK_REQUIRE_ERROR_CODE: 'false'    
   image: 'hmctspublic.azurecr.io/ccd/user-profile-api:latest'
+  ingressHost: ccd-user-profile-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   keyVaults:
     ccd:
       secrets:
