@@ -47,6 +47,7 @@ module "user-profile-api" {
   capacity = "${var.capacity}"
   appinsights_instrumentation_key = "${var.appinsights_instrumentation_key}"
   java_container_version = "9.0"
+  enable_ase                      = "${var.enable_ase}"
 
   app_settings = {
     USER_PROFILE_DB_HOST        = "${module.user-profile-db.host_name}"
