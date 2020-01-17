@@ -41,7 +41,6 @@ public class UserProfileEndpointIT extends BaseTest {
 
     private static final String CREATE_USER_PROFILE = "/user-profile/users";
     private static final String FIND_PROFILE_FOR_USER_1 = "/user-profile/users?uid=USER1";
-    private static final String FIND_PROFILE_FOR_USER_2 = "/user-profile/users?uid=User2";
     private static final String FIND_JURISDICTION_FOR_USER_1 = "/user-profile/users?uid=user1";
     private static final String FIND_JURISDICTION_FOR_USER_2 = "/user-profile/users?uid=user2%2Ba%40example.com";
     private static final String USER_PROFILE_USERS_DEFAULTS = "/users";
@@ -339,7 +338,7 @@ public class UserProfileEndpointIT extends BaseTest {
         // Given - a User Profile (id = user1) with 3 Jurisdictions (TEST1,
         // TEST2 and TEST3)
         // When - attempting to find Jurisdictions for the User Profile
-        final MvcResult mvcResult = mockMvc.perform(get(FIND_PROFILE_FOR_USER_1)).andReturn();
+        final MvcResult mvcResult = mockMvc.perform(get(FIND_JURISDICTION_FOR_USER_1)).andReturn();
 
         assertEquals("Unexpected response status", 200, mvcResult.getResponse().getStatus());
 
@@ -384,7 +383,7 @@ public class UserProfileEndpointIT extends BaseTest {
 
         // When - attempting to find Jurisdictions for the User Profile
         // Then - assert that no Jurisdiction id's are found
-        final MvcResult mvcResult = mockMvc.perform(get(FIND_PROFILE_FOR_USER_2)).andReturn();
+        final MvcResult mvcResult = mockMvc.perform(get(FIND_JURISDICTION_FOR_USER_2)).andReturn();
 
         assertEquals("Unexpected response status", 200, mvcResult.getResponse().getStatus());
 

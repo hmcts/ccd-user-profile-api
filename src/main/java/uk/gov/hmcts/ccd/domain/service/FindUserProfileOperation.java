@@ -21,9 +21,9 @@ public class FindUserProfileOperation {
         this.userProfileRepository = userProfileRepository;
     }
 
-    public UserProfile execute(String userProfileId) {
+    public UserProfile execute(String userProfileId, String actionedBy) {
         LOG.info("Finding user with id {}", userProfileId);
-        final UserProfile userProfile = userProfileRepository.findById(userProfileId);
+        final UserProfile userProfile = userProfileRepository.findById(userProfileId, actionedBy);
         return Optional.ofNullable(userProfile)
             .orElseThrow(() -> new NotFoundException("Cannot find profile for user '" + userProfileId + "'"));
     }
