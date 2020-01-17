@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 
 @ExtendWith(AATExtension.class)
 public abstract class BaseTest {
-    protected final AATHelper aat;
+    protected final transient AATHelper aat;
 
     protected BaseTest(AATHelper aat) {
         this.aat = aat;
@@ -16,10 +16,7 @@ public abstract class BaseTest {
     }
 
     protected Supplier<RequestSpecification> asDataStoreService() {
-        final String s2sToken = aat.getS2SHelper()
-                                   .getToken();
-
         return () -> RestAssured.given()
-                          .header("ServiceAuthorization", s2sToken);
+                          .header("ServiceAuthorization", aat.getS2SHelper().getToken());
     }
 }

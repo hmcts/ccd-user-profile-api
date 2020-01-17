@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,15 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.AppInsights;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 import uk.gov.hmcts.ccd.domain.service.DeleteUserProfileJurisdictionOperation;
-import uk.gov.hmcts.ccd.domain.service.SaveUserProfileOperation;
 import uk.gov.hmcts.ccd.domain.service.FindAllUserProfilesOperation;
+import uk.gov.hmcts.ccd.domain.service.SaveUserProfileOperation;
 import uk.gov.hmcts.ccd.domain.service.UserProfileOperation;
 
-import javax.transaction.Transactional;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import javax.transaction.Transactional;
 
 @RestController
 class UserProfileController {
@@ -54,11 +55,14 @@ class UserProfileController {
         @ApiResponse(code = 200, message = "Found User Profiles"),
         @ApiResponse(code = 400, message = "Unable to find User Profiles")
     })
-    public List<UserProfile> getUserProfiles(@ApiParam(value = "Jurisdiction ID")
+    public List<UserProfile> getUserProfiles(@ApiParam("Jurisdiction ID")
                                              @RequestParam("jurisdiction")
-                                             final Optional<String> jurisdictionOptional) {
+                                                 final Optional<String> jurisdictionOptional,
+                                             @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
+                                                 final String actionedBy) {
         Instant start = Instant.now();
-        List<UserProfile> userProfiles = jurisdictionOptional.map(findAllUserProfilesOperation::getAll)
+        List<UserProfile> userProfiles = jurisdictionOptional
+            .map(j -> findAllUserProfilesOperation.getAll(j, actionedBy))
             .orElse(findAllUserProfilesOperation.getAll());
         final Duration between = Duration.between(start, Instant.now());
         appInsights.trackRequest(between, true);
@@ -73,8 +77,10 @@ class UserProfileController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Updated User Profile defaults")
     })
-    public void populateUserProfiles(@RequestBody final List<UserProfile> userProfiles) {
-        userProfileOperation.execute(userProfiles);
+    public void populateUserProfiles(@RequestBody final List<UserProfile> userProfiles,
+                                     @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
+                                     final String actionedBy) {
+        userProfileOperation.execute(userProfiles, actionedBy);
     }
 
     @Transactional
@@ -88,8 +94,10 @@ class UserProfileController {
         @ApiResponse(code = 200, message = "Saved User Profile"),
         @ApiResponse(code = 400, message = "User Profile does not exist, or user already belongs to given Jurisdiction")
     })
-    public UserProfile saveUserProfile(@RequestBody final UserProfile userProfile) {
-        return saveUserProfileOperation.saveUserProfile(userProfile);
+    public UserProfile saveUserProfile(@RequestBody final UserProfile userProfile,
+                                       @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
+                                       final String actionedBy) {
+        return saveUserProfileOperation.saveUserProfile(userProfile, actionedBy);
     }
 
     @Transactional
@@ -106,12 +114,14 @@ class UserProfileController {
                                     + "Jurisdiction, or user's Workbasket defaults are for the Jurisdiction being "
                                     + "removed")
     })
-    public void deleteJurisdictionFromUserProfile(@ApiParam(value = "User Profile ID")
+    public void deleteJurisdictionFromUserProfile(@ApiParam("User Profile ID")
                                                   @RequestParam("uid")
                                                   final String uid,
-                                                  @ApiParam(value = "Jurisdiction ID")
+                                                  @ApiParam("Jurisdiction ID")
                                                   @RequestParam("jid")
-                                                  final String jid) {
-        deleteUserProfileJurisdictionOperation.deleteAssociation(uid, jid);
+                                                  final String jid,
+                                                  @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
+                                                      final String actionedBy) {
+        deleteUserProfileJurisdictionOperation.deleteAssociation(uid, jid, actionedBy);
     }
 }

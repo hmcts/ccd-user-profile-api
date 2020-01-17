@@ -13,6 +13,7 @@ import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -33,7 +34,7 @@ public class UserProfileOperation {
         this.createUserProfileOperation = createUserProfileOperation;
     }
 
-    public void execute(final List<UserProfile> userProfiles) {
+    public void execute(final List<UserProfile> userProfiles, final String actionedBy) {
         for (UserProfile userProfile : userProfiles) {
 
             // ensure that jurisdiction entity exists
@@ -47,21 +48,21 @@ public class UserProfileOperation {
             }
 
             // We deals with lower case user profile Id only
-            userProfile.setId(userProfile.getId().toLowerCase());
+            userProfile.setId(userProfile.getId().toLowerCase(Locale.UK));
 
             // finds user profile entity
-            final UserProfile userProfileFound = userProfileRepository.findById(userProfile.getId());
+            final UserProfile userProfileFound = userProfileRepository.findById(userProfile.getId(), actionedBy);
 
             if (null == userProfileFound) {
                 LOG.info("User profile for {} not found. Creating one...", userProfile.getId());
-                createUserProfileOperation.execute(populateProfileJurisdiction(userProfile));
+                createUserProfileOperation.execute(populateProfileJurisdiction(userProfile), actionedBy);
             } else {
                 if (isUpdateRequired(userProfileFound, userProfile)) {
                     LOG.info("User profile for {} found. Updating...", userProfile.getId());
                     userProfileFound.setWorkBasketDefaultCaseType(userProfile.getWorkBasketDefaultCaseType());
                     userProfileFound.setWorkBasketDefaultJurisdiction(userProfile.getWorkBasketDefaultJurisdiction());
                     userProfileFound.setWorkBasketDefaultState(userProfile.getWorkBasketDefaultState());
-                    userProfileRepository.updateUserProfile(userProfileFound);
+                    userProfileRepository.updateUserProfile(userProfileFound, actionedBy);
                 }
             }
         }

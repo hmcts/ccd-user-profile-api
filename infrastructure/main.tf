@@ -1,6 +1,10 @@
+provider "azurerm" {
+  version = "1.22.1"
+}
+
 locals {
   app_full_name = "${var.product}-${var.component}"
-  aseName = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
+  aseName = "core-compute-${var.env}"
 
   local_env = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "aat" : "saat" : var.env}"
   local_ase = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "core-compute-aat" : "core-compute-saat" : local.aseName}"
@@ -40,6 +44,10 @@ module "user-profile-api" {
   asp_name = "${(var.asp_name == "use_shared") ? local.sharedAppServicePlan : var.asp_name}"
   asp_rg = "${(var.asp_rg == "use_shared") ? local.sharedASPResourceGroup : var.asp_rg}"
   website_local_cache_sizeinmb = 1000
+  capacity = "${var.capacity}"
+  appinsights_instrumentation_key = "${var.appinsights_instrumentation_key}"
+  java_container_version = "9.0"
+  enable_ase                      = "${var.enable_ase}"
 
   app_settings = {
     USER_PROFILE_DB_HOST        = "${module.user-profile-db.host_name}"
@@ -47,6 +55,8 @@ module "user-profile-api" {
     USER_PROFILE_DB_NAME        = "${module.user-profile-db.postgresql_database}"
     USER_PROFILE_DB_USERNAME    = "${module.user-profile-db.user_name}"
     USER_PROFILE_DB_PASSWORD    = "${module.user-profile-db.postgresql_password}"
+
+    USER_PROFILE_DB_OPTIONS     = "?sslmode=require"
 
     ENABLE_DB_MIGRATE = "false"
 
@@ -61,6 +71,7 @@ module "user-profile-db" {
   product = "${local.app_full_name}-postgres-db"
   location = "${var.location}"
   env = "${var.env}"
+  subscription = "${var.subscription}"
   postgresql_user = "${var.postgresql_user}"
   database_name = "${var.database_name}"
   sku_name = "GP_Gen5_2"
@@ -75,31 +86,31 @@ module "user-profile-db" {
 ////////////////////////////////
 
 resource "azurerm_key_vault_secret" "POSTGRES-USER" {
-  name = "${local.app_full_name}-POSTGRES-USER"
+  name = "${var.component}-POSTGRES-USER"
   value = "${module.user-profile-db.user_name}"
-  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.ccd_shared_key_vault.id}"
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES-PASS" {
-  name = "${local.app_full_name}-POSTGRES-PASS"
+  name = "${var.component}-POSTGRES-PASS"
   value = "${module.user-profile-db.postgresql_password}"
-  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.ccd_shared_key_vault.id}"
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES_HOST" {
-  name = "${local.app_full_name}-POSTGRES-HOST"
+  name = "${var.component}-POSTGRES-HOST"
   value = "${module.user-profile-db.host_name}"
-  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.ccd_shared_key_vault.id}"
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES_PORT" {
-  name = "${local.app_full_name}-POSTGRES-PORT"
+  name = "${var.component}-POSTGRES-PORT"
   value = "${module.user-profile-db.postgresql_listen_port}"
-  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.ccd_shared_key_vault.id}"
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
-  name = "${local.app_full_name}-POSTGRES-DATABASE"
+  name = "${var.component}-POSTGRES-DATABASE"
   value = "${module.user-profile-db.postgresql_database}"
-  vault_uri = "${data.azurerm_key_vault.ccd_shared_key_vault.vault_uri}"
+  key_vault_id = "${data.azurerm_key_vault.ccd_shared_key_vault.id}"
 }

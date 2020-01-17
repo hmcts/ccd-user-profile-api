@@ -68,9 +68,18 @@ variable "database_name" {
 
 variable "authorised-services" {
   type    = "string"
-  default = "ccd_data,ccd_definition,ccd_admin"
+  default = "ccd_data,ccd_definition,ccd_admin,rd_professional_api"
 }
 
 variable "common_tags" {
   type = "map"
+}
+
+variable "appinsights_instrumentation_key" {
+  description = "Instrumentation key of the App Insights instance this webapp should use. Module will create own App Insights resource if this is not provided"
+  default = ""
+}
+
+variable "enable_ase" {
+  default = false
 }

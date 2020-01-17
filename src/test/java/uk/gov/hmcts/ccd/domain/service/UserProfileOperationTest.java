@@ -14,17 +14,13 @@ import static org.mockito.Mockito.mock;
 public class UserProfileOperationTest {
 
     private UserProfileOperation subject;
-    private UserProfileRepository userProfileRepository;
-    private JurisdictionRepository jurisdictionRepository;
-    private CreateUserProfileOperation createUserProfileOperation;
 
     @Before
     public void setUp() {
-        userProfileRepository = mock(UserProfileRepository.class);
-        jurisdictionRepository = mock(JurisdictionRepository.class);
-        createUserProfileOperation = mock(CreateUserProfileOperation.class);
+        UserProfileRepository userProfileRepository = mock(UserProfileRepository.class);
+        JurisdictionRepository jurisdictionRepository = mock(JurisdictionRepository.class);
+        CreateUserProfileOperation createUserProfileOperation = mock(CreateUserProfileOperation.class);
         subject = new UserProfileOperation(userProfileRepository, jurisdictionRepository, createUserProfileOperation);
-
     }
 
     @Test

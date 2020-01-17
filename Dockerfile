@@ -1,10 +1,14 @@
-FROM openjdk:8-jre
+# Keep hub.Dockerfile aligned to this file as far as possible
+ARG JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom"
+ARG APP_INSIGHTS_AGENT_VERSION=2.5.1-BETA
+
+FROM hmctspublic.azurecr.io/base/java:openjdk-8-distroless-1.2
 LABEL maintainer="https://github.com/hmcts/ccd-user-profile-api"
 
-COPY build/libs/user-profile.jar /app.jar
-
-HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD http_proxy="" curl --silent --fail http://localhost:4453/status/health
+COPY build/libs/user-profile.jar  /opt/app/
+COPY lib/AI-Agent.xml /opt/app
 
 EXPOSE 4453
 
-CMD java ${JAVA_OPTS} -Dspring.config.location=classpath:/application.properties -Djava.security.egd=file:/dev/./urandom -jar /app.jar
+CMD ["user-profile.jar"]
+

@@ -9,10 +9,10 @@ import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.data.userprofile.UserProfileRepository;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
@@ -20,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 class FindAllUserProfilesOperationTest {
+
+    private static final String ACTIONED_BY_EMAIL = "pf4sd59ykc@example.com";
 
     @Mock
     private UserProfileRepository userProfileRepository;
@@ -43,9 +45,10 @@ class FindAllUserProfilesOperationTest {
             final UserProfile userProfile1b = createUserProfile("test1b@example.com", "TEST", "CT2");
             final UserProfile userProfile2 = createUserProfile("test2@example.com", "TEST2", "CT2");
 
-            when(userProfileRepository.findAll("TEST")).thenReturn(Arrays.asList(userProfile1a, userProfile1b));
+            when(userProfileRepository.findAll("TEST", ACTIONED_BY_EMAIL)).thenReturn(asList(userProfile1a,
+                                                                                             userProfile1b));
 
-            List<UserProfile> userProfiles = classUnderTest.getAll("TEST");
+            List<UserProfile> userProfiles = classUnderTest.getAll("TEST", ACTIONED_BY_EMAIL);
             assertEquals(2, userProfiles.size());
             assertEquals("test1a@example.com", userProfiles.get(0).getId());
             assertEquals("TEST", userProfiles.get(0).getWorkBasketDefaultJurisdiction());
@@ -63,7 +66,7 @@ class FindAllUserProfilesOperationTest {
             final UserProfile userProfile1b = createUserProfile("test1b@example.com", "TEST", "CT2");
             final UserProfile userProfile2 = createUserProfile("test2@example.com", "TEST2", "CT2");
 
-            when(userProfileRepository.findAll()).thenReturn(Arrays.asList(userProfile1a, userProfile1b, userProfile2));
+            when(userProfileRepository.findAll()).thenReturn(asList(userProfile1a, userProfile1b, userProfile2));
 
             List<UserProfile> userProfiles = classUnderTest.getAll();
             assertEquals(3, userProfiles.size());
@@ -78,9 +81,9 @@ class FindAllUserProfilesOperationTest {
         @Test
         @DisplayName("Should return an empty list when the repository returns no UserProfiles")
         void shouldReturnEmptyUserProfileList() {
-            when(userProfileRepository.findAll("TEST3")).thenReturn(Collections.emptyList());
+            when(userProfileRepository.findAll("TEST3", ACTIONED_BY_EMAIL)).thenReturn(Collections.emptyList());
 
-            List<UserProfile> userProfiles = classUnderTest.getAll("TEST3");
+            List<UserProfile> userProfiles = classUnderTest.getAll("TEST3", ACTIONED_BY_EMAIL);
             assertEquals(0, userProfiles.size());
         }
 
