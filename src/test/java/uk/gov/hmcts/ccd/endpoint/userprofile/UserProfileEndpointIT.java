@@ -399,7 +399,7 @@ public class UserProfileEndpointIT extends BaseTest {
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:sql/init_db.sql" })
     public void getJurisdictionsForNonExistentUserProfile() throws Exception {
         // Given - there is no User Profile with id = user1
-        // When - attempting to find Jurisdictions for a User Profile iwth id =
+        // When - attempting to find Jurisdictions for a User Profile with id =
         // user1
         // Then - assert that the expected error is returned
         final MvcResult mvcResult = mockMvc.perform(get(FIND_PROFILE_FOR_USER_1)).andReturn();
