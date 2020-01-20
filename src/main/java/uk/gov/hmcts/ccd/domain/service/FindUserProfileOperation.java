@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.data.userprofile.UserProfileRepository;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
-import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
+import uk.gov.hmcts.ccd.endpoint.exception.NotFoundException;
 
 import java.util.Optional;
 
@@ -22,8 +22,9 @@ public class FindUserProfileOperation {
     }
 
     public UserProfile execute(String userProfileId, String actionedBy) {
-        LOG.debug("Finding user with id {}", userProfileId);
-        return Optional.ofNullable(userProfileRepository.findById(userProfileId, actionedBy))
-            .orElseThrow(() -> new BadRequestException("No user exists with the Id '" + userProfileId + "'"));
+        LOG.info("Finding user with id {}", userProfileId);
+        final UserProfile userProfile = userProfileRepository.findById(userProfileId, actionedBy);
+        return Optional.ofNullable(userProfile)
+            .orElseThrow(() -> new NotFoundException("Cannot find profile for user '" + userProfileId + "'"));
     }
 }
