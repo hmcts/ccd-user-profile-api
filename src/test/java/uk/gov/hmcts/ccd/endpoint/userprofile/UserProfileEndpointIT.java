@@ -40,6 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserProfileEndpointIT extends BaseTest {
 
     private static final String CREATE_USER_PROFILE = "/user-profile/users";
+    private static final String FIND_PROFILE_FOR_USER_1 = "/user-profile/users?uid=USER1";
     private static final String FIND_JURISDICTION_FOR_USER_1 = "/user-profile/users?uid=user1";
     private static final String FIND_JURISDICTION_FOR_USER_2 = "/user-profile/users?uid=user2%2Ba%40example.com";
     private static final String USER_PROFILE_USERS_DEFAULTS = "/users";
@@ -401,10 +402,11 @@ public class UserProfileEndpointIT extends BaseTest {
         // When - attempting to find Jurisdictions for a User Profile with id =
         // user1
         // Then - assert that the expected error is returned
-        final MvcResult mvcResult = mockMvc.perform(get(FIND_JURISDICTION_FOR_USER_1)).andReturn();
+        final MvcResult mvcResult = mockMvc.perform(get(FIND_PROFILE_FOR_USER_1)).andReturn();
 
-        assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
-        assertEquals("Unexpected response message", "No user exists with the Id '" + USER_ID_1 + "'",
+        assertEquals("Unexpected response status", 404, mvcResult.getResponse().getStatus());
+        assertEquals("Unexpected response message", "Cannot find profile for user 'USER1'",
+
             mvcResult.getResponse().getContentAsString());
 
         final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
