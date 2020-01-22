@@ -15,9 +15,11 @@
 
 	"expectedResponse": {
     "headers" : {
+      "Content-Length" : "[[ANY]]",
       "Content-Type" : "application/vnd.spring-boot.actuator.v2+json;charset=UTF-8",
       "Date" : "[[ANY]]",
-      "Transfer-Encoding" : "chunked"
+      "Request-Context" : "[[ANY]]",
+      "Vary" : "Accept-Encoding"
     },
     "body" : {
       "status" : "UP",
