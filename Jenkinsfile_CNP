@@ -12,7 +12,8 @@ def component = "user-profile-api"
 
 def secrets = [
     's2s-${env}': [
-        secret('microservicekey-ccd-data', 'CCD_DS_SERVICE_SECRET')
+        secret('microservicekey-ccd-data', 'CCD_DS_SERVICE_SECRET'),
+        secret('microservicekey-ccd-gw', 'CCD_GW_SERVICE_SECRET')
     ]
 ]
 
