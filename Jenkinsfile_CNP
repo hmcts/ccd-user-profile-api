@@ -32,6 +32,10 @@ def vaultOverrides = [
 // Vars needed for AKS functional and smoke tests
 env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
 env.CCD_DS_SERVICE_NAME = "ccd_data"
+env.CCD_GW_SERVICE_NAME = "ccd_gw"
+env.OAUTH2_CLIENT_ID = "ccd_gateway"
+env.OAUTH2_REDIRECT_URI = "https://www-ccd.aat.platform.hmcts.net/oauth2redirect"
+
 
 withPipeline(type, product, component) {
     onMaster {
