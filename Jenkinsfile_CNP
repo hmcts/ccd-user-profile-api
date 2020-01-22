@@ -53,4 +53,12 @@ withPipeline(type, product, component) {
     enableDbMigration('ccd')
     installCharts()
     disableLegacyDeployment()
+
+    after('functionalTest:preview') {
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/cucumber/**/*'
+    }
+
+    after('functionalTest:aat') {
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/cucumber/**/*'
+    }
 }
