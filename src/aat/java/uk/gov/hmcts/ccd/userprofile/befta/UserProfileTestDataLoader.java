@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ccd.userprofile.befta;
 
 public class UserProfileTestDataLoader {
-    public static void main(String[] args) {
+    public UserProfileTestDataLoader() {
         new UserProfileTestAutomationAdapter().loadTestDataIfNecessary();
     }
 }
