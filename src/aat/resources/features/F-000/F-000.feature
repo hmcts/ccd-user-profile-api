@@ -6,7 +6,6 @@ Feature: [SAMPLE] Get health endpoint check
 
   @S-000
   Scenario: [SAMPLE] must return a successful response from the health endpoint
-    Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And it is submitted to call the [Health Endpoint] operation of [CCD User Profile]
     Then a positive response is received
