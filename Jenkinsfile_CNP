@@ -13,7 +13,8 @@ def component = "user-profile-api"
 def secrets = [
     'ccd-${env}': [
         secret('ccd-caseworker-autotest-email', 'CCD_CASEWORKER_AUTOTEST_EMAIL'),
-        secret('ccd-caseworker-autotest-password', 'CCD_CASEWORKER_AUTOTEST_PASSWORD')
+        secret('ccd-caseworker-autotest-password', 'CCD_CASEWORKER_AUTOTEST_PASSWORD'),
+        secret('ccd-api-gateway-oauth2-client-secret', 'OAUTH2_CLIENT_SECRET'),
     ],
     's2s-${env}': [
         secret('microservicekey-ccd-data', 'CCD_DS_SERVICE_SECRET'),
