@@ -40,6 +40,9 @@ public abstract class BaseTest {
     protected UserProfileEntity mapUserProfileData(final ResultSet resultSet,
                                                    final Integer i) throws SQLException {
 
+
+
+
         final UserProfileEntity entity = new UserProfileEntity();
         entity.setWorkBasketDefaultCaseType(resultSet.getString("work_basket_default_case_type"));
         entity.setWorkBasketDefaultJurisdiction(resultSet.getString("work_basket_default_jurisdiction"));
