@@ -55,4 +55,11 @@
     <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson-databind@.*$</packageUrl>
     <cpe>cpe:/a:fasterxml:jackson</cpe>
     </suppress>
+
+    <suppress>
+        <notes><![CDATA[Spring suppression]]></notes>
+        <cpe>cpe:2.3:a:security-framework_project:security-framework:5.1.5:*:*:*:*:*:*:*</cpe>
+        <cve>CVE-2020-5398</cve>
+    </suppress>
+
 </suppressions>
