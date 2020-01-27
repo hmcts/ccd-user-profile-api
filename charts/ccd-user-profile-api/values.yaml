@@ -2,7 +2,7 @@ java:
   applicationPort: 4453
   aadIdentityName: ccd
   environment:
-    USER_PROFILE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_definition,ccd_admin,rd_professional_api
+    USER_PROFILE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_definition,ccd_admin
     IDAM_S2S_URL: http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
     ENABLE_DB_MIGRATE: false
     USER_PROFILE_DB_HOST: ccd-user-profile-api-postgres-db-{{ .Values.global.environment }}.postgres.database.azure.com
