@@ -23,6 +23,7 @@ plugins {
     id "com.github.spotbugs" version "1.6.10"
     id "com.github.kt3k.coveralls" version "2.8.2"
     id 'net.ltgt.apt' version '0.21'
+    id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.14'
 }
 
 dependencyUpdates.resolutionStrategy = {
@@ -105,6 +106,7 @@ configurations {
     annotationProcessor
     aatCompile.extendsFrom(testCompile)
     aatRuntime.extendsFrom(testRuntime)
+    cucumberRuntime.extendsFrom(functionalRuntime)
 }
 // end::jar[]
 
@@ -175,6 +177,8 @@ dependencies {
     testCompile group: 'com.opentable.components', name: 'otj-pg-embedded', version: '0.13.1'
     testCompile group: 'com.github.tomakehurst', name: 'wiremock-standalone', version: '2.21.0'
     testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '2.1.0.RELEASE'
+    
+    testCompile group: 'uk.gov.hmcts', name: 'ccd-api-test-automation-fw', version: '1.0.20'
 }
 // end::dependencies[]
 
@@ -296,6 +300,8 @@ jacocoTestReport {
 
 test {
     environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
+    
+    generateCucumberReports.enabled = false
 
     useJUnitPlatform()
 
@@ -330,7 +336,13 @@ task smoke(type: Test) {
 //    setClasspath(sourceSets.aat.runtimeClasspath)
 //    include 'uk.gov.hmcts.ccd.userprofile.tests.smoke'
 //    useJUnitPlatform()
-
+    doFirst {
+        javaexec {
+            main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileTestDataLoader"
+            classpath += sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+            args = ['']
+        }
+    }
 }
 
 task functional(type: Test) {
@@ -342,6 +354,16 @@ task functional(type: Test) {
     setClasspath(sourceSets.aat.runtimeClasspath)
     include "uk/gov/hmcts/ccd/userprofile/tests/functional/**"
     useJUnitPlatform()
+
+    doFirst {
+        generateCucumberReports.enabled = true
+        javaexec {
+            main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
+            classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', "json:${projectDir}/target/cucumber.json", '--tags', 'not @Ignore', '--glue',
+                    'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
+        }
+    }
 }
 
 check.dependsOn jacocoTestReport
@@ -377,4 +399,9 @@ task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
             "-r",
             "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
     ]
+}
+
+cucumberReports {
+    outputDir = file("${projectDir}/target/cucumber")
+    reports = files("${projectDir}/target/cucumber.json")
 }
