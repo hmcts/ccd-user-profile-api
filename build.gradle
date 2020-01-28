@@ -177,9 +177,7 @@ dependencies {
     testCompile group: 'com.opentable.components', name: 'otj-pg-embedded', version: '0.13.1'
     testCompile group: 'com.github.tomakehurst', name: 'wiremock-standalone', version: '2.21.0'
     testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '2.1.0.RELEASE'
-
-    compile group: 'io.cucumber', name: 'cucumber-java', version: '5.0.0-RC1'
-    testCompile group: 'io.cucumber', name: 'cucumber-junit', version: '5.0.0-RC1'
+    
     testCompile group: 'uk.gov.hmcts', name: 'ccd-api-test-automation-fw', version: '1.0.20'
 }
 // end::dependencies[]
