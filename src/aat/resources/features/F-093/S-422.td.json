@@ -1,0 +1,25 @@
+{
+	"_guid_": "S-422",
+	"title": "should fetch user profile",
+
+	"productName": "CCD User Profile",
+	"operationName": "Get a user profile",
+	"method": "GET",
+	"uri": "/users?uid={uid}",
+
+	"specs": [
+		"an active profile in CCD",
+    "contains HTTP 200 Ok return code"
+	],
+
+  "request": {
+    "_extends_": "Common_Request",
+    "pathVariables": {
+      "uid": "[[DYNAMIC]]"
+    }
+  },
+
+	"expectedResponse": {
+    "extends": "Common_200_Response"
+  }
+}
