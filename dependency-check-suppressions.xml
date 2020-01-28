@@ -55,4 +55,12 @@
     <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson-databind@.*$</packageUrl>
     <cpe>cpe:/a:fasterxml:jackson</cpe>
     </suppress>
+    <!-- FIXME : RDM-7451 -->
+    <suppress>
+        <notes><![CDATA[
+   relates to spring_framework spring-security
+   ]]></notes>
+        <cpe>cpe:/a:pivotal_software:spring_framework</cpe>
+        <cve>CVE-2020-5398</cve>
+    </suppress>
 </suppressions>
