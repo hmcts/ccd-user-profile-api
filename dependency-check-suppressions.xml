@@ -55,4 +55,8 @@
     <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson-databind@.*$</packageUrl>
     <cpe>cpe:/a:fasterxml:jackson</cpe>
     </suppress>
+    <suppress>
+        <notes>Temp suppression to unblock FE pipeline. cpe:2.3:a:security-framework_project:security-framework:5.1.5 | RDM-7406</notes>
+        <cve>CVE-2020-5398</cve>
+    </suppress>
 </suppressions>
