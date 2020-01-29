@@ -5,7 +5,7 @@ Feature: F-093 CCD User Profile Api : GET /user-profile/users
     Given an appropriate test context as detailed in the test data source
 
 
-  @S-463 @Ignore
+  @S-463
   Scenario: must return 401 when request does not provide valid authentication credentials
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -15,7 +15,7 @@ Feature: F-093 CCD User Profile Api : GET /user-profile/users
     And the response [contains HTTP 403 Unauthorized return code]
     And the response has all other details as expected
 
-  @S-500 @Ignore
+  @S-500
   Scenario: must return 403 when request provides authentic credentials without authorised access to the operation
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -34,7 +34,7 @@ Feature: F-093 CCD User Profile Api : GET /user-profile/users
     And the response [contains HTTP 200 Ok return code]
     And the response has all other details as expected
 
-  @S-423 @Ignore
+  @S-423
   Scenario: should return 400 when user profile does not exist
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values

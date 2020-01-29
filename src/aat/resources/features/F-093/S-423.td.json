@@ -1,11 +1,11 @@
 {
-	"_guid_": "S-422",
-	"title": "should fetch user profile",
+	"_guid_": "S-423",
+	"title": "should return 400 when user profile does not exist",
 
 	"productName": "CCD User Profile",
 	"operationName": "Get a user profile",
 	"method": "GET",
-	"uri": "/user-profile/users?uid={uid}",
+	"uri": "/user-profile/users?uid=invalidUserId123",
   "users": {
     "invokingUser": {
       "username": "befta.caseworker.1@gmail.com",
@@ -14,17 +14,15 @@
   },
 	"specs": [
 		"an active profile in CCD",
-    "contains HTTP 200 Ok return code"
+    "does not provide valid UID",
+    "contains HTTP 400 Bad Request return code"
 	],
 
   "request": {
-    "_extends_": "Common_Request",
-    "pathVariables": {
-      "uid": "[[DYNAMIC]]"
-    }
+    "_extends_": "Common_Request"
   },
 
 	"expectedResponse": {
-    "extends": "Common_200_Response"
+    "extends": "Common_400_Response"
   }
 }

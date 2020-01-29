@@ -1,6 +1,6 @@
 {
-	"_guid_": "S-422",
-	"title": "should fetch user profile",
+	"_guid_": "S-500",
+	"title": "must return 403 when request provides authentic credentials without authorised access to the operation",
 
 	"productName": "CCD User Profile",
 	"operationName": "Get a user profile",
@@ -14,17 +14,21 @@
   },
 	"specs": [
 		"an active profile in CCD",
-    "contains HTTP 200 Ok return code"
+    "does not provide valid authentication credentials in CCD",
+    "contains HTTP 403 Unauthorized return code"
 	],
 
   "request": {
     "_extends_": "Common_Request",
+    "headers": {
+      "Authorization": "TESTAUTH"
+    },
     "pathVariables": {
       "uid": "[[DYNAMIC]]"
     }
   },
 
 	"expectedResponse": {
-    "extends": "Common_200_Response"
+    "extends": "Common_403_Response"
   }
 }
