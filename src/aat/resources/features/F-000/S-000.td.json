@@ -33,28 +33,32 @@
       "Vary" : "Accept-Encoding"
     },
     "body" : {
-      "status" : "UP",
-      "details" : {
-        "diskSpace" : {
-          "status" : "UP",
-          "details" : {
+      "status": "UP",
+      "components": {
+        "db": {
+          "status": "UP",
+          "details": {
+            "database": "PostgreSQL",
+            "result": 1,
+            "validationQuery": "SELECT 1"
+          }
+        },
+        "diskSpace": {
+          "status": "UP",
+          "details": {
             "total" : "[[ANY]]",
             "free" : "[[ANY]]",
             "threshold" : "[[ANY]]"
           }
         },
-        "db" : {
-          "status" : "UP",
-          "details" : {
-            "database" : "PostgreSQL",
-            "hello" : 1
-          }
+        "liveness": {
+          "status": "UP"
         },
-        "liveness" : {
-          "status" : "UP"
+        "ping": {
+          "status": "UP"
         },
-        "refreshScope" : {
-          "status" : "UP"
+        "refreshScope": {
+          "status": "UP"
         }
       }
     }
