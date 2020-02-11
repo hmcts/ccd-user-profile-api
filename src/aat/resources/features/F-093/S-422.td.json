@@ -20,7 +20,7 @@
   "request": {
     "_extends_": "Common_Request",
     "pathVariables": {
-      "uid": "befta.caseworker.1@gmail.com"
+      "uid": "[[DYNAMIC]]"
     }
   },
 
