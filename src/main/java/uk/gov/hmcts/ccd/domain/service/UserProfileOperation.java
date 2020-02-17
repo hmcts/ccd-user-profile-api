@@ -84,8 +84,9 @@ public class UserProfileOperation {
                                   userProfileFromDefintion.getWorkBasketDefaultState())// checkstyle line break
             && userProfileFromRepository.getJurisdictions()
             .stream()
-            .filter(j -> StringUtils.equals(j.getId(), userProfileFromDefintion.getWorkBasketDefaultJurisdiction()))
-            .count() > 0;
+            .anyMatch(j -> StringUtils.equals(
+                j.getId(),
+                userProfileFromDefintion.getWorkBasketDefaultJurisdiction()));
     }
 
     private UserProfile populateProfileJurisdiction(final UserProfile userProfile) {
