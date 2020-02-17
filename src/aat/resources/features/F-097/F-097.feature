@@ -6,7 +6,7 @@ Feature: CCD User Profile Api :: GET /users
 
   @S-424
   Scenario: should fetch user profile
-    When user profiles that have just been created as in [Standard_User_Profiles_Creation_Data]
+    When a successful call [to create user profiles] as in [Standard_User_Profiles_Creation_Data]
     And a request is prepared with appropriate values
     And it is submitted to call the [Retrieve user profiles] operation of [CCD User Profile]
     Then a positive response is received
