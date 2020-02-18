@@ -1,23 +1,11 @@
 {
 	"_guid_": "S-424",
+  "_extends_": "F-097_Test_Data_Base",
 	"title": "should fetch user profiles",
-	"productName": "CCD User Profile",
-	"operationName": "Retrieve user profiles",
-	"method": "GET",
-	"uri": "/users",
 	"specs": [
     "has the 200 OK code"
 	],
-  "users": {
-    "invokingUser": {
-      "username": "[[$CCD_CASEWORKER_AUTOTEST_EMAIL]]",
-      "password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
-    }
-  },
   "request": {
-    "queryParams": {
-      "jurisdiction": "BEFTA_JURISDICTION_2"
-    },
     "headers": {
       "ServiceAuthorization": "[[DYNAMIC]]",
       "Content-Type": "application/json"
