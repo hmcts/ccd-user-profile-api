@@ -13,13 +13,7 @@
     }
   },
 	"expectedResponse": {
-    "responseCode": 200,
-    "responseMessage": "OK",
-    "headers" : {
-      "Content-Length" : "[[ANYTHING_PRESENT]]",
-      "Content-Type" : "application/json;charset=UTF-8",
-      "Date" : "[[ANYTHING_PRESENT]]"
-    },
+    "_extends_": "Common_200_Response",
     "body" : {"arrayInMap" : "[[ANY_OBJECT_NOT_NULLABLE]]"}
   }
 }
