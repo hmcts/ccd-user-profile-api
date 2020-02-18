@@ -54,7 +54,6 @@ withPipeline(type, product, component) {
     }
 
    
-    enableDockerBuild()
     overrideVaultEnvironments(vaultOverrides)
     enableAksStagingDeployment()
     disableLegacyDeploymentOnAAT()
