@@ -6,7 +6,7 @@ Feature: F-097: Get Users
 
   @S-424
   Scenario: should fetch user profiles by jurisdiction
-    Given a successful call [to create user profile] as in [Standard_User_Profiles_Creation_Data]
+    Given a successful call [to create user profiles] as in [Standard_User_Profiles_Creation_Data]
     When a request is prepared with appropriate values
     And it is submitted to call the [Retrieve user profiles by jurisdiction id] operation of [CCD User Profile]
     Then the response [has the 200 OK code]
