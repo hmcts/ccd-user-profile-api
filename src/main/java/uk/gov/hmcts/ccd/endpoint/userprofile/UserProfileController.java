@@ -52,8 +52,7 @@ class UserProfileController {
     @ApiOperation(value = "Get User Profiles",
                   notes = "Optional filtering of results via \"jurisdiction\" request parameter")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Found User Profiles"),
-        @ApiResponse(code = 400, message = "Unable to find User Profiles")
+        @ApiResponse(code = 200, message = "Found User Profiles")
     })
     public List<UserProfile> getUserProfiles(@ApiParam("Jurisdiction ID")
                                              @RequestParam("jurisdiction")
