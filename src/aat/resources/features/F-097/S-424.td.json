@@ -16,7 +16,7 @@
     }
   },
 	"expectedResponse": {
-    "_extends_": "Common_200_Response",
+    "_extends_": "User_Profile_Common_200_Response",
     "body" : {"arrayInMap" : "[[ANY_OBJECT_NOT_NULLABLE]]"}
   }
 }

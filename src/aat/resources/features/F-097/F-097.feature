@@ -20,7 +20,7 @@ Feature: F-097: Get Users
     Then the response [has the 200 OK code]
     And the response has all other details as expected
 
-  @S-504 @Ignore
+  @S-504
   Scenario: must return 403 when request provides authentic credentials without authorized access to the operation
     Given a request is prepared with appropriate values
     When the request [does not provide a valid authentication credentials]

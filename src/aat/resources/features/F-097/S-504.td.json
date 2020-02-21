@@ -14,7 +14,7 @@
     }
   },
   "expectedResponse": {
-    "_extends_": "Common_403_Response",
+    "_extends_": "User_Profile_Common_403_Response",
     "body": {
       "message" : "Access Denied"
     }
