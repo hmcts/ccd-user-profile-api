@@ -23,9 +23,6 @@
           "id": "{{CCD_CASEWORKER_AUTOTEST_EMAIL}}",
           "jurisdictions": [
             {
-              "id": "BEFTA_JURISDICTION_2"
-            },
-            {
               "id": "BEFTA_JURISDICTION_3"
             }
           ],
