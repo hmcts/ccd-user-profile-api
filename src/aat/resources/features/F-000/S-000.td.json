@@ -26,29 +26,21 @@
     "responseCode": 200,
     "responseMessage": "OK",
     "headers" : {
-      "Content-Length" : "[[ANY]]",
-      "Content-Type" : "application/vnd.spring-boot.actuator.v3+json",
-      "Date" : "[[ANY]]",
-      "Request-Context" : "[[ANY]]",
+      "Content-Length" : "[[ANYTHING_PRESENT]]",
+      "Content-Type" : "application/vnd.spring-boot.actuator.v2+json;charset=UTF-8",
+      "Date" : "[[ANYTHING_PRESENT]]",
+      "Request-Context" : "[[ANYTHING_PRESENT]]",
       "Vary" : "Accept-Encoding"
     },
     "body" : {
-      "status": "UP",
-      "components": {
-        "db": {
-          "status": "UP",
-          "details": {
-            "database": "PostgreSQL",
-            "result": 1,
-            "validationQuery": "SELECT 1"
-          }
-        },
-        "diskSpace": {
-          "status": "UP",
-          "details": {
-            "total" : "[[ANY]]",
-            "free" : "[[ANY]]",
-            "threshold" : "[[ANY]]"
+      "status" : "UP",
+      "details" : {
+        "diskSpace" : {
+          "status" : "UP",
+          "details" : {
+            "total" : "[[ANYTHING_PRESENT]]",
+            "free" : "[[ANYTHING_PRESENT]]",
+            "threshold" : "[[ANYTHING_PRESENT]]"
           }
         },
         "liveness": {

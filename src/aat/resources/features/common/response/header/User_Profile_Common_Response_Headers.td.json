@@ -1,0 +1,19 @@
+{
+	"_guid_": "User_Profile_Common_Response_Headers",
+
+	"X-Frame-Options": "DENY",
+	"Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+	"X-Content-Type-Options": "nosniff",
+	"Pragma": "no-cache",
+	"Expires": "0",
+	"X-XSS-Protection": "1; mode=block",
+	"Date": "[[ANYTHING_PRESENT]]",
+  "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]",
+  "Connection": "[[ANY_STRING_NULLABLE]]",
+  "Request-Context": "[[ANY_STRING_NULLABLE]]",
+  "Keep-Alive": "[[ANY_STRING_NULLABLE]]",
+  "VaRy": "[[ANY_STRING_NULLABLE]]",
+  "Content-Type": "[[ANY_STRING_NULLABLE]]",
+  "Transfer-Encoding": "[[ANY_STRING_NULLABLE]]",
+  "Content-Length": "[[ANY_STRING_NULLABLE]]"
+}

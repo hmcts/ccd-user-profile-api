@@ -1,0 +1,6 @@
+{
+	"_guid_": "User_Profile_Common_403_Response_Headers",
+	"_extends_": "User_Profile_Common_Response_Headers",
+
+	"vary": "accept-encoding"
+}

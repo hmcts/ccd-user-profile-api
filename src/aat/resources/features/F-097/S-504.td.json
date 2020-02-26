@@ -1,0 +1,22 @@
+{
+  "_guid_": "S-504",
+  "_extends_": "F-097_Test_Data_Base",
+  "title": "must return 403 when request provides authentic credentials without authorized access to the operation",
+  "operationName": "Retrieve user profiles",
+  "specs": [
+    "does not provide a valid authentication credentials",
+    "contains a HTTP 403 Forbidden"
+  ],
+  "request": {
+    "headers":{
+      "Authorization": "invalidAuthToken",
+      "Content-Type": "application/json"
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "User_Profile_Common_403_Response",
+    "body": {
+      "message" : "Access Denied"
+    }
+  }
+}

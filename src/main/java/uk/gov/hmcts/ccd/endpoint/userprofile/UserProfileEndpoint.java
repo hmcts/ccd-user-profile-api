@@ -59,7 +59,7 @@ public class UserProfileEndpoint {
 
     @Transactional
     @RequestMapping(value = "/users", method = RequestMethod.PUT)
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Update a new User Profile",
         notes = "a user profile or jurisdiction is created if it does not exist")
     @ApiResponses(value = {
