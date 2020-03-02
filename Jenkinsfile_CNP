@@ -51,5 +51,4 @@ withPipeline(type, product, component) {
     loadVaultSecrets(secrets)
     enableDbMigration('ccd')
     installCharts()
-    disableLegacyDeployment()
 }
