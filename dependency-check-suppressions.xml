@@ -72,5 +72,6 @@
         <cve>CVE-2016-5394</cve>
         <cve>CVE-2016-6798</cve>
         <cve>CVE-2020-8840</cve>
+        <cve>CVE-2020-1938</cve>
     </suppress>
 </suppressions>
