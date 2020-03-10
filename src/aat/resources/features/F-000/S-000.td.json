@@ -7,52 +7,60 @@
 	"uri": "/health",
 	"specs": [
 		"an active profile in CCD",
-    "has the 200 OK code"
+		"has the 200 OK code"
 	],
-  "users": {
-    "invokingUser": {
-      "username": "[[$CCD_CASEWORKER_AUTOTEST_EMAIL]]",
-      "password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
-    }
-  },
-  "request": {
-    "headers": {
-      "Authorization": "[[DYNAMIC]]",
-      "ServiceAuthorization": "[[DYNAMIC]]",
-      "Content-Type": "application/json"
-    }
-  },
+	"users": {
+		"invokingUser": {
+			"username": "[[$CCD_CASEWORKER_AUTOTEST_EMAIL]]",
+			"password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
+		}
+	},
+	"request": {
+		"headers": {
+			"Authorization": "[[DYNAMIC]]",
+			"ServiceAuthorization": "[[DYNAMIC]]",
+			"Content-Type": "application/json"
+		}
+	},
 	"expectedResponse": {
-    "responseCode": 200,
-    "responseMessage": "OK",
-    "headers" : {
-      "Content-Length" : "[[ANYTHING_PRESENT]]",
-      "Content-Type" : "application/vnd.spring-boot.actuator.v3+json",
-      "Date" : "[[ANYTHING_PRESENT]]",
-      "Request-Context" : "[[ANYTHING_PRESENT]]",
-      "Vary" : "Accept-Encoding"
-    },
-    "body" : {
-      "status" : "UP",
-      "details" : {
-        "diskSpace" : {
-          "status" : "UP",
-          "details" : {
-            "total" : "[[ANYTHING_PRESENT]]",
-            "free" : "[[ANYTHING_PRESENT]]",
-            "threshold" : "[[ANYTHING_PRESENT]]"
-          }
-        },
-        "liveness": {
-          "status": "UP"
-        },
-        "ping": {
-          "status": "UP"
-        },
-        "refreshScope": {
-          "status": "UP"
-        }
-      }
-    }
-  }
+		"responseCode": 200,
+		"responseMessage": "OK",
+		"headers": {
+			"Content-Length": "[[ANYTHING_PRESENT]]",
+			"Content-Type": "application/vnd.spring-boot.actuator.v3+json",
+			"Date": "[[ANYTHING_PRESENT]]",
+			"Request-Context": "[[ANYTHING_PRESENT]]",
+			"Vary": "Accept-Encoding"
+		},
+		"body": {
+			"status": "UP",
+			"components": {
+				"db": {
+					"status": "UP",
+					"details": {
+						"database": "PostgreSQL",
+						"result": 1,
+						"validationQuery": "SELECT 1"
+					}
+				},
+				"diskSpace": {
+					"status": "UP",
+					"details": {
+						"total": "[[ANYTHING_INTEGER_PRESENT]]",
+						"free": "[[ANYTHING_INTEGER_PRESENT]]",
+						"threshold": "[[ANYTHING_INTEGER_PRESENT]]"
+					}
+				},
+				"liveness": {
+					"status": "UP"
+				},
+				"ping": {
+					"status": "UP"
+				},
+				"refreshScope": {
+					"status": "UP"
+				}
+			}
+		}
+	}
 }
