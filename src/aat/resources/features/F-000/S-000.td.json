@@ -46,9 +46,9 @@
 				"diskSpace": {
 					"status": "UP",
 					"details": {
-						"total": "[[ANYTHING_INTEGER_PRESENT]]",
-						"free": "[[ANYTHING_INTEGER_PRESENT]]",
-						"threshold": "[[ANYTHING_INTEGER_PRESENT]]"
+						"total": "[[ANY_INTEGER_PRESENT]]",
+						"free": "[[ANY_INTEGER_PRESENT]]",
+						"threshold": "[[ANY_INTEGER_PRESENT]]"
 					}
 				},
 				"liveness": {
