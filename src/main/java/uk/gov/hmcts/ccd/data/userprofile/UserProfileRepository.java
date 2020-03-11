@@ -7,6 +7,7 @@ import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionMapper;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionRepository;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
+import uk.gov.hmcts.ccd.domain.model.UserProfileLight;
 import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
 
 import javax.persistence.EntityManager;
@@ -174,6 +175,12 @@ public class UserProfileRepository {
 
     public List<UserProfile> findAll() {
         TypedQuery<UserProfileEntity> query = em.createNamedQuery("UserProfileEntity.findAll", UserProfileEntity.class);
+        return query.getResultList().stream().map(UserProfileMapper::entityToModel).collect(Collectors.toList());
+    }
+
+    public List<UserProfileLight> findAllLight() {
+        TypedQuery<UserProfileLightEntity> query = em.createNamedQuery("UserProfileLightEntity.findAllLight",
+            UserProfileLightEntity.class);
         return query.getResultList().stream().map(UserProfileMapper::entityToModel).collect(Collectors.toList());
     }
 
