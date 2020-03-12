@@ -1,23 +1,21 @@
 language: java
+
 jdk:
-- openjdk8
+  - openjdk8
+
 before_cache:
-- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
 cache:
   directories:
-  - "$HOME/.gradle/caches/"
-  - "$HOME/.gradle/wrapper/"
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
 script:
-- "./gradlew check"
-- "./gradlew jacocoTestReport"
-before_install:
-- curl https://raw.githubusercontent.com/hmcts/reform-api-docs/master/bin/publish-swagger-docs.sh
-  > publish-swagger-docs.sh
+  - "./gradlew check"
+  - "./gradlew jacocoTestReport"
+
 after_success:
-- bash <(curl -s https://codecov.io/bash) || echo 'Codecov failed to upload'
-- test "$TRAVIS_BRANCH" = "RDM-7740-swagger-test" && sh ./publish-swagger-docs.sh
-- "./gradlew assemble"
-env:
-  global:
-    secure: iwIw92sdWbe2F1FSgL1fuJMLjOHaX9xauKJf4eMExvAtM0vltcel1ZuUsfTbroNPrrPwFiW1qg69krdxUypfuE8SF+Ry5CLcHGp5Prlr7vOYQDQvauuJ79cKGqMAtITJLJflMKuo7uBhDZxcTVPANKDnkF1Z4318fYuqEniKCB/24ZdS4i6+aH8s4esEu6G6DXX0E3KuBXVXHqn3EVFFNjHUAsGCRcj+XvwNSvK5vVZoxwFONiKCJLu2WSpdlY5t8+7hb7p1VlBWrvQQN+pKk/eXlNk8B7/yrFvr++Jzslat9+EIulnt0+reF/YrZn43t6QlUvnJ/v6SGjvH02pI/yhP4SvMkEyoigNogUbD/ND2UGf0Cz8CPPJJNC+u65USrJr0iHl2sg/Evx3nWE0AvXyMikgaVaouoYvYBYC9nBtTL8UAcpASU397J1WpnwmJ5cMdfeHKd+y/3YLvNddQL6kZc/wx9u9HBU47RO9VhswyNqWjSxKQp2dfkHKx27FmEiDrAg4SoY6XcXXAd3GpEHPd1eE34iY6VXjpFZN7wUMSJcwoA9cAsbFSxaUlP7MOJI3qJR/uAkbavd3y4WFfrQ/4OWrfQ5JxVHFWf5Ma+BzB7JOE6fj+yXE+5OJ0+cnsV5zbfufQqVDCUSlNkdCb5QLZPnqZUUQzLG/pIhdUOCc=
+  - "bash <(curl -s https://codecov.io/bash) || echo 'Codecov failed to upload'"
+  - "./gradlew installDist bootRepackage"
