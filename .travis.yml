@@ -1,26 +1,24 @@
 language: java
-
 jdk:
-  - openjdk8
-
+- openjdk8
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
 script:
-  - "./gradlew check"
-  - "./gradlew jacocoTestReport"
-
+- "./gradlew check"
+- "./gradlew jacocoTestReport"
 before_install:
-  - curl https://raw.githubusercontent.com/hmcts/reform-api-docs/master/bin/publish-swagger-docs.sh > publish-swagger-docs.sh
-
+- curl https://raw.githubusercontent.com/hmcts/reform-api-docs/master/bin/publish-swagger-docs.sh
+  > publish-swagger-docs.sh
 after_success:
-  - "bash <(curl -s https://codecov.io/bash) || echo 'Codecov failed to upload'"
-  - test "$TRAVIS_BRANCH" = "master" && sh ./publish-swagger-docs.sh
-#  - test "$TRAVIS_BRANCH" = "master" && test "$TRAVIS_PULL_REQUEST" = "false" && sh ./publish-swagger-docs.sh
-  - "./gradlew installDist bootRepackage"
+- bash <(curl -s https://codecov.io/bash) || echo 'Codecov failed to upload'
+- test "$TRAVIS_BRANCH" = "master" && sh ./publish-swagger-docs.sh
+- "./gradlew installDist bootRepackage"
+  secure: jyI3AtASaxUZHmZWZVYxYJSYO2my6TJwS3T3sNJrS80HmyIguzXqRuKD6G++Z0GS9hHDdCKfXRMtnTyjzEaBZ2Awjyz2D+ovy2N3XPlBtdZQ7G6I+FLaVkrot+ymWWB54AKftad7/s9d7kgRkvNjbTB7h7tGXoDAkmpztNW+o/1gJsDFLlY+U/9qJ+SqsmObae2dKwZlhhTcnWXAzLfqCWuIkTly7gY0bIweBM2mUwXLV+RJKpxidcaGBCzIZ36d2ongSYKCdd9ADoZdlew2n/64eE4pR2rdJEV5sfVMxP0vDc2PI4zPFzvrKojXCjXmsq+DygHO4cA60zIkaLxQY6H9Ct1HIkOb7x3mHU5HfxCKKZ7itOlJ3msiw3fyMOOUIeRK8AU16Mu1LsSbQg+3NBMrJLdMkruESMJwe4E0d9EHEbhs9KG38psIA2XGcPZmCWtvb3GpZJjSgiF1Plp9Ji5+uvQJ07EeSMduh+RuVthBYpbhGBJkBoHtyH2YA3QYyp7r6cY4+7jaaQ/9Sx1MtAa4/q/n/b6ONth49u35mhgZCtRuISFnSkxOQe4ECRn8qUVlxeaCgEISlxBqRlTI27wwjpw8qHuvbZQD8VXlyar8G3opN5dk4CyVfl5iRAZ4wC7zTLlmLqA7DRYyjWyJHucSYDLjV1yOXhDZ+by9WFk=
+env:
+  global:
+    secure: ot/vzKSva1nUW5+0mA16S2+fApOWH3ElkCLEJEhKbry4bolv+BY9eGOaf6HIzeHDTqX2ELhgAYUUMt/I+fUxDboL4LPbxvPOlonKvlz6gLixbYU77gdZoDZt8PXEtm2SikReja+x2zYJHAilmJo80zfL6XnQ4KFifE5wnbnpq85lxfuNVXswWN406Zc1abvHq64hegcD48N4iWQMvIa5zuVxw1dPOGVJkMX+lqUG2NiW5YTQb7oo5hvYGi1EyhVkftbWBFLcQEuv0GwtgsWue3yvBjTwOXBRhs44pgJGdfEdRn4ZbW8auJI6g9MGJypofewyS+HEbw9Rk+VQtx5Cv8YyTQBLZlBReSZ317peiBGrRfs7D8n17k+TOt1v8IaFjrYYCCIwnIWdUKpiFO+37QHMklhslj8tFr3rQi4i68lIAfSFoGp+yTrb3NEUSihcmmN+Pq5TFEru8J7e4176HPJ6OktyYqIrn55dKDucHawEjVBRHof8CTI3yUvC01e0dsX4CKJp3sgTY6ilxQrGChSv1K+havpGUyFWxIXZH8pAJHG7rAjJCpyYT8mbD/6+bKvWqP+l5LyOG+BV3XZxIksMXUDGH+ok4SXTmXNDCgnT9JOMW0dXTA//zGIuMYZrCLfQkxAYGrFTa3dGfyRL6FDDYiTu64V9ErptIdfF3B4=
