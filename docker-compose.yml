@@ -15,7 +15,7 @@ services:
       - REFORM_SERVICE_NAME=ccd-user-profile-api
       - REFORM_TEAM=ccd
       - REFORM_ENVIRONMENT=local
-      - AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY=key
+      - AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY
     ports:
       - 4453:4453
     depends_on:
@@ -34,7 +34,6 @@ services:
     environment:
       - USER_PROFILE_DB_USERNAME=user_profile
       - USER_PROFILE_DB_PASSWORD=user_profile
-      - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
       - 5453:5432
     volumes:
