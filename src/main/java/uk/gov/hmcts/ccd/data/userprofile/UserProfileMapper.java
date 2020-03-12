@@ -4,7 +4,6 @@ import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionEntity;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionMapper;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
-import uk.gov.hmcts.ccd.domain.model.UserProfileLight;
 
 import java.util.Map;
 
@@ -13,16 +12,25 @@ public final class UserProfileMapper {
 
     private UserProfileMapper() {}
 
-    static UserProfileLight entityToModel(UserProfileLightEntity userProfileEntity) {
-        if (userProfileEntity == null) {
+    static UserProfile entityToModel(UserProfileLightEntity userProfileLightEntity) {
+        if (userProfileLightEntity == null) {
             return null;
         }
-        UserProfileLight userProfileLight = new UserProfileLight();
-        userProfileLight.setId(userProfileEntity.getId());
-        userProfileLight.setWorkBasketDefaultCaseType(userProfileEntity.getWorkBasketDefaultCaseType());
-        userProfileLight.setWorkBasketDefaultJurisdiction(userProfileEntity.getWorkBasketDefaultJurisdiction());
-        userProfileLight.setWorkBasketDefaultState(userProfileEntity.getWorkBasketDefaultState());
-        return userProfileLight;
+        UserProfile userProfile = new UserProfile();
+        userProfile.setId(userProfileLightEntity.getId());
+        userProfile.setWorkBasketDefaultCaseType(userProfileLightEntity.getWorkBasketDefaultCaseType());
+        userProfile.setWorkBasketDefaultJurisdiction(userProfileLightEntity.getWorkBasketDefaultJurisdiction());
+        userProfile.setWorkBasketDefaultState(userProfileLightEntity.getWorkBasketDefaultState());
+        return userProfile;
+    }
+
+    static UserProfile entityToModel(UserProfileLightEntity userProfileLightEntity, Jurisdiction jurisdiction) {
+        if (userProfileLightEntity == null) {
+            return null;
+        }
+        UserProfile userProfile = UserProfileMapper.entityToModel(userProfileLightEntity);
+        userProfile.addJurisdiction(jurisdiction);
+        return userProfile;
     }
 
     static UserProfile entityToModel(UserProfileEntity userProfileEntity) {

@@ -87,6 +87,57 @@ class FindAllUserProfilesOperationTest {
             assertEquals(0, userProfiles.size());
         }
 
+        @Test
+        @DisplayName("getAllLight should map each UserProfileEntity to a UserProfile and return a list of mapped"
+            + " UserProfiles, for the specified Jurisdiction")
+        void getAllLightShouldReturnAllUserProfilesForJurisdiction() {
+            final UserProfile userProfile1a = createUserProfile("test1a@example.com", "TEST", "CT1");
+            final UserProfile userProfile1b = createUserProfile("test1b@example.com", "TEST", "CT2");
+            final UserProfile userProfile2 = createUserProfile("test2@example.com", "TEST2", "CT2");
+
+            when(userProfileRepository.findAllLight("TEST", ACTIONED_BY_EMAIL)).thenReturn(asList(userProfile1a,
+                userProfile1b));
+
+            List<UserProfile> userProfiles = classUnderTest.getAllLight("TEST", ACTIONED_BY_EMAIL);
+            assertEquals(2, userProfiles.size());
+            assertEquals("test1a@example.com", userProfiles.get(0).getId());
+            assertEquals("TEST", userProfiles.get(0).getWorkBasketDefaultJurisdiction());
+            assertEquals("CT1", userProfiles.get(0).getWorkBasketDefaultCaseType());
+            assertEquals("test1b@example.com", userProfiles.get(1).getId());
+            assertEquals("TEST", userProfiles.get(1).getWorkBasketDefaultJurisdiction());
+            assertEquals("CT2", userProfiles.get(1).getWorkBasketDefaultCaseType());
+            assertThat(userProfiles, not(hasItem(userProfile2)));
+        }
+
+        @Test
+        @DisplayName("getAllLight should map each UserProfileEntity to a UserProfile and return a list of mapped"
+            + " UserProfiles")
+        void getAllLightShouldReturnAllUserProfiles() {
+            final UserProfile userProfile1a = createUserProfile("test1a@example.com", "TEST", "CT1");
+            final UserProfile userProfile1b = createUserProfile("test1b@example.com", "TEST", "CT2");
+            final UserProfile userProfile2 = createUserProfile("test2@example.com", "TEST2", "CT2");
+
+            when(userProfileRepository.findAllLight()).thenReturn(asList(userProfile1a, userProfile1b, userProfile2));
+
+            List<UserProfile> userProfiles = classUnderTest.getAllLight();
+            assertEquals(3, userProfiles.size());
+            assertEquals("test1a@example.com", userProfiles.get(0).getId());
+            assertEquals("TEST", userProfiles.get(0).getWorkBasketDefaultJurisdiction());
+            assertEquals("CT1", userProfiles.get(0).getWorkBasketDefaultCaseType());
+            assertEquals("test2@example.com", userProfiles.get(2).getId());
+            assertEquals("TEST2", userProfiles.get(2).getWorkBasketDefaultJurisdiction());
+            assertEquals("CT2", userProfiles.get(2).getWorkBasketDefaultCaseType());
+        }
+
+        @Test
+        @DisplayName("getAllLight should return an empty list when the repository returns no UserProfiles")
+        void getAllLightShouldReturnEmptyUserProfileList() {
+            when(userProfileRepository.findAllLight("TEST3", ACTIONED_BY_EMAIL)).thenReturn(Collections.emptyList());
+
+            List<UserProfile> userProfiles = classUnderTest.getAllLight("TEST3", ACTIONED_BY_EMAIL);
+            assertEquals(0, userProfiles.size());
+        }
+
         private UserProfile createUserProfile(String id, String jurisdiction, String caseType) {
             UserProfile userProfile = new UserProfile();
             userProfile.setId(id);

@@ -2,10 +2,13 @@ package uk.gov.hmcts.ccd.data.userprofile;
 
 import javax.persistence.*;
 
+/**
+ * This entity differs from UserProfileEntity in a way it has no jurisdictions to speed up performance.
+ */
 @Entity
 @Table(name = "user_profile")
 @NamedQueries({
-    @NamedQuery(name = "UserProfileLightEntity.findAllLight",
+    @NamedQuery(name = "UserProfileLightEntity.findAll",
         query = "SELECT u FROM UserProfileLightEntity u"),
 })
 public class UserProfileLightEntity {
@@ -54,5 +57,4 @@ public class UserProfileLightEntity {
     public void setWorkBasketDefaultState(final String workBasketDefaultState) {
         this.workBasketDefaultState = workBasketDefaultState;
     }
-
 }
