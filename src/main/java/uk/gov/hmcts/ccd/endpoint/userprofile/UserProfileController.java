@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.AppInsights;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
-import uk.gov.hmcts.ccd.domain.model.UserProfileLight;
 import uk.gov.hmcts.ccd.domain.service.DeleteUserProfileJurisdictionOperation;
 import uk.gov.hmcts.ccd.domain.service.FindAllUserProfilesOperation;
 import uk.gov.hmcts.ccd.domain.service.SaveUserProfileOperation;
@@ -57,32 +56,27 @@ class UserProfileController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Found User Profiles")
     })
-    public List<UserProfileLight> getUserProfiles(@ApiParam("Jurisdiction ID") @RequestParam("jurisdiction")
+    public List<UserProfile> getUserProfiles(@ApiParam("Jurisdiction ID") @RequestParam("jurisdiction")
                                                  final Optional<String> jurisdictionOptional,
                                                   @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
                                                  final String actionedBy) {
-        // old query for the time measurement
-        Instant startOld = Instant.now();
-        List<UserProfile> userProfiles = jurisdictionOptional.map(j ->
-            findAllUserProfilesOperation.getAll(j, actionedBy))
-            .orElse(findAllUserProfilesOperation.getAll());
-        final Duration betweenOld = Duration.between(startOld, Instant.now());
-        long betweenOldInMils = betweenOld.toMillis();
-        log.info("Old: Found {} entries", userProfiles.size());
-        log.info("Old: Time to execute the query: {} milliseconds", betweenOldInMils);
-
-        // new query without jurisdictions
         Instant start = Instant.now();
-        List<UserProfileLight> allUserProfilesLight = findAllUserProfilesOperation.getAllLight();
+
+        List<UserProfile> allUserProfiles;
+        if (jurisdictionOptional.isPresent()) {
+            allUserProfiles = findAllUserProfilesOperation.getAllLight(jurisdictionOptional.get(), actionedBy);
+        } else {
+            allUserProfiles = findAllUserProfilesOperation.getAllLight();
+        }
 
         final Duration between = Duration.between(start, Instant.now());
         long betweenInMils = between.toMillis();
-        log.info("Found {} entries", allUserProfilesLight.size());
+        log.info("Found {} entries", allUserProfiles.size());
         log.info("Time to execute the query: {} milliseconds", betweenInMils);
 
         appInsights.trackRequest(between, true);
 
-        return allUserProfilesLight;
+        return allUserProfiles;
     }
 
     @Transactional
