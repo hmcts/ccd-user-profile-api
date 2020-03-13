@@ -18,9 +18,9 @@ public final class UserProfileMapper {
         }
         UserProfile userProfile = new UserProfile();
         userProfile.setId(userProfileLightEntity.getId());
-        userProfile.setWorkBasketDefaultCaseType(userProfileLightEntity.getWorkBasketDefaultCaseType());
-        userProfile.setWorkBasketDefaultJurisdiction(userProfileLightEntity.getWorkBasketDefaultJurisdiction());
-        userProfile.setWorkBasketDefaultState(userProfileLightEntity.getWorkBasketDefaultState());
+        userProfile.setWorkBasketDefaultCaseType(userProfileLightEntity.getDefaultCaseType());
+        userProfile.setWorkBasketDefaultJurisdiction(userProfileLightEntity.getDefaultJurisdiction());
+        userProfile.setWorkBasketDefaultState(userProfileLightEntity.getDefaultState());
         return userProfile;
     }
 
