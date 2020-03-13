@@ -63,12 +63,9 @@ class UserProfileController {
                                                  final String actionedBy) {
         Instant start = Instant.now();
 
-        List<UserProfileLight> allUserProfiles;
-        if (jurisdictionOptional.isPresent()) {
-            allUserProfiles = findAllUserProfilesOperation.getAllLight(jurisdictionOptional.get(), actionedBy);
-        } else {
-            allUserProfiles = findAllUserProfilesOperation.getAllLight();
-        }
+        List<UserProfileLight> allUserProfiles = jurisdictionOptional
+            .map(j -> findAllUserProfilesOperation.getAllLight(j, actionedBy))
+            .orElseGet(findAllUserProfilesOperation::getAllLight);
 
         final Duration between = Duration.between(start, Instant.now());
         long betweenInMils = between.toMillis();
