@@ -45,7 +45,8 @@ class UserProfileMapperTest {
     public void shouldMapUserProfileLightEntityWithJurisdiction() {
         UserProfileLightEntity userProfileLightEntity = getUserProfileEntity();
 
-        UserProfile userProfile = UserProfileMapper.entityToModel(userProfileLightEntity, getJurisdiction(JURISDICTION));
+        UserProfile userProfile = UserProfileMapper.entityToModel(userProfileLightEntity,
+            getJurisdiction(JURISDICTION));
 
         assertNotNull(userProfile);
         assertEquals(1, userProfile.getJurisdictions().size());
