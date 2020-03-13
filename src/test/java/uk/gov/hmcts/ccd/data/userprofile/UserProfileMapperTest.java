@@ -60,9 +60,9 @@ class UserProfileMapperTest {
     private static UserProfileLightEntity getUserProfileEntity() {
         UserProfileLightEntity userProfileEntity = new UserProfileLightEntity();
         userProfileEntity.setId(USER_ID);
-        userProfileEntity.setWorkBasketDefaultJurisdiction(JURISDICTION);
-        userProfileEntity.setWorkBasketDefaultCaseType(CASE_TYPE);
-        userProfileEntity.setWorkBasketDefaultState(STATE);
+        userProfileEntity.setDefaultJurisdiction(JURISDICTION);
+        userProfileEntity.setDefaultCaseType(CASE_TYPE);
+        userProfileEntity.setDefaultState(STATE);
         return userProfileEntity;
     }
 

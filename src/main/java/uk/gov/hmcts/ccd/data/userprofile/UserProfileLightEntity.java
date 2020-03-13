@@ -18,13 +18,13 @@ public class UserProfileLightEntity {
     private String id;
 
     @Column(name = "work_basket_default_jurisdiction")
-    private String workBasketDefaultJurisdiction;
+    private String defaultJurisdiction;
 
     @Column(name = "work_basket_default_case_type")
-    private String workBasketDefaultCaseType;
+    private String defaultCaseType;
 
     @Column(name = "work_basket_default_state")
-    private String workBasketDefaultState;
+    private String defaultState;
 
     public String getId() {
         return id;
@@ -34,27 +34,27 @@ public class UserProfileLightEntity {
         this.id = id;
     }
 
-    public String getWorkBasketDefaultJurisdiction() {
-        return workBasketDefaultJurisdiction;
+    public String getDefaultJurisdiction() {
+        return defaultJurisdiction;
     }
 
-    public void setWorkBasketDefaultJurisdiction(final String workBasketDefaultJurisdiction) {
-        this.workBasketDefaultJurisdiction = workBasketDefaultJurisdiction;
+    public void setDefaultJurisdiction(final String workBasketDefaultJurisdiction) {
+        this.defaultJurisdiction = workBasketDefaultJurisdiction;
     }
 
-    public String getWorkBasketDefaultCaseType() {
-        return workBasketDefaultCaseType;
+    public String getDefaultCaseType() {
+        return defaultCaseType;
     }
 
-    public void setWorkBasketDefaultCaseType(final String workBasketDefaultCaseType) {
-        this.workBasketDefaultCaseType = workBasketDefaultCaseType;
+    public void setDefaultCaseType(final String workBasketDefaultCaseType) {
+        this.defaultCaseType = workBasketDefaultCaseType;
     }
 
-    public String getWorkBasketDefaultState() {
-        return workBasketDefaultState;
+    public String getDefaultState() {
+        return defaultState;
     }
 
-    public void setWorkBasketDefaultState(final String workBasketDefaultState) {
-        this.workBasketDefaultState = workBasketDefaultState;
+    public void setDefaultState(final String workBasketDefaultState) {
+        this.defaultState = workBasketDefaultState;
     }
 }
