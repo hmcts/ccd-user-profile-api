@@ -4,6 +4,7 @@ import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionEntity;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionMapper;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
+import uk.gov.hmcts.ccd.domain.model.UserProfileLight;
 
 import java.util.Map;
 
@@ -12,24 +13,15 @@ public final class UserProfileMapper {
 
     private UserProfileMapper() {}
 
-    static UserProfile entityToModel(UserProfileLightEntity userProfileLightEntity) {
+    static UserProfileLight entityToModel(UserProfileLightEntity userProfileLightEntity) {
         if (userProfileLightEntity == null) {
             return null;
         }
-        UserProfile userProfile = new UserProfile();
+        UserProfileLight userProfile = new UserProfileLight();
         userProfile.setId(userProfileLightEntity.getId());
-        userProfile.setWorkBasketDefaultCaseType(userProfileLightEntity.getDefaultCaseType());
-        userProfile.setWorkBasketDefaultJurisdiction(userProfileLightEntity.getDefaultJurisdiction());
-        userProfile.setWorkBasketDefaultState(userProfileLightEntity.getDefaultState());
-        return userProfile;
-    }
-
-    static UserProfile entityToModel(UserProfileLightEntity userProfileLightEntity, Jurisdiction jurisdiction) {
-        if (userProfileLightEntity == null) {
-            return null;
-        }
-        UserProfile userProfile = UserProfileMapper.entityToModel(userProfileLightEntity);
-        userProfile.addJurisdiction(jurisdiction);
+        userProfile.setDefaultJurisdiction(userProfileLightEntity.getDefaultJurisdiction());
+        userProfile.setDefaultCaseType(userProfileLightEntity.getDefaultCaseType());
+        userProfile.setDefaultState(userProfileLightEntity.getDefaultState());
         return userProfile;
     }
 

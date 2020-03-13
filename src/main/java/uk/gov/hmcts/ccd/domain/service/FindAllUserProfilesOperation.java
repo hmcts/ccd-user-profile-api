@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.data.userprofile.UserProfileRepository;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
+import uk.gov.hmcts.ccd.domain.model.UserProfileLight;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,13 +31,13 @@ public class FindAllUserProfilesOperation {
         return userProfiles.orElse(Collections.emptyList());
     }
 
-    public List<UserProfile> getAllLight() {
-        final Optional<List<UserProfile>> userProfiles = Optional.ofNullable(userProfileRepository.findAllLight());
+    public List<UserProfileLight> getAllLight() {
+        final Optional<List<UserProfileLight>> userProfiles = Optional.ofNullable(userProfileRepository.findAllLight());
         return userProfiles.orElse(Collections.emptyList());
     }
 
-    public List<UserProfile> getAllLight(String jurisdictionId, String actionedBy) {
-        final Optional<List<UserProfile>> userProfiles =
+    public List<UserProfileLight> getAllLight(String jurisdictionId, String actionedBy) {
+        final Optional<List<UserProfileLight>> userProfiles =
             Optional.ofNullable(userProfileRepository.findAllLight(jurisdictionId, actionedBy));
         return userProfiles.orElse(Collections.emptyList());
     }
