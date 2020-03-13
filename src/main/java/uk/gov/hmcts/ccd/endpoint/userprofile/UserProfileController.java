@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.AppInsights;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
+import uk.gov.hmcts.ccd.domain.model.UserProfileLight;
 import uk.gov.hmcts.ccd.domain.service.DeleteUserProfileJurisdictionOperation;
 import uk.gov.hmcts.ccd.domain.service.FindAllUserProfilesOperation;
 import uk.gov.hmcts.ccd.domain.service.SaveUserProfileOperation;
@@ -56,13 +57,13 @@ class UserProfileController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Found User Profiles")
     })
-    public List<UserProfile> getUserProfiles(@ApiParam("Jurisdiction ID") @RequestParam("jurisdiction")
+    public List<UserProfileLight> getUserProfiles(@ApiParam("Jurisdiction ID") @RequestParam("jurisdiction")
                                                  final Optional<String> jurisdictionOptional,
                                                   @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
                                                  final String actionedBy) {
         Instant start = Instant.now();
 
-        List<UserProfile> allUserProfiles;
+        List<UserProfileLight> allUserProfiles;
         if (jurisdictionOptional.isPresent()) {
             allUserProfiles = findAllUserProfilesOperation.getAllLight(jurisdictionOptional.get(), actionedBy);
         } else {

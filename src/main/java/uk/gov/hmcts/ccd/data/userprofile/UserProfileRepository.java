@@ -8,6 +8,7 @@ import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionRepository;
 import uk.gov.hmcts.ccd.data.userprofilejurisdiction.UserProfileJurisdictionEntity;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
+import uk.gov.hmcts.ccd.domain.model.UserProfileLight;
 import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
 
 import javax.persistence.EntityManager;
@@ -21,10 +22,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.ObjectUtils.allNotNull;
-import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.CREATE;
-import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.DELETE;
-import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.READ;
-import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.UPDATE;
+import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.*;
 
 @Repository
 public class UserProfileRepository {
@@ -179,7 +177,7 @@ public class UserProfileRepository {
         return query.getResultList().stream().map(UserProfileMapper::entityToModel).collect(Collectors.toList());
     }
 
-    public List<UserProfile> findAllLight(String jurisdictionId, final String actionedBy) {
+    public List<UserProfileLight> findAllLight(String jurisdictionId, final String actionedBy) {
 
         TypedQuery<UserProfileJurisdictionEntity> query1 = em.createNamedQuery(
             "UserProfileJurisdictionEntity.findAllByJurisdiction", UserProfileJurisdictionEntity.class);
@@ -192,9 +190,9 @@ public class UserProfileRepository {
         TypedQuery<UserProfileLightEntity> query = em.createNamedQuery("UserProfileLightEntity.findAll",
             UserProfileLightEntity.class);
 
-        List<UserProfile> userProfiles = query.getResultList().stream()
+        List<UserProfileLight> userProfiles = query.getResultList().stream()
             .filter(e -> profileIdsInJurisdiction.contains(e.getId()))
-            .map(e1 -> UserProfileMapper.entityToModel(e1, getJurisdiction(jurisdictionId)))
+            .map(UserProfileMapper::entityToModel)
             .collect(Collectors.toList());
 
         userProfileAuditEntityRepository.createUserProfileAuditEntity(auditFindAll(),
@@ -205,7 +203,7 @@ public class UserProfileRepository {
         return userProfiles;
     }
 
-    public List<UserProfile> findAllLight() {
+    public List<UserProfileLight> findAllLight() {
         TypedQuery<UserProfileLightEntity> query = em.createNamedQuery("UserProfileLightEntity.findAll",
             UserProfileLightEntity.class);
         return query.getResultList().stream().map(UserProfileMapper::entityToModel).collect(Collectors.toList());
@@ -322,11 +320,5 @@ public class UserProfileRepository {
         userProfileEntity.setWorkBasketDefaultCaseType(userProfile.getWorkBasketDefaultCaseType());
         userProfileEntity.setWorkBasketDefaultJurisdiction(userProfile.getWorkBasketDefaultJurisdiction());
         userProfileEntity.setWorkBasketDefaultState(userProfile.getWorkBasketDefaultState());
-    }
-
-    private Jurisdiction getJurisdiction(String jurisdictionId) {
-        Jurisdiction jurisdiction = new Jurisdiction();
-        jurisdiction.setId(jurisdictionId);
-        return jurisdiction;
     }
 }

@@ -2,8 +2,7 @@ package uk.gov.hmcts.ccd.data.userprofile;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
-import uk.gov.hmcts.ccd.domain.model.UserProfile;
+import uk.gov.hmcts.ccd.domain.model.UserProfileLight;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,36 +24,13 @@ class UserProfileMapperTest {
     public void shouldMapUserProfileLightEntity() {
         UserProfileLightEntity userProfileLightEntity = getUserProfileEntity();
 
-        UserProfile userProfile = UserProfileMapper.entityToModel(userProfileLightEntity);
+        UserProfileLight userProfile = UserProfileMapper.entityToModel(userProfileLightEntity);
 
         assertNotNull(userProfile);
         assertEquals(USER_ID, userProfile.getId());
-        assertEquals(JURISDICTION, userProfile.getWorkBasketDefaultJurisdiction());
-        assertEquals(CASE_TYPE, userProfile.getWorkBasketDefaultCaseType());
-        assertEquals(STATE, userProfile.getWorkBasketDefaultState());
-    }
-
-    @Test
-    @DisplayName("entityToModel should map null UserProfileLightEntity with jurisdiction")
-    public void shouldMapNullUserProfileLightEntityWithJurisdiction() {
-        assertNull(UserProfileMapper.entityToModel(null, getJurisdiction(JURISDICTION)));
-    }
-
-    @Test
-    @DisplayName("entityToModel should map UserProfileLightEntity with jurisdiction")
-    public void shouldMapUserProfileLightEntityWithJurisdiction() {
-        UserProfileLightEntity userProfileLightEntity = getUserProfileEntity();
-
-        UserProfile userProfile = UserProfileMapper.entityToModel(userProfileLightEntity,
-            getJurisdiction(JURISDICTION));
-
-        assertNotNull(userProfile);
-        assertEquals(1, userProfile.getJurisdictions().size());
-        assertEquals(getJurisdiction(JURISDICTION).getId(), userProfile.getJurisdictions().get(0).getId());
-        assertEquals(USER_ID, userProfile.getId());
-        assertEquals(JURISDICTION, userProfile.getWorkBasketDefaultJurisdiction());
-        assertEquals(CASE_TYPE, userProfile.getWorkBasketDefaultCaseType());
-        assertEquals(STATE, userProfile.getWorkBasketDefaultState());
+        assertEquals(JURISDICTION, userProfile.getDefaultJurisdiction());
+        assertEquals(CASE_TYPE, userProfile.getDefaultCaseType());
+        assertEquals(STATE, userProfile.getDefaultState());
     }
 
     private static UserProfileLightEntity getUserProfileEntity() {
@@ -64,11 +40,5 @@ class UserProfileMapperTest {
         userProfileEntity.setDefaultCaseType(CASE_TYPE);
         userProfileEntity.setDefaultState(STATE);
         return userProfileEntity;
-    }
-
-    private Jurisdiction getJurisdiction(String jurisdictionId) {
-        Jurisdiction jurisdiction = new Jurisdiction();
-        jurisdiction.setId(jurisdictionId);
-        return jurisdiction;
     }
 }
