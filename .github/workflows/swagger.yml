@@ -34,5 +34,5 @@ jobs:
           repo=`echo "$GITHUB_REPOSITORY" | cut -f2- -d/`
           echo "$(cat /tmp/swagger-specs.json)" > "docs/specs/$repo.json"
           git add "docs/specs/$repo.json"
-          # Only commit and push if we have changes
+          # Only commit and push if we have changes.
           git diff --quiet && git diff --staged --quiet || (git commit -m "Update spec for $repo#${GITHUB_SHA:7}"; git push --set-upstream upstream master)
