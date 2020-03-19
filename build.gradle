@@ -1,6 +1,6 @@
 buildscript {
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.3.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.2.4.RELEASE")
     }
     dependencies {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622"
@@ -12,8 +12,8 @@ buildscript {
 
 plugins {
     id 'application'
-    id 'io.spring.dependency-management' version '1.0.7.RELEASE'
-    id 'org.springframework.boot' version '2.1.4.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'org.springframework.boot' version '2.2.4.RELEASE'
     id 'org.owasp.dependencycheck' version '5.1.0'
     id 'se.patrikerdes.use-latest-versions' version '0.2.10'
     id 'com.github.ben-manes.versions' version '0.21.0'
@@ -23,6 +23,7 @@ plugins {
     id "com.github.spotbugs" version "1.6.10"
     id "com.github.kt3k.coveralls" version "2.8.2"
     id 'net.ltgt.apt' version '0.21'
+    id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.14'
 }
 
 dependencyUpdates.resolutionStrategy = {
@@ -105,6 +106,7 @@ configurations {
     annotationProcessor
     aatCompile.extendsFrom(testCompile)
     aatRuntime.extendsFrom(testRuntime)
+    cucumberRuntime.extendsFrom(functionalRuntime)
 }
 // end::jar[]
 
@@ -126,8 +128,8 @@ ext {
     ]
 }
 
-ext['junit-jupiter.version'] = '5.4.0'
-ext['junit-vintage.version'] = '5.4.0'
+ext['junit-jupiter.version'] = '5.5.2'
+ext['junit-vintage.version'] = '5.5.2'
 
 dependencies {
     compile('org.projectlombok:lombok:1.18.6')
@@ -175,6 +177,8 @@ dependencies {
     testCompile group: 'com.opentable.components', name: 'otj-pg-embedded', version: '0.13.1'
     testCompile group: 'com.github.tomakehurst', name: 'wiremock-standalone', version: '2.21.0'
     testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '2.1.0.RELEASE'
+    
+    testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '1.2.1'
 }
 // end::dependencies[]
 
@@ -289,6 +293,8 @@ jacocoTestReport {
 
 test {
     environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
+    
+    generateCucumberReports.enabled = false
 
     useJUnitPlatform()
 
@@ -315,15 +321,25 @@ sourceSets {
     }
 }
 task smoke(type: Test) {
+    systemProperty "http.proxyHost", System.getProperty('http.proxyHost')
+    systemProperty "http.proxyPort", System.getProperty('http.proxyPort')
+    systemProperty "https.proxyHost", System.getProperty('https.proxyHost')
+    systemProperty "https.proxyPort", System.getProperty('https.proxyPort')
+
     environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
-    logger.quiet("TODO: Add smoke tests")
 //    group = 'Delivery pipeline'
-//    description = 'Executes functional tests against an AAT UserProfile instance'
+//    description = 'Executes smoke tests against an AAT CCD User Profile instance'
 //    setTestClassesDirs(sourceSets.aat.output.classesDirs)
 //    setClasspath(sourceSets.aat.runtimeClasspath)
-//    include 'uk.gov.hmcts.ccd.userprofile.tests.smoke'
+//    include 'uk/gov/hmcts/ccd/userprofile/tests/smoke'
 //    useJUnitPlatform()
-
+//    doFirst {
+//        javaexec {
+//            main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileTestDataLoader"
+//            classpath += sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+//            args = ['']
+//        }
+//    }
 }
 
 task functional(type: Test) {
@@ -335,6 +351,16 @@ task functional(type: Test) {
     setClasspath(sourceSets.aat.runtimeClasspath)
     include "uk/gov/hmcts/ccd/userprofile/tests/functional/**"
     useJUnitPlatform()
+
+    doFirst {
+        generateCucumberReports.enabled = true
+        javaexec {
+            main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
+            classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', "json:${projectDir}/target/cucumber.json", '--tags', 'not @Ignore', '--glue',
+                    'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
+        }
+    }
 }
 
 check.dependsOn jacocoTestReport
@@ -370,4 +396,9 @@ task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
             "-r",
             "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
     ]
+}
+
+cucumberReports {
+    outputDir = file("${projectDir}/target/cucumber")
+    reports = files("${projectDir}/target/cucumber.json")
 }
