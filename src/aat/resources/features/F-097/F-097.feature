@@ -4,7 +4,7 @@ Feature: F-097: Get Users
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-424 @Ignore
+  @S-424
   Scenario: should fetch user profiles by jurisdiction
     Given a successful call [to create user profiles] as in [Standard_User_Profiles_Creation_Data]
     When a request is prepared with appropriate values
@@ -12,7 +12,7 @@ Feature: F-097: Get Users
     Then the response [has the 200 OK code]
     And the response has all other details as expected
 
-  @S-467 @Ignore
+  @S-467
   Scenario: should fetch all user profiles
     Given a successful call [to create user profiles] as in [Standard_User_Profiles_Creation_Data]
     When a request is prepared with appropriate values
