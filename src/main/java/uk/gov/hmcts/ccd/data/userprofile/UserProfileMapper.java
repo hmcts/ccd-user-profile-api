@@ -4,6 +4,7 @@ import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionEntity;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionMapper;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
+import uk.gov.hmcts.ccd.domain.model.UserProfileLight;
 
 import java.util.Map;
 
@@ -11,6 +12,18 @@ import java.util.Map;
 public final class UserProfileMapper {
 
     private UserProfileMapper() {}
+
+    static UserProfileLight entityToModel(UserProfileLightEntity userProfileLightEntity) {
+        if (userProfileLightEntity == null) {
+            return null;
+        }
+        UserProfileLight userProfile = new UserProfileLight();
+        userProfile.setId(userProfileLightEntity.getId());
+        userProfile.setDefaultJurisdiction(userProfileLightEntity.getDefaultJurisdiction());
+        userProfile.setDefaultCaseType(userProfileLightEntity.getDefaultCaseType());
+        userProfile.setDefaultState(userProfileLightEntity.getDefaultState());
+        return userProfile;
+    }
 
     static UserProfile entityToModel(UserProfileEntity userProfileEntity) {
         if (userProfileEntity == null) {
