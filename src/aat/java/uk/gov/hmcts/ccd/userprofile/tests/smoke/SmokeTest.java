@@ -1,14 +1,15 @@
 package uk.gov.hmcts.ccd.userprofile.tests.smoke;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-class SmokeTest {
+public class SmokeTest {
 
     @Test
     @DisplayName("Smoke test")
+    @Tag("smoke")
     void test() {
-        Assertions.fail("junit 5 failure");
+        System.out.println("Smoke test will be implemented later.");
     }
 }

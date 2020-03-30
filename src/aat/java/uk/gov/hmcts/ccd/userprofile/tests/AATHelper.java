@@ -21,11 +21,11 @@ public enum AATHelper {
     }
 
     public String getDataStoreServiceName() {
-        return System.getenv("CCD_DS_SERVICE_NAME");
+        return System.getenv("BEFTA_S2S_CLIENT_ID");
     }
 
     public String getDataStoreServiceSecret() {
-        return System.getenv("CCD_DS_SERVICE_SECRET");
+        return System.getenv("BEFTA_S2S_CLIENT_SECRET");
     }
 
     public S2SHelper getS2SHelper() {
