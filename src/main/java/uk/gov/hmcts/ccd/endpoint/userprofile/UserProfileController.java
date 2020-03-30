@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.AppInsights;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
+import uk.gov.hmcts.ccd.domain.model.UserProfileLight;
 import uk.gov.hmcts.ccd.domain.service.DeleteUserProfileJurisdictionOperation;
 import uk.gov.hmcts.ccd.domain.service.FindAllUserProfilesOperation;
 import uk.gov.hmcts.ccd.domain.service.SaveUserProfileOperation;
@@ -27,6 +29,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 @RestController
+@Slf4j
 class UserProfileController {
     private final FindAllUserProfilesOperation findAllUserProfilesOperation;
     private final UserProfileOperation userProfileOperation;
@@ -54,18 +57,24 @@ class UserProfileController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Found User Profiles")
     })
-    public List<UserProfile> getUserProfiles(@ApiParam("Jurisdiction ID")
-                                             @RequestParam("jurisdiction")
+    public List<UserProfileLight> getUserProfiles(@ApiParam("Jurisdiction ID") @RequestParam("jurisdiction")
                                                  final Optional<String> jurisdictionOptional,
-                                             @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
+                                                  @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
                                                  final String actionedBy) {
         Instant start = Instant.now();
-        List<UserProfile> userProfiles = jurisdictionOptional
-            .map(j -> findAllUserProfilesOperation.getAll(j, actionedBy))
-            .orElse(findAllUserProfilesOperation.getAll());
+
+        List<UserProfileLight> allUserProfiles = jurisdictionOptional
+            .map(j -> findAllUserProfilesOperation.getAllLight(j, actionedBy))
+            .orElseGet(findAllUserProfilesOperation::getAllLight);
+
         final Duration between = Duration.between(start, Instant.now());
+        long betweenInMils = between.toMillis();
+        log.info("Found {} entries", allUserProfiles.size());
+        log.info("Time to execute the query: {} milliseconds", betweenInMils);
+
         appInsights.trackRequest(between, true);
-        return userProfiles;
+
+        return allUserProfiles;
     }
 
     @Transactional
