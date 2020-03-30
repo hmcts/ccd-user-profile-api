@@ -4,7 +4,6 @@ provider "azurerm" {
 
 locals {
   app_full_name = "${var.product}-${var.component}"
-  env_ase_url = "${var.env}.service.core-compute-${var.env}.internal"
 
   // Vault name
   vaultName = "${var.product}-${var.env}"
@@ -12,7 +11,6 @@ locals {
   // Shared Resource Group
   sharedResourceGroup = "${var.product}-shared-${var.env}"
 
-  s2s_url = "http://rpe-service-auth-provider-${local.env_ase_url}"
 }
 
 data "azurerm_key_vault" "ccd_shared_key_vault" {
