@@ -178,7 +178,7 @@ dependencies {
     testCompile group: 'com.github.tomakehurst', name: 'wiremock-standalone', version: '2.21.0'
     testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '2.1.0.RELEASE'
     
-    testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '2.2.0'
+    testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '2.7.0-RDM-7650-prerelease-2'
 }
 // end::dependencies[]
 
