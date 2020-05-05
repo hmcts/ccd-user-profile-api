@@ -29,9 +29,6 @@
         <notes>We do not use: Spring Framework 5.0.5.RELEASE + Spring Security (any version), see https://pivotal.io/security/cve-2018-1258</notes>
         <cve>CVE-2018-1258</cve>
     </suppress>
-
-
-
     <suppress>
         <notes>Temporary suppression while we investigate. See RDM-3324</notes>
         <cve>CVE-2018-1000632</cve>
@@ -67,7 +64,6 @@
         <cpe>cpe:/a:pivotal_software:spring_framework</cpe>
         <cve>CVE-2020-5398</cve>
     </suppress>
-
     <suppress>
         <notes><![CDATA[test only dependency pulled in by rest-assured. No fix available]]></notes>
         <gav regex="true">^org\.apache\.sling:org\.apache\.sling\.javax\.activation:0\.1\.0$</gav>
@@ -78,8 +74,6 @@
         <cve>CVE-2020-8840</cve>
         <cve>CVE-2020-1938</cve>
     </suppress>
-
-
    <suppress>
    <notes><![CDATA[
    file name: tomcat-embed-websocket-9.0.30.jar
@@ -94,6 +88,4 @@
    <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-core@.*$</packageUrl>
    <cve>CVE-2020-1938</cve>
    </suppress>
-
-
 </suppressions>
