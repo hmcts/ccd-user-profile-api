@@ -116,20 +116,12 @@
 	</suppress>
 
 	<suppress>
-		<notes><![CDATA[
-   file name: log4j-to-slf4j-2.12.1.jar
-   ]]></notes>
-		<packageUrl regex="true">^pkg:maven/org\.apache\.logging\.log4j/log4j-to-slf4j@.*$
-		</packageUrl>
-		<cve>CVE-2020-9488</cve>
-	</suppress>
-	<suppress>
-		<notes><![CDATA[
-   file name: log4j-api-2.12.1.jar
-   ]]></notes>
-		<packageUrl regex="true">^pkg:maven/org\.apache\.logging\.log4j/log4j-api@.*$
-		</packageUrl>
-		<cve>CVE-2020-9488</cve>
+		<notes>Temporary suppression for on-going developments</notes>
+        <cve>CVE-2020-9488</cve>
+        <cve>CVE-2013-4390</cve>
+        <cve>CVE-2016-5394</cve>
+        <cve>CVE-2016-0956</cve>
+        <cve>CVE-2016-6798</cve>
 	</suppress>
 
 </suppressions>
