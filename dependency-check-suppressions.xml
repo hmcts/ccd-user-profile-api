@@ -110,24 +110,35 @@
 		<notes><![CDATA[
    file name: tomcat-embed-core-9.0.30.jar
    ]]></notes>
-		<packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-core@.*$
-		</packageUrl>
-		<cve>CVE-2020-1938</cve>
-	</suppress>
-
-	<suppress>
-		<notes>Temporary suppression for on-going developments</notes>
-        <cve>CVE-2020-9488</cve>
-        <cve>CVE-2013-4390</cve>
-        <cve>CVE-2016-5394</cve>
-        <cve>CVE-2016-0956</cve>
-        <cve>CVE-2016-6798</cve>
-	</suppress>
-	 <suppress>
-      <notes><![CDATA[
-          file name: dom4j-2.1.1.jar
-          ]]></notes>
-      <cve>CVE-2020-10683</cve>
-     </suppress>
-
+   <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-core@.*$</packageUrl>
+   <cve>CVE-2020-1938</cve>
+   </suppress>
+    <suppress>
+   <notes><![CDATA[
+   file name: log4j-to-slf4j-2.12.1.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.apache\.logging\.log4j/log4j-to-slf4j@.*$</packageUrl>
+   <cve>CVE-2020-9488</cve>
+</suppress>
+    <suppress>
+   <notes><![CDATA[
+   file name: log4j-api-2.12.1.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.apache\.logging\.log4j/log4j-api@.*$</packageUrl>
+   <cve>CVE-2020-9488</cve>
+</suppress>
+    <suppress>
+   <notes><![CDATA[
+   file name: dom4j-1.6.1.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/dom4j/dom4j@.*$</packageUrl>
+   <cpe>cpe:/a:dom4j_project:dom4j</cpe>
+</suppress>
+    <suppress>
+   <notes><![CDATA[
+   file name: dom4j-2.1.1.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.dom4j/dom4j@.*$</packageUrl>
+   <cpe>cpe:/a:dom4j_project:dom4j</cpe>
+</suppress>
 </suppressions>
