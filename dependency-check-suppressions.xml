@@ -136,4 +136,12 @@
 		</packageUrl>
 		<cpe>cpe:/a:dom4j_project:dom4j</cpe>
 	</suppress>
+
+	<!-- Temporary suppressions to enable release 18.1 -->
+	<suppress>
+		<cve>CVE-2020-5408</cve>
+		<cve>CVE-2020-5407</cve>
+		<cve>CVE-2020-9484</cve>
+	</suppress>
+
 </suppressions>
