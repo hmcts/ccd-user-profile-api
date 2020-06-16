@@ -136,6 +136,20 @@
 		</packageUrl>
 		<cpe>cpe:/a:dom4j_project:dom4j</cpe>
 	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: postgresql-42.2.5.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.postgresql/postgresql@.*$</packageUrl>
+		<cpe>cpe:/a:postgresql:postgresql</cpe>
+	</suppress>
+	<suppress>
+		<notes><![CDATA[
+   file name: postgresql-42.2.5.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.postgresql/postgresql@.*$</packageUrl>
+		<cpe>cpe:/a:postgresql:postgresql_jdbc_driver</cpe>
+	</suppress>
 
 	<!-- Temporary suppressions to enable release 18.1 -->
 	<suppress>
