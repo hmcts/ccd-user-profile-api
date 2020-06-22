@@ -358,42 +358,35 @@ sourceSets {
     }
 }
 task smoke(type: Test) {
-    setTestClassesDirs(sourceSets.aat.output.classesDirs)
-    setClasspath(sourceSets.aat.runtimeClasspath)
-    include "uk/gov/hmcts/ccd/userprofile/tests/befta/**"
-    useJUnitPlatform {
-        includeTags 'smoke'
+  description = 'Executes smoke tests against an the CCD User Profile API instance just deployed'
+  setTestClassesDirs(sourceSets.aat.output.classesDirs)
+
+  doFirst {
+    generateCucumberReports.enabled = true
+    javaexec {
+      main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
+      classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+      args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', '@Smoke', '--glue',
+              'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
     }
-    doLast {
-        generateCucumberReports.enabled = true
-        javaexec {
-            main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
-            classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', "json:${projectDir}/target/cucumber.json", '--tags', '@Smoke', '--glue',
-                    'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
-        }
-    }
+  }
+  outputs.upToDateWhen { false }
 }
 
 task functional(type: Test) {
-    environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
+  description = 'Executes functional tests against an the CCD User Profile API instance just deployed'
+  setTestClassesDirs(sourceSets.aat.output.classesDirs)
 
-    group = 'Delivery pipeline'
-    description = 'Executes functional tests against the User Profile instance'
-    setTestClassesDirs(sourceSets.aat.output.classesDirs)
-    setClasspath(sourceSets.aat.runtimeClasspath)
-    include "uk/gov/hmcts/ccd/userprofile/tests/functional/**"
-    useJUnitPlatform()
-
-    doFirst {
-        generateCucumberReports.enabled = true
-        javaexec {
-            main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
-            classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', "json:${projectDir}/target/cucumber.json", '--tags', 'not @Ignore', '--glue',
-                    'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
-        }
+  doFirst {
+    generateCucumberReports.enabled = true
+    javaexec {
+      main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
+      classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+      args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', 'not @Ignore', '--glue',
+              'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
     }
+  }
+  outputs.upToDateWhen { false }
 }
 
 check.dependsOn jacocoTestReport
