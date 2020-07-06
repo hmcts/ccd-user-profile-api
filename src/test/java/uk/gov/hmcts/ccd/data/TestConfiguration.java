@@ -17,6 +17,7 @@ public class TestConfiguration {
     private static final Logger LOG = LoggerFactory.getLogger(TestConfiguration.class);
 
     @Bean(name = "EmbeddedPostgres")
+    @SuppressWarnings("PMD.CloseResource")
     public DataSource dataSource() throws IOException {
         int port = randomPort();
         LOG.info("Starting Postgres on port number {}", port);
