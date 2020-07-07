@@ -374,6 +374,7 @@ task smoke(type: Test) {
       classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
       args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', '@Smoke', '--glue',
               'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
+      jvmArgs = [ '--add-opens=java.base/java.lang.reflect', 'ALL-UNNAMED' ]
     }
   }
   outputs.upToDateWhen { false }
@@ -390,6 +391,7 @@ task functional(type: Test) {
       classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
       args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', 'not @Ignore', '--glue',
               'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
+      jvmArgs = [ '--add-opens=java.base/java.lang.reflect', 'ALL-UNNAMED' ]
     }
   }
   outputs.upToDateWhen { false }
