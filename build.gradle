@@ -117,7 +117,6 @@ targetCompatibility = 11
 
 ext {
     reformLogging= '5.1.1-BETA'
-    hibernateVersion = '5.3.17.Final'
     springCloudVersion = 'Greenwich.RELEASE'
     limits = [
             'instruction': 86,
@@ -249,7 +248,7 @@ checkstyle {
     configDir = new File(rootDir, 'config/checkstyle')
 }
 pmd {
-    toolVersion = "6.21.0"
+    toolVersion = "6.11.0"
     ruleSets = ["rulesets/java/quickstart.xml"]
 }
 
