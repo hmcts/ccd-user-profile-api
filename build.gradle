@@ -248,7 +248,7 @@ checkstyle {
     configDir = new File(rootDir, 'config/checkstyle')
 }
 pmd {
-    toolVersion = "6.11.0"
+    toolVersion = '6.11.0'
     ruleSets = ["rulesets/java/quickstart.xml"]
 }
 
