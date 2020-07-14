@@ -11,4 +11,3 @@ COPY lib/AI-Agent.xml /opt/app
 EXPOSE 4453
 
 CMD ["user-profile.jar"]
-
