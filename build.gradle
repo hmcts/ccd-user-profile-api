@@ -381,7 +381,7 @@ task smoke() {
     }
   }
   doLast {
-    file("${rootDir}/target/cucumber/cucumber-html-reports").renameTo(file("${rootDir}/target/cucumber/smoke"))
+    file("${rootDir}/target/cucumber").renameTo(file("${rootDir}/target/smoke"))
   }
   outputs.upToDateWhen { false }
 }
@@ -400,7 +400,7 @@ task functional() {
     }
   }
   doLast {
-    file('${rootDir}/target/cucumber/cucumber-html-reports').renameTo(file('${rootDir}/target/cucumber/functional'))
+    file('${rootDir}/target/cucumber').renameTo(file('${rootDir}/target/functional'))
   }
   outputs.upToDateWhen { false }
 }
