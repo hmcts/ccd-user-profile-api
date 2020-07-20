@@ -368,10 +368,15 @@ task smoke() {
 
   dependsOn aatClasses
 
-  new File("$buildDir/test-results/test").mkdirs()
-  new File("$buildDir/test-results/test/DummyTest.xml").text = "dummy"
-
   doFirst {
+    new File("$buildDir/test-results/test").mkdirs()
+    copy{
+      from "src/aat/resources/DummyTest.xml"
+      into "$buildDir/test-results/test"
+    }
+  }
+
+  doLast {
     generateCucumberReports.enabled = true
     println 'hellp'
     javaexec {
