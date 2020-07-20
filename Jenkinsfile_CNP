@@ -66,18 +66,18 @@ withPipeline(type, product, component) {
     disableLegacyDeployment()
 
     after('smokeTest:preview') {
-        steps.archiveArtifacts allowEmptyResults: true, artifacts: '**/target/cucumber/**/*'
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/cucumber/**/*'
     }
 
     after('smokeTest:aat') {
-        steps.archiveArtifacts allowEmptyResults: true, artifacts: '**/target/cucumber/**/*'
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/cucumber/**/*'
     }
 
     after('functionalTest:preview') {
-        steps.archiveArtifacts allowEmptyResults: true, artifacts: '**/target/cucumber/**/*'
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/cucumber/**/*'
     }
 
     after('functionalTest:aat') {
-        steps.archiveArtifacts allowEmptyResults: true, artifacts: '**/target/cucumber/**/*'
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/cucumber/**/*'
     }
 }
