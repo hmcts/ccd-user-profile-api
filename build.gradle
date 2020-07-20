@@ -363,7 +363,7 @@ sourceSets {
         }
     }
 }
-task smoke(type: Test) {
+task smoke() {
   description = 'Executes smoke tests against an the CCD User Profile API instance just deployed'
   setTestClassesDirs(sourceSets.aat.output.classesDirs)
 
