@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.userprofile;
+package uk.gov.hmcts.ccd.userprofile.smoke;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;

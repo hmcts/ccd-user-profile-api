@@ -366,7 +366,7 @@ sourceSets {
 task smoke(type: Test) {
   description = 'Executes smoke tests against an the CCD User Profile API instance just deployed'
   setTestClassesDirs(sourceSets.aat.output.classesDirs)
-  include "uk/gov/hmcts/ccd/userprofile/**"
+  include "uk/gov/hmcts/ccd/userprofile/smoke/**"
   useJUnitPlatform {
     includeTags 'smoke'
   }
