@@ -376,6 +376,8 @@ task smoke() {
 
   doFirst {
     generateCucumberReports.enabled = true
+    cucumberReports.outputDir = file("${projectDir}/target/smoke/cucumber")
+    cucumberReports.reports  = files("${projectDir}/target/smoke/cucumber.json")
     javaexec {
       main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
       classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
@@ -406,6 +408,8 @@ task functional() {
 
   doFirst {
     generateCucumberReports.enabled = true
+    cucumberReports.outputDir = file("${projectDir}/target/functional/cucumber")
+    cucumberReports.reports  = files("${projectDir}/target/functional/cucumber.json")
     javaexec {
       main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
       classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
