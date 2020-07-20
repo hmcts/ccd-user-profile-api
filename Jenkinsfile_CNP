@@ -65,11 +65,11 @@ withPipeline(type, product, component) {
     enableDbMigration('ccd')
     disableLegacyDeployment()
 
-    after('smokeTest:preview') {
+    after('smoketest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/smoke/**/*'
     }
 
-    after('smokeTest:aat') {
+    after('smoketest:aat') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/smoke/**/*'
     }
 
