@@ -370,6 +370,7 @@ task smoke() {
 
   doFirst {
     generateCucumberReports.enabled = true
+    new File("$buildDir/test-results/test/DummyTest.xml").text = ""
     javaexec {
       main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
       classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
@@ -377,7 +378,6 @@ task smoke() {
               'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
       jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
     }
-    new File("$buildDir/test-results/test/DummyTest.xml").text = ""
   }
   outputs.upToDateWhen { false }
 }
