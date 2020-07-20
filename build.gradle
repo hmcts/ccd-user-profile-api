@@ -386,12 +386,12 @@ task smoke() {
   }
 
   finalizedBy {
-     generateCucumberReports {
-       doLast{
-         new File("${rootDir}/befta-reports/smoke/cucumber").mkdirs()
-         file("${rootDir}/target/cucumber").renameTo(file("${rootDir}/befta-reports/smoke/cucumber"))
-       }
-     }
+    generateCucumberReports {
+      doLast{
+        new File("${rootDir}/befta-reports/smoke/cucumber").mkdirs()
+        file("${rootDir}/target/cucumber").renameTo(file("${rootDir}/befta-reports/smoke/cucumber"))
+      }
+    }
   }
   
   outputs.upToDateWhen { false }
@@ -418,12 +418,12 @@ task functional() {
   }
 
   finalizedBy {
-     generateCucumberReports {
-       doLast{
-         new File("${rootDir}/befta-reports/functional/cucumber").mkdirs()
-         file("${rootDir}/target/cucumber").renameTo(file("${rootDir}/befta-reports/functional/cucumber"))
-       }
-     }
+    generateCucumberReports {
+      doLast{
+        new File("${rootDir}/befta-reports/functional/cucumber").mkdirs()
+        file("${rootDir}/target/cucumber").renameTo(file("${rootDir}/befta-reports/functional/cucumber"))
+      }
+    }
   }
 
 
