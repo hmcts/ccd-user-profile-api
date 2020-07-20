@@ -385,9 +385,8 @@ task smoke() {
   }
 
   finalizedBy {  
-    cucumberReports.outputDir = file("${projectDir}/target/smoke/cucumber")
-    cucumberReports.reports  = files("${projectDir}/target/smoke/cucumber.json")
     generateCucumberReports
+    file("${rootDir}/target/cucumber").renameTo(file("${rootDir}/befta-reports/smoke/cucumber"))
   }
 
   outputs.upToDateWhen { false }
@@ -413,10 +412,9 @@ task functional() {
     }
   }
 
-  finalizedBy {  
-    cucumberReports.outputDir = file("${projectDir}/target/functional/cucumber")
-    cucumberReports.reports  = files("${projectDir}/target/functional/cucumber.json")
+  finalizedBy {
     generateCucumberReports
+    file("${rootDir}/target/cucumber").renameTo(file("${rootDir}/befta-reports/functional/cucumber"))
   }
 
   outputs.upToDateWhen { false }
