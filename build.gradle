@@ -372,11 +372,12 @@ task smoke() {
     generateCucumberReports.enabled = true
     javaexec {
       main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
-      classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.aat.output + sourceSets.test.output
+      classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
       args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', '@Smoke', '--glue',
               'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
       jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
     }
+    new File("$buildDir/test-results/test/DummyTest.xml").text = ""
   }
   outputs.upToDateWhen { false }
 }
