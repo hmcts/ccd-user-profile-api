@@ -366,7 +366,7 @@ sourceSets {
 task smoke() {
   description = 'Executes smoke tests against an the CCD User Profile API instance just deployed'
 
-  doLast {
+  doFirst {
     generateCucumberReports.enabled = true
     javaexec {
       main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
