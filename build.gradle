@@ -382,7 +382,6 @@ task smoke() {
 
 task functional(type: Test) {
   description = 'Executes functional tests against an the CCD User Profile API instance just deployed'
-  setTestClassesDirs(sourceSets.aat.output.classesDirs)
 
   doFirst {
     generateCucumberReports.enabled = true
