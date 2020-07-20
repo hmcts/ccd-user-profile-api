@@ -378,7 +378,6 @@ task smoke() {
 
   doLast {
     generateCucumberReports.enabled = true
-    println 'hellp'
     javaexec {
       main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
       classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
