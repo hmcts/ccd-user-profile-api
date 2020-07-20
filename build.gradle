@@ -386,13 +386,6 @@ task smoke() {
       jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
     }
   }
-  doLast {
-    new File("$rootDir/target/smoke").mkdirs()
-    //copy{
-    //  from "$rootDir/target"
-    //  into "$rootDir/target/smoke"
-    //}
-  }
   outputs.upToDateWhen { false }
 }
 
@@ -417,13 +410,6 @@ task functional() {
               'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
       jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
     }
-  }
-  doLast {
-    new File("$rootDir/target/functional").mkdirs()
-    //copy{
-    //  from "$rootDir/target"
-    //  into "$rootDir/target/functional"
-    //}
   }
   outputs.upToDateWhen { false }
 }
