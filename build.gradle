@@ -400,7 +400,7 @@ task functional() {
     }
   }
   doLast {
-    file('${rootDir}/target/cucumber').renameTo(file('${rootDir}/target/functional'))
+    file("${rootDir}/target/cucumber").renameTo(file("${rootDir}/target/functional"))
   }
   outputs.upToDateWhen { false }
 }
