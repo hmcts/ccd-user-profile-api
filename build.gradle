@@ -383,7 +383,7 @@ task smoke() {
   }
 
   doLast {
-    ant.move file: "target/cucumber/cucumber-html-reports", todir: "target/befta/smoke"
+    ant.move file: "${projectDir}target/cucumber/cucumber-html-reports", todir: "target/befta/smoke"
   }
 
   outputs.upToDateWhen { false }
@@ -403,7 +403,7 @@ task functional() {
     }
   }
   doLast {
-    ant.move file: "target/cucumber/cucumber-html-reports", todir: "target/befta/functional"
+    ant.move file: "${projectDir}target/cucumber/cucumber-html-reports", todir: "target/befta/functional"
   }
   outputs.upToDateWhen { false }
 }
