@@ -368,7 +368,6 @@ task smoke() {
   dependsOn aatClasses
 
   new File("$buildDir/test-results/test").mkdirs()
-  //new File("$buildDir/test-results/test/DummyTest.xml").text = "dummy"
   copy{
     from "src/aat/resources/DummyTest.xml"
     into "$buildDir/test-results/test"
@@ -376,8 +375,6 @@ task smoke() {
 
   doFirst {
     generateCucumberReports.enabled = true
-    cucumberReports.outputDir = file("${projectDir}/target/smoke/cucumber")
-    cucumberReports.reports  = files("${projectDir}/target/smoke/cucumber.json")
     javaexec {
       main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
       classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
@@ -386,6 +383,13 @@ task smoke() {
       jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
     }
   }
+
+  finalizedBy {  
+    cucumberReports.outputDir = file("${projectDir}/target/smoke/cucumber")
+    cucumberReports.reports  = files("${projectDir}/target/smoke/cucumber.json")
+    generateCucumberReports
+  }
+
   outputs.upToDateWhen { false }
 }
 
@@ -393,7 +397,6 @@ task functional() {
   description = 'Executes functional tests against an the CCD User Profile API instance just deployed'
 
   new File("$buildDir/test-results/test").mkdirs()
-  //new File("$buildDir/test-results/test/DummyTest.xml").text = "dummy"
   copy{
     from "src/aat/resources/DummyTest.xml"
     into "$buildDir/test-results/test"
@@ -401,8 +404,6 @@ task functional() {
 
   doFirst {
     generateCucumberReports.enabled = true
-    cucumberReports.outputDir = file("${projectDir}/target/functional/cucumber")
-    cucumberReports.reports  = files("${projectDir}/target/functional/cucumber.json")
     javaexec {
       main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
       classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
@@ -411,6 +412,13 @@ task functional() {
       jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
     }
   }
+
+  finalizedBy {  
+    cucumberReports.outputDir = file("${projectDir}/target/functional/cucumber")
+    cucumberReports.reports  = files("${projectDir}/target/functional/cucumber.json")
+    generateCucumberReports
+  }
+
   outputs.upToDateWhen { false }
 }
 
