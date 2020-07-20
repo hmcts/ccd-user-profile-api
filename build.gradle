@@ -363,6 +363,7 @@ sourceSets {
         }
     }
 }
+
 task smoke() {
   description = 'Executes smoke tests against an the CCD User Profile API instance just deployed'
   dependsOn aatClasses
@@ -373,7 +374,7 @@ task smoke() {
     into "$buildDir/test-results/test"
   }
 
-  doFirst {
+  doLast {
     generateCucumberReports.enabled = true
     javaexec {
       main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
@@ -384,11 +385,15 @@ task smoke() {
     }
   }
 
-  finalizedBy {  
-    generateCucumberReports
-    file("${rootDir}/target/cucumber").renameTo(file("${rootDir}/befta-reports/smoke/cucumber"))
+  finalizedBy {
+     generateCucumberReports {
+       doLast{
+         new File("${rootDir}/befta-reports/smoke/cucumber").mkdirs()
+         file("${rootDir}/target/cucumber").renameTo(file("${rootDir}/befta-reports/smoke/cucumber"))
+       }
+     }
   }
-
+  
   outputs.upToDateWhen { false }
 }
 
@@ -413,9 +418,14 @@ task functional() {
   }
 
   finalizedBy {
-    generateCucumberReports
-    file("${rootDir}/target/cucumber").renameTo(file("${rootDir}/befta-reports/functional/cucumber"))
+     generateCucumberReports {
+       doLast{
+         new File("${rootDir}/befta-reports/functional/cucumber").mkdirs()
+         file("${rootDir}/target/cucumber").renameTo(file("${rootDir}/befta-reports/functional/cucumber"))
+       }
+     }
   }
+
 
   outputs.upToDateWhen { false }
 }
