@@ -411,7 +411,10 @@ task functional() {
     }
   }
   doLast {
-    file("${rootDir}/target/cucumber").renameTo(file("${rootDir}/target/functional"))
+    copy{
+      from "$rootDir/target/cucumber"
+      into "$rootDir/target/functional"
+    }
   }
   outputs.upToDateWhen { false }
 }
