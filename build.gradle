@@ -365,7 +365,6 @@ sourceSets {
 }
 task smoke() {
   description = 'Executes smoke tests against an the CCD User Profile API instance just deployed'
-
   dependsOn aatClasses
 
   new File("$buildDir/test-results/test").mkdirs()
@@ -381,11 +380,9 @@ task smoke() {
       jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
     }
   }
-
   doLast {
     file("${projectDir}/target/cucumber/cucumber-html-reports").renameTo(file("${projectDir}/target/cucumber/smoke"))
   }
-
   outputs.upToDateWhen { false }
 }
 
