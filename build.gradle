@@ -385,10 +385,11 @@ task smoke() {
     }
   }
   doLast {
-    copy{
-      from "$rootDir/target"
-      into "$rootDir/target/smoke"
-    }
+    new File("$rootDir/target/smoke").mkdirs()
+    //copy{
+    //  from "$rootDir/target"
+    //  into "$rootDir/target/smoke"
+    //}
   }
   outputs.upToDateWhen { false }
 }
@@ -414,10 +415,11 @@ task functional() {
     }
   }
   doLast {
-    copy{
-      from "$rootDir/target"
-      into "$rootDir/target/functional"
-    }
+    new File("$rootDir/target/functional").mkdirs()
+    //copy{
+    //  from "$rootDir/target"
+    //  into "$rootDir/target/functional"
+    //}
   }
   outputs.upToDateWhen { false }
 }
