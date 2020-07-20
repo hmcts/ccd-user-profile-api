@@ -176,7 +176,10 @@
 		<cve>CVE-2016-5394</cve>
 		<cve>CVE-2016-0956</cve>
 		<cve>CVE-2016-6798</cve>
-		<cve>CVE-2020-13692</cve> 
+		<cve>CVE-2020-13692</cve>
+		<cve>CVE-2020-13934</cve>
+		<cve>CVE-2020-13935</cve>
+		<cve>CVE-2019-14900</cve>
 	</suppress>
 
 </suppressions>
