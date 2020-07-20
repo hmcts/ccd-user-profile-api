@@ -66,18 +66,18 @@ withPipeline(type, product, component) {
     disableLegacyDeployment()
 
     after('smoketest:preview') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/befta-reports/smoke/cucumber/**/*'
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/befta-reports/smoke/**/*'
     }
 
     after('smoketest:aat') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/befta-reports/smoke/cucumber/**/*'
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/befta-reports/smoke/**/*'
     }
 
     after('functionalTest:preview') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/befta-reports/functional/cucumber/**/*'
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/befta-reports/functional/**/*'
     }
 
     after('functionalTest:aat') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/befta-reports/functional/cucumber/**/*'
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/befta-reports/functional/**/*'
     }
 }
