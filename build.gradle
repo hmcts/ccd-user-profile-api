@@ -369,7 +369,7 @@ task smoke() {
   dependsOn aatClasses
 
   new File("$buildDir/test-results/test").mkdirs()
-  new File("$buildDir/test-results/test/DummyTest.xml").text = ""
+  new File("$buildDir/test-results/test/DummyTest.xml").text = "dummy"
 
   doFirst {
     generateCucumberReports.enabled = true
