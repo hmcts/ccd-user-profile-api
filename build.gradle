@@ -385,7 +385,10 @@ task smoke() {
     }
   }
   doLast {
-    file("${rootDir}/target/cucumber").renameTo(file("${rootDir}/target/smoke"))
+    copy{
+      from "$rootDir/target"
+      into "$rootDir/target/smoke"
+    }
   }
   outputs.upToDateWhen { false }
 }
@@ -412,7 +415,7 @@ task functional() {
   }
   doLast {
     copy{
-      from "$rootDir/target/cucumber"
+      from "$rootDir/target"
       into "$rootDir/target/functional"
     }
   }
