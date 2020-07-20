@@ -368,9 +368,12 @@ task smoke() {
 
   dependsOn aatClasses
 
+  new File("$buildDir/test-results/test").mkdirs()
+  new File("$buildDir/test-results/test/DummyTest.xml").text = "dummy"
+
   doFirst {
     generateCucumberReports.enabled = true
-    new File("$buildDir/test-results/test/DummyTest.xml").text = ""
+    println 'hellp'
     javaexec {
       main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
       classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
