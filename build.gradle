@@ -181,7 +181,7 @@ dependencies {
     testCompile group: 'com.github.tomakehurst', name: 'wiremock-standalone', version: '2.21.0'
     testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '2.1.0.RELEASE'
 
-    testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '2.7.0'
+    testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '4.0.2'
 }
 // end::dependencies[]
 
@@ -363,26 +363,48 @@ sourceSets {
         }
     }
 }
-task smoke(type: Test) {
-  description = 'Executes smoke tests against an the CCD User Profile API instance just deployed'
-  setTestClassesDirs(sourceSets.aat.output.classesDirs)
 
-  doFirst {
+task smoke() {
+  description = 'Executes smoke tests against an the CCD User Profile API instance just deployed'
+  dependsOn aatClasses
+
+  new File("$buildDir/test-results/test").mkdirs()
+  copy{
+    from "src/aat/resources/DummyTest.xml"
+    into "$buildDir/test-results/test"
+  }
+
+  doLast {
     generateCucumberReports.enabled = true
     javaexec {
       main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
-      classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+      classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
       args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', '@Smoke', '--glue',
               'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
       jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
     }
   }
+
+  finalizedBy {
+    generateCucumberReports {
+      doLast{
+        new File("${rootDir}/befta-reports/smoke").mkdirs()
+        file("${rootDir}/target/cucumber/cucumber-html-reports").renameTo(file("${rootDir}/befta-reports/smoke"))
+      }
+    }
+  }
+  
   outputs.upToDateWhen { false }
 }
 
-task functional(type: Test) {
+task functional() {
   description = 'Executes functional tests against an the CCD User Profile API instance just deployed'
-  setTestClassesDirs(sourceSets.aat.output.classesDirs)
+
+  new File("$buildDir/test-results/test").mkdirs()
+  copy{
+    from "src/aat/resources/DummyTest.xml"
+    into "$buildDir/test-results/test"
+  }
 
   doFirst {
     generateCucumberReports.enabled = true
@@ -394,6 +416,17 @@ task functional(type: Test) {
       jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
     }
   }
+
+  finalizedBy {
+    generateCucumberReports {
+      doLast{
+        new File("${rootDir}/befta-reports/functional").mkdirs()
+        file("${rootDir}/target/cucumber/cucumber-html-reports").renameTo(file("${rootDir}/befta-reports/functional"))
+      }
+    }
+  }
+
+
   outputs.upToDateWhen { false }
 }
 
