@@ -26,3 +26,4 @@ nbdist/
 .gradle/
 out/
 /befta-reports/
+bin/
