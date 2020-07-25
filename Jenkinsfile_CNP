@@ -60,7 +60,6 @@ withPipeline(type, product, component) {
         enableSlackNotifications('#ccd-pr-builds')
     }
 
-
     overrideVaultEnvironments(vaultOverrides)
     enableAksStagingDeployment()
     disableLegacyDeploymentOnAAT()
