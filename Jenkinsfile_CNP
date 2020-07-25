@@ -14,6 +14,8 @@ def secrets = [
     'ccd-${env}': [
         secret('ccd-caseworker-autotest-password', 'CCD_CASEWORKER_AUTOTEST_PASSWORD'),
         secret('ccd-api-gateway-oauth2-client-secret', 'OAUTH2_CLIENT_SECRET'),
+        secret('ccd-importer-autotest-email', 'CCD_IMPORT_AUTOTEST_EMAIL'),
+        secret('ccd-importer-autotest-password', 'CCD_IMPORT_AUTOTEST_PASSWORD')
     ],
     's2s-${env}': [
         secret('microservicekey-ccd-data', 'BEFTA_S2S_CLIENT_SECRET'),
@@ -50,6 +52,9 @@ withPipeline(type, product, component) {
     if (env.BRANCH_NAME == 'develop') {
         enableSlackNotifications('#ccd-develop-builds')
     }
+    if (env.BRANCH_NAME != 'master' && env.BRANCH_NAME != 'demo' && env.BRANCH_NAME != 'perftest' && env.BRANCH_NAME != 'ithc') {
+        env.DEFINITION_STORE_HOST = "http://ccd-definition-store-api-pr-575.service.core-compute-preview.internal"
+    }
     onDemo {
         enableSlackNotifications('#ccd-demo-builds')
     }
@@ -57,7 +62,6 @@ withPipeline(type, product, component) {
         enableSlackNotifications('#ccd-pr-builds')
     }
 
-   
     overrideVaultEnvironments(vaultOverrides)
     enableAksStagingDeployment()
     disableLegacyDeploymentOnAAT()
