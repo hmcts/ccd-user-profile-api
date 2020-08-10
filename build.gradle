@@ -20,7 +20,7 @@ plugins {
     id 'org.sonarqube' version '2.7.1'
     id 'jacoco'
     id 'checkstyle'
-    id "com.github.spotbugs" version "1.6.10"
+    id "com.github.spotbugs" version "4.4.4"
     id "com.github.kt3k.coveralls" version "2.8.2"
     id 'net.ltgt.apt' version '0.21'
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.14'
@@ -112,12 +112,11 @@ configurations {
 // end::jar[]
 
 // tag::dependencies[]
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 11
+targetCompatibility = 11
 
 ext {
     reformLogging= '5.1.1-BETA'
-    hibernateVersion = '5.2.17.Final'
     springCloudVersion = 'Greenwich.RELEASE'
     limits = [
             'instruction': 86,
@@ -138,11 +137,7 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'logging', version: reformLogging
     compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: reformLogging
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-    compile "org.hibernate:hibernate-core:${hibernateVersion}"
-    compile('org.springframework.boot:spring-boot-starter-data-jpa') {
-        exclude group: 'org.hibernate', module: 'hibernate-core'
-        exclude group: 'org.hibernate', module: 'hibernate-entitymanager'
-    }
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile(group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc') {
         exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
     }
@@ -159,9 +154,9 @@ dependencies {
         // TODO remove when auth-checker-lib upgrades its dependency to spring boot 2.0.x
         exclude group: 'uk.gov.hmcts.reform', module: 'java-logging-spring'
     }
-    compile group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0'
+    compile group: 'io.rest-assured', name: 'rest-assured', version: '4.3.0'
     compile 'net.jcip:jcip-annotations:1.0'
-    compile 'com.github.spotbugs:spotbugs-annotations:3.1.12'
+    compile 'com.github.spotbugs:spotbugs-annotations:4.0.6'
 
 
     // Force to use the latest org.springframework.security
@@ -172,7 +167,7 @@ dependencies {
 
 
     compile 'uk.gov.hmcts.reform:properties-volume-spring-boot-starter:0.0.4'
-    compile 'uk.gov.hmcts.reform:health-spring-boot-starter:0.0.3'
+    compile 'uk.gov.hmcts.reform:health-spring-boot-starter:0.0.5'
 
     compile "com.fasterxml.jackson.core:jackson-databind:2.11.0.rc1"
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.11.0.rc1'
@@ -185,14 +180,15 @@ dependencies {
     testCompile group: 'com.opentable.components', name: 'otj-pg-embedded', version: '0.13.1'
     testCompile group: 'com.github.tomakehurst', name: 'wiremock-standalone', version: '2.21.0'
     testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '2.1.0.RELEASE'
-    testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '2.2.0'
+
+    testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '4.0.2'
 }
 // end::dependencies[]
 
 dependencyManagement {
     dependencies {
         // CVE-2019-0232 - Java and Command Line injections in Windows
-        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.31') {
+        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.36') {
             entry 'tomcat-embed-core'
             entry 'tomcat-embed-el'
             entry 'tomcat-embed-websocket'
@@ -200,6 +196,17 @@ dependencyManagement {
         // CVE-2019-10086
         dependencySet(group: 'commons-beanutils', version: '1.9.4') {
             entry 'commons-beanutils'
+        }
+
+        // Remove once BEFTA rest-assured is updated
+        dependencySet(group: 'io.rest-assured', version: '4.3.0') {
+            entry 'json-path'
+            entry 'xml-path'
+        }
+        dependencySet(group: 'org.codehaus.groovy', version: '3.0.2') {
+            entry 'groovy'
+            entry 'groovy-xml'
+            entry 'groovy-json'
         }
     }
 }
@@ -248,7 +255,7 @@ pmd {
 checkstyleMain.shouldRunAfter(compileJava)
 test.shouldRunAfter(checkstyleTest)
 
-tasks.withType(com.github.spotbugs.SpotBugsTask) {
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
     reports {
         xml.enabled = false
         html.enabled = true
@@ -272,11 +279,11 @@ jacocoTestReport {
     }
 
     afterEvaluate {
-        classDirectories = files(classDirectories.files.collect {
+        classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it,
                     exclude: ['uk/gov/hmcts/ccd/endpoint/exception/**',
                               'uk/gov/hmcts/ccd/repository/**'])
-        })
+        }))
     }
 
     doLast {
@@ -356,47 +363,71 @@ sourceSets {
         }
     }
 }
-task smoke(type: Test) {
-    systemProperty "http.proxyHost", System.getProperty('http.proxyHost')
-    systemProperty "http.proxyPort", System.getProperty('http.proxyPort')
-    systemProperty "https.proxyHost", System.getProperty('https.proxyHost')
-    systemProperty "https.proxyPort", System.getProperty('https.proxyPort')
 
-    environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
-//    group = 'Delivery pipeline'
-//    description = 'Executes smoke tests against an AAT CCD User Profile instance'
-//    setTestClassesDirs(sourceSets.aat.output.classesDirs)
-//    setClasspath(sourceSets.aat.runtimeClasspath)
-//    include 'uk/gov/hmcts/ccd/userprofile/tests/smoke'
-//    useJUnitPlatform()
-//    doFirst {
-//        javaexec {
-//            main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileTestDataLoader"
-//            classpath += sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
-//            args = ['']
-//        }
-//    }
+task smoke() {
+  description = 'Executes smoke tests against an the CCD User Profile API instance just deployed'
+  dependsOn aatClasses
+
+  new File("$buildDir/test-results/test").mkdirs()
+  copy{
+    from "src/aat/resources/DummyTest.xml"
+    into "$buildDir/test-results/test"
+  }
+
+  doLast {
+    generateCucumberReports.enabled = true
+    javaexec {
+      main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
+      classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
+      args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', '@Smoke', '--glue',
+              'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
+      jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
+    }
+  }
+
+  finalizedBy {
+    generateCucumberReports {
+      doLast{
+        new File("${rootDir}/befta-reports/smoke").mkdirs()
+        file("${rootDir}/target/cucumber/cucumber-html-reports").renameTo(file("${rootDir}/befta-reports/smoke"))
+      }
+    }
+  }
+  
+  outputs.upToDateWhen { false }
 }
 
-task functional(type: Test) {
-    environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
+task functional() {
+  description = 'Executes functional tests against an the CCD User Profile API instance just deployed'
 
-    group = 'Delivery pipeline'
-    description = 'Executes functional tests against the User Profile instance'
-    setTestClassesDirs(sourceSets.aat.output.classesDirs)
-    setClasspath(sourceSets.aat.runtimeClasspath)
-    include "uk/gov/hmcts/ccd/userprofile/tests/functional/**"
-    useJUnitPlatform()
+  new File("$buildDir/test-results/test").mkdirs()
+  copy{
+    from "src/aat/resources/DummyTest.xml"
+    into "$buildDir/test-results/test"
+  }
 
-    doFirst {
-        generateCucumberReports.enabled = true
-        javaexec {
-            main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
-            classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', "json:${projectDir}/target/cucumber.json", '--tags', 'not @Ignore', '--glue',
-                    'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
-        }
+  doFirst {
+    generateCucumberReports.enabled = true
+    javaexec {
+      main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
+      classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+      args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', 'not @Ignore', '--glue',
+              'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
+      jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
     }
+  }
+
+  finalizedBy {
+    generateCucumberReports {
+      doLast{
+        new File("${rootDir}/befta-reports/functional").mkdirs()
+        file("${rootDir}/target/cucumber/cucumber-html-reports").renameTo(file("${rootDir}/befta-reports/functional"))
+      }
+    }
+  }
+
+
+  outputs.upToDateWhen { false }
 }
 
 check.dependsOn jacocoTestReport

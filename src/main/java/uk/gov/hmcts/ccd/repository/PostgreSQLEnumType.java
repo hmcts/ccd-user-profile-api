@@ -46,6 +46,11 @@ public class PostgreSQLEnumType<T extends Enum<T>> extends EnumType {
         }
     }
 
+    @Override
+    public int[] sqlTypes() {
+        return new int[] { Types.OTHER };
+    }
+
     private <T extends Enum<T>> T getEnumFromString(Class<T> c, String enumConstant) {
         if (c == null) {
             throw new IllegalArgumentException("Class argument cannot be null");

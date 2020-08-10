@@ -4,7 +4,7 @@ Feature: F-097: Get Users
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-424
+  @S-424 @Smoke
   Scenario: should fetch user profiles by jurisdiction
     Given a successful call [to create user profiles] as in [Standard_User_Profiles_Creation_Data]
     When a request is prepared with appropriate values
