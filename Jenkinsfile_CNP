@@ -10,6 +10,11 @@ def type = "java"
 def product = "ccd"
 def component = "user-profile-api"
 
+// Variables to switch pipeline logic and wiring per type of build
+def definitionStoreDevelopPr = "PR-575" // This doesn't change frequently, but when it does, only change this value.
+def userProfileApiDevelopPr = "PR-224" // This doesn't change frequently, but when it does, only change this value.
+def prsToUseAaat             = "PR-296" // Set this value to a PR number, or add it as a comma-separated value, if it's to follow CI/CD.
+
 def secrets = [
     'ccd-${env}': [
         secret('ccd-caseworker-autotest-password', 'CCD_CASEWORKER_AUTOTEST_PASSWORD'),
@@ -34,20 +39,23 @@ def vaultOverrides = [
     'spreview': 'saat'
 ]
 // Vars needed for AKS functional and smoke tests
+// Assume a feature build branched off 'develop', with dependencies develop-to-develop.
+env.DEFINITION_STORE_HOST = "http://ccd-definition-store-api-${definitionStoreDevelopPr}.service.core-compute-preview.internal".toLowerCase()
+
+// Other env variables needed for BEFTA.
 env.IDAM_URL = "https://idam-api.aat.platform.hmcts.net"
 env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
 env.BEFTA_S2S_CLIENT_ID = "ccd_data"
 env.OAUTH2_CLIENT_ID = "ccd_gateway"
 env.OAUTH2_REDIRECT_URI = "https://www-ccd.aat.platform.hmcts.net/oauth2redirect"
-env.DEFINITION_STORE_HOST = "http://ccd-definition-store-api-aat.service.core-compute-aat.internal"
 env.CCD_CASEWORKER_AUTOTEST_EMAIL = "auto.test.cnp@gmail.com"
-env.BEFTA_RESPONSE_HEADER_CHECK_POLICY="JUST_WARN"
+env.BEFTA_RESPONSE_HEADER_CHECK_POLICY="JUST_WARN" // Temporary workaround for platform changes: turn BEFTA header checks to warning mode
 
 withPipeline(type, product, component) {
     onMaster {
         enableSlackNotifications('#ccd-master-builds')
     }
-    if (env.BRANCH_NAME == 'develop') {
+    if (env.BRANCH_NAME.equalsIgnoreCase(userProfileApiDevelopPr)) {
         enableSlackNotifications('#ccd-develop-builds')
     }
     onDemo {
@@ -57,7 +65,17 @@ withPipeline(type, product, component) {
         enableSlackNotifications('#ccd-pr-builds')
     }
 
-   
+    // Check if the build should be wired to an environment higher than 'preview'.
+    if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'demo' || env.BRANCH_NAME == 'perftest' || env.BRANCH_NAME == 'ithc' || prsToUseAaat.toLowerCase().contains(env.BRANCH_NAME.toLowerCase())) {
+        environmentOfDependencies = env.BRANCH_NAME
+        // use aat environment for dependencies of master and CI/CD builds.
+        if (env.BRANCH_NAME.startsWith("PR") || env.BRANCH_NAME == 'master') {
+            environmentOfDependencies = "aat"
+        }
+        env.DEFINITION_STORE_HOST       = "http://ccd-definition-store-api-${environmentOfDependencies}.service.core-compute-${environmentOfDependencies}.internal"
+    }
+    echo "FTA will use Definition Store: ${env.DEFINITION_STORE_HOST}"
+
     overrideVaultEnvironments(vaultOverrides)
     enableAksStagingDeployment()
     disableLegacyDeploymentOnAAT()
