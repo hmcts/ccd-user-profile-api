@@ -3,7 +3,7 @@
   "title": "must return a successful response when hitting user profile health endpoint",
 
   "productName": "CCD User Profile",
-  "operationName": "Health Endpoint",
+  "operationName": "Healthcheck Operation",
 
   "method": "GET",
   "uri": "/health",
