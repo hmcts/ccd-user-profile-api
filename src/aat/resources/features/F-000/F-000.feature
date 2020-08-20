@@ -16,4 +16,5 @@ Scenario: [SAMPLE] must return a successful response from the health endpoint
      Then a positive response is received
       And the response [has the 200 OK code]
       And the response has all other details as expected
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
