@@ -1,6 +1,6 @@
 {
   "_guid_": "S-000",
-  "title": "must return a successful response when hitting user profile health endpoint",
+  "title": "must return an all-healthy response from the Healthcheck Operation",
 
   "productName": "CCD User Profile",
   "operationName": "Healthcheck Operation",

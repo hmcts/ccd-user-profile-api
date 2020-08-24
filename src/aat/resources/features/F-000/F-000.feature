@@ -1,17 +1,17 @@
-#=================================
+#=============================
 @F-000
-Feature: Get health endpoint check
-#=================================
+Feature: Healthcheck Operation
+#=============================
 
 Background:
     Given an appropriate test context as detailed in the test data source
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 @S-000 @Smoke
-Scenario: [SAMPLE] must return a successful response from the health endpoint
+Scenario: must return an all-healthy response from the Healthcheck Operation
 
      When a request is prepared with appropriate values
-      And it is submitted to call the [Health Endpoint] operation of [CCD User Profile]
+      And it is submitted to call the [Healthcheck] operation of [CCD User Profile API]
 
      Then a positive response is received
       And the response [has the 200 OK code]
