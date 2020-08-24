@@ -1,72 +1,72 @@
 {
-  "_guid_": "S-000",
-  "title": "must return an all-healthy response from the Healthcheck Operation",
+	"_guid_": "S-000",
+	"title": "must return an all-healthy response from the Healthcheck Operation",
 
-  "productName": "CCD User Profile",
-  "operationName": "Healthcheck Operation",
+	"productName": "CCD User Profile",
+	"operationName": "Healthcheck Operation",
 
-  "method": "GET",
-  "uri": "/health",
+	"method": "GET",
+	"uri": "/health",
 
-  "specs": [
-    "an active profile in CCD",
-    "has the 200 OK code"
-  ],
+	"specs": [
+		"an active profile in CCD",
+		"has the 200 OK code"
+	],
 
-  "users": {
-    "invokingUser": {
-      "username": "[[$CCD_CASEWORKER_AUTOTEST_EMAIL]]",
-      "password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
-    }
-  },
+	"users": {
+		"invokingUser": {
+			"username": "[[$CCD_CASEWORKER_AUTOTEST_EMAIL]]",
+			"password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
+		}
+	},
 
-  "request": {
-    "headers": {
-      "Authorization": "[[DEFAULT_AUTO_VALUE]]",
-      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
-      "Content-Type": "application/json"
-    }
-  },
+	"request": {
+		"headers": {
+			"Authorization": "[[DEFAULT_AUTO_VALUE]]",
+			"ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
+			"Content-Type": "application/json"
+		}
+	},
 
-  "expectedResponse": {
-    "responseCode": 200,
-    "responseMessage": "OK",
-    "headers": {
-      "Content-Length": "[[ANYTHING_PRESENT]]",
-      "Content-Type": "application/vnd.spring-boot.actuator.v3+json",
-      "Date": "[[ANYTHING_PRESENT]]",
-      "Request-Context": "[[ANYTHING_PRESENT]]",
-      "Vary": "Accept-Encoding"
-    },
-    "body": {
-      "status": "UP",
-      "components": {
-        "db": {
-          "status": "UP",
-          "details": {
-            "database": "PostgreSQL",
-            "result": 1,
-            "validationQuery": "SELECT 1"
-          }
-        },
-        "diskSpace": {
-          "status": "UP",
-          "details": {
-            "total": "[[ANY_NUMBER_NOT_NULLABLE]]",
-            "free": "[[ANY_NUMBER_NOT_NULLABLE]]",
-            "threshold": "[[ANY_INTEGER_NOT_NULLABLE]]"
-          }
-        },
-        "liveness": {
-          "status": "UP"
-        },
-        "ping": {
-          "status": "UP"
-        },
-        "refreshScope": {
-          "status": "UP"
-        }
-      }
-    }
-  }
+	"expectedResponse": {
+		"responseCode": 200,
+		"responseMessage": "OK",
+		"headers": {
+			"Content-Length": "[[ANYTHING_PRESENT]]",
+			"Content-Type": "application/vnd.spring-boot.actuator.v3+json",
+			"Date": "[[ANYTHING_PRESENT]]",
+			"Request-Context": "[[ANYTHING_PRESENT]]",
+			"Vary": "Accept-Encoding"
+		},
+		"body": {
+			"status": "UP",
+			"components": {
+				"db": {
+					"status": "UP",
+					"details": {
+						"database": "PostgreSQL",
+						"result": 1,
+						"validationQuery": "SELECT 1"
+					}
+				},
+				"diskSpace": {
+					"status": "UP",
+					"details": {
+						"total": "[[ANY_NUMBER_NOT_NULLABLE]]",
+						"free": "[[ANY_NUMBER_NOT_NULLABLE]]",
+						"threshold": "[[ANY_INTEGER_NOT_NULLABLE]]"
+					}
+				},
+				"liveness": {
+					"status": "UP"
+				},
+				"ping": {
+					"status": "UP"
+				},
+				"refreshScope": {
+					"status": "UP"
+				}
+			}
+		}
+	}
 }
