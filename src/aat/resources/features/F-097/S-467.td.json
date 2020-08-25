@@ -3,7 +3,7 @@
 	"_extends_": "F-097_Test_Data_Base",
 	"title": "should fetch user profiles",
 
-	"operationName": "Retrieve user profiles",
+	"operationName": "Get User Profiles by Jurisdiction Id",
 
 	"specs": [
 		"has the 200 OK code"

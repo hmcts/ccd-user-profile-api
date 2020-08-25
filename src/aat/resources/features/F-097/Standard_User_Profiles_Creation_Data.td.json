@@ -1,7 +1,7 @@
 {
 	"_guid_": "Standard_User_Profiles_Creation_Data",
 
-	"productName": "CCD User Profile",
+	"productName": "CCD User Profile API",
 	"operationName": "Submit user profiles creation as Case worker",
 
 	"method": "PUT",
