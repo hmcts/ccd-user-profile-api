@@ -3,7 +3,7 @@
 	"title": "must return an all-healthy response from the Healthcheck Operation",
 
 	"productName": "CCD User Profile API",
-	"operationName": "Healthcheck Operation",
+	"operationName": "Healthcheck",
 
 	"method": "GET",
 	"uri": "/health",
