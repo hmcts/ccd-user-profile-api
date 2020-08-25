@@ -1,15 +1,15 @@
 {
-  "_guid_": "F-097_Test_Data_Base",
+	"_guid_": "F-097_Test_Data_Base",
 
-  "productName": "CCD User Profile",
+	"productName": "CCD User Profile API",
 
-  "method": "GET",
-  "uri": "/users",
+	"method": "GET",
+	"uri": "/users",
 
-  "users": {
-    "invokingUser": {
-      "username": "[[$CCD_CASEWORKER_AUTOTEST_EMAIL]]",
-      "password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
-    }
-  }
+	"users": {
+		"invokingUser": {
+			"username": "[[$CCD_CASEWORKER_AUTOTEST_EMAIL]]",
+			"password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
+		}
+	}
 }

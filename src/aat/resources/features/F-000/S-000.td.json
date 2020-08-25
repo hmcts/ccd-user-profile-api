@@ -2,8 +2,8 @@
 	"_guid_": "S-000",
 	"title": "must return an all-healthy response from the Healthcheck Operation",
 
-	"productName": "CCD User Profile",
-	"operationName": "Healthcheck Operation",
+	"productName": "CCD User Profile API",
+	"operationName": "Healthcheck",
 
 	"method": "GET",
 	"uri": "/health",
