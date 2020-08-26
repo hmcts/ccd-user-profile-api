@@ -2,16 +2,20 @@
 	"_guid_": "S-467",
 	"_extends_": "F-097_Test_Data_Base",
 	"title": "should fetch user profiles",
-	"operationName": "Retrieve user profiles",
+
+	"operationName": "Get User Profiles by Jurisdiction Id",
+
 	"specs": [
 		"has the 200 OK code"
 	],
+
 	"request": {
 		"headers": {
 			"ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
 			"Content-Type": "application/json"
 		}
 	},
+
 	"expectedResponse": {
 		"_extends_": "User_Profile_Common_200_Response",
 		"headers": {
