@@ -8,12 +8,12 @@
 	"Expires": "0",
 	"X-XSS-Protection": "1; mode=block",
 	"Date": "[[ANYTHING_PRESENT]]",
-  "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]",
-  "Connection": "[[ANY_STRING_NULLABLE]]",
-  "Request-Context": "[[ANY_STRING_NULLABLE]]",
-  "Keep-Alive": "[[ANY_STRING_NULLABLE]]",
-  "VaRy": "[[ANY_STRING_NULLABLE]]",
-  "Content-Type": "[[ANY_STRING_NULLABLE]]",
-  "Transfer-Encoding": "[[ANY_STRING_NULLABLE]]",
-  "Content-Length": "[[ANY_STRING_NULLABLE]]"
+	"Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]",
+	"Connection": "[[ANY_STRING_NULLABLE]]",
+	"Request-Context": "[[ANY_STRING_NULLABLE]]",
+	"Keep-Alive": "[[ANY_STRING_NULLABLE]]",
+	"VaRy": "[[ANY_STRING_NULLABLE]]",
+	"Content-Type": "[[ANY_STRING_NULLABLE]]",
+	"Transfer-Encoding": "[[ANY_STRING_NULLABLE]]",
+	"Content-Length": "[[ANY_STRING_NULLABLE]]"
 }
