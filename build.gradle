@@ -484,6 +484,9 @@ configurations.all {
             if (details.requested.group == 'com.google.guava' && details.requested.name == 'guava') {
                 details.useVersion '24.1.1-jre'
             }
+            if (details.requested.group == 'org.dom4j' && details.requested.name == 'dom4j') {
+                details.useVersion '2.1.3'
+            }
         }
     }
 }
