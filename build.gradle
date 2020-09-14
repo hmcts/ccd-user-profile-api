@@ -481,6 +481,9 @@ configurations.all {
             if (details.requested.group == 'org.apache.logging.log4j' && details.requested.name == 'log4j-api') {
                 details.useVersion '2.13.2'
             }
+            if (details.requested.group == 'com.google.guava' && details.requested.name == 'guava') {
+                details.useVersion '24.1.1-jre'
+            }
         }
     }
 }
