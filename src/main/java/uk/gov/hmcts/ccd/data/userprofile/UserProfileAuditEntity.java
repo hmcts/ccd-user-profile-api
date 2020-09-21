@@ -30,7 +30,6 @@ public class UserProfileAuditEntity {
     @GenericGenerator(name = "incrementGenerator", strategy = "increment")
     @GeneratedValue(generator = "incrementGenerator")
     @Getter
-    @Setter
     private Integer id;
 
     @Column(name = "jurisdiction_id")
