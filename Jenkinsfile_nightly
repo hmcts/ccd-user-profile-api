@@ -30,5 +30,10 @@ withNightlyPipeline(type, product, component) {
     loadVaultSecrets(secrets)
     enableMutationTest()
     enableDbMigration()
+      enableFullFunctionalTest(200)
+    
+    after('fullFunctionalTest') {
+steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/target/cucumber/**/*'
+    }
     enableSlackNotifications('#ccd-nightly-builds')
 }
