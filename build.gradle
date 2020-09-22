@@ -1,6 +1,6 @@
 buildscript {
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.2.4.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.3.3.RELEASE")
     }
     dependencies {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622"
@@ -9,11 +9,10 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
 }
-
 plugins {
     id 'application'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-    id 'org.springframework.boot' version '2.2.5.RELEASE'
+    id 'org.springframework.boot' version '2.3.3.RELEASE'
     id 'org.owasp.dependencycheck' version '5.1.0'
     id 'se.patrikerdes.use-latest-versions' version '0.2.10'
     id 'com.github.ben-manes.versions' version '0.21.0'
@@ -167,7 +166,6 @@ dependencies {
 
 
     compile 'uk.gov.hmcts.reform:properties-volume-spring-boot-starter:0.0.4'
-    compile 'uk.gov.hmcts.reform:health-spring-boot-starter:0.0.5'
 
     compile "com.fasterxml.jackson.core:jackson-databind:2.11.0.rc1"
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.11.0.rc1'
