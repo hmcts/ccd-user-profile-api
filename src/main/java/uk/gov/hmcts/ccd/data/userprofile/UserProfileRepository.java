@@ -22,7 +22,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.ObjectUtils.allNotNull;
-import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.*;
+import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.CREATE;
+import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.DELETE;
+import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.READ;
+import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.UPDATE;
 
 @Repository
 public class UserProfileRepository {
