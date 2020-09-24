@@ -147,6 +147,7 @@ dependencies {
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     compile group: 'org.liquibase', name: 'liquibase-core', version: '3.6.3'
+    compile group: 'org.yaml', name: 'snakeyaml', version: '1.26'
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
     compile group: 'javax.inject', name: 'javax.inject', version: '1'
