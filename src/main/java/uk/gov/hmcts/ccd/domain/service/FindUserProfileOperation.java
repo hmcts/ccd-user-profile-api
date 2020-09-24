@@ -23,3 +23,4 @@ public class FindUserProfileOperation {
             .orElseThrow(() -> new NotFoundException("Cannot find user profile"));
     }
 }
+
