@@ -36,3 +36,4 @@ public class CreateUserProfileOperation {
         return userProfileRepository.createUserProfile(userProfile, actionedBy);
     }
 }
+
