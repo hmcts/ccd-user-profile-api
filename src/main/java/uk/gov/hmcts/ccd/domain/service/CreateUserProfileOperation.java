@@ -33,7 +33,6 @@ public class CreateUserProfileOperation {
                 throw new BadRequestException("A Jurisdiction must have an Id");
             }
         }
-        LOG.info("Creating user profile for {}", userProfile.getId());
         return userProfileRepository.createUserProfile(userProfile, actionedBy);
     }
 }
