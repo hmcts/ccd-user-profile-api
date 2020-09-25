@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.domain.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.data.userprofile.UserProfileRepository;
@@ -11,7 +9,6 @@ import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
 
 @Service
 public class CreateUserProfileOperation {
-    private static final  Logger LOG = LoggerFactory.getLogger(CreateUserProfileOperation.class);
     private final UserProfileRepository userProfileRepository;
 
     @Autowired
