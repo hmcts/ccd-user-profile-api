@@ -95,7 +95,7 @@ public class UserProfileRepository {
 
         final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
         if (null == userProfileEntity) {
-            throw new BadRequestException("User does not exist with Id " + userProfile.getId());
+            throw new BadRequestException("User does not exist");
         }
 
         final boolean auditable = isAuditable(userProfileEntity);
@@ -224,7 +224,7 @@ public class UserProfileRepository {
 
         final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
         if (null == userProfileEntity) {
-            throw new BadRequestException("User does not exist with ID " + userProfile.getId());
+            throw new BadRequestException("User does not exist");
         }
 
         final UserProfile audit = UserProfileMapper.entityToModel(userProfileEntity);
@@ -255,9 +255,7 @@ public class UserProfileRepository {
             }
             return UserProfileMapper.entityToModel(userProfileEntity);
         } else {
-            throw new BadRequestException("User with ID "
-                                          + userProfile.getId()
-                                          + " is already a member of the "
+            throw new BadRequestException("User is already a member of the "
                                           + userProfile.getWorkBasketDefaultJurisdiction()
                                           + " jurisdiction");
         }
@@ -282,7 +280,7 @@ public class UserProfileRepository {
                                                          final String actionedBy) {
         final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
         if (userProfileEntity == null) {
-            throw new BadRequestException("User does not exist with ID " + userProfile.getId());
+            throw new BadRequestException("User does not exist");
         }
 
         final String currentJurisdiction = userProfileEntity.getWorkBasketDefaultJurisdiction();
