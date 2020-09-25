@@ -26,3 +26,6 @@ nbdist/
 .gradle/
 out/
 /befta-reports/
+bin/
+/BEFTA Report for Smoke Tests/
+/BEFTA Report for Functional Tests/

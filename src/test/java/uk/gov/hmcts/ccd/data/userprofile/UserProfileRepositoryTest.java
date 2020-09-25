@@ -24,7 +24,9 @@ import java.util.Map;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.CREATE;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.DELETE;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.READ;
