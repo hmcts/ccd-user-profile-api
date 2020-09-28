@@ -7,7 +7,6 @@ Background:
     Given an appropriate test context as detailed in the test data source
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-000 @Smoke
 Scenario: must return an all-healthy response from the Healthcheck Operation
 
      When a request is prepared with appropriate values
