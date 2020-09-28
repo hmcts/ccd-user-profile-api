@@ -27,11 +27,11 @@ public class DeleteUserProfileJurisdictionOperation {
 
     public UserProfile deleteAssociation(final String userId, final String jurisdictionId, final String actionedBy) {
         final UserProfile userProfile = Optional.ofNullable(userProfileRepository.findById(userId, actionedBy))
-            .orElseThrow(() -> new BadRequestException("User does not exist with ID " + userId));
+            .orElseThrow(() -> new BadRequestException("User does not exist"));
 
         // Throw an exception if the user is not a member of any Jurisdictions
         if (userProfile.getJurisdictions() == null) {
-            throw new BadRequestException("User with ID " + userId + " is not a member of any Jurisdictions");
+            throw new BadRequestException("User is not a member of any Jurisdictions");
         }
 
         // Throw an exception if the Jurisdiction being removed matches the user's Workbasket default Jurisdiction.
@@ -46,11 +46,11 @@ public class DeleteUserProfileJurisdictionOperation {
                 .stream()
                 .filter(j -> j.getId().equals(jurisdictionId))
                 .findFirst()
-                .orElseThrow(() -> new BadRequestException("User with ID " + userId + " is not a member of the "
+                .orElseThrow(() -> new BadRequestException("User is not a member of the "
                     + jurisdictionId + " jurisdiction"));
 
 
-        LOG.info("Deleting association to {} jurisdiction for User Profile {}...", jurisdictionId, userId);
+        LOG.info("Deleting association to {} jurisdiction for User Profile ...", jurisdictionId);
         return userProfileRepository.deleteJurisdictionFromUserProfile(userProfile, jurisdiction, actionedBy);
     }
 }
