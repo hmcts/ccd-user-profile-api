@@ -1,38 +1,44 @@
 {
 	"_guid_": "Standard_User_Profiles_Creation_Data",
-	"productName": "CCD User Profile",
+
+	"productName": "CCD User Profile API",
 	"operationName": "Submit user profiles creation as Case worker",
+
 	"method": "PUT",
 	"uri": "/user-profile/users",
+
 	"specs": [
 		"to create user profiles"
 	],
+
 	"users": {
 		"invokingUser": {
 			"username": "[[$CCD_CASEWORKER_AUTOTEST_EMAIL]]",
 			"password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
 		}
 	},
+
 	"request": {
 		"headers": {
 			"_extends_": "Common_Request_Headers"
 		},
 		"body": {
-      "arrayInMap": [
-        {
-          "id": "{{CCD_CASEWORKER_AUTOTEST_EMAIL}}",
-          "jurisdictions": [
-            {
-              "id": "BEFTA_JURISDICTION_3"
-            }
-          ],
-          "work_basket_default_jurisdiction": "BEFTA_JURISDICTION_2",
-          "work_basket_default_case_type": "BEFTA_CASETYPE_2_1",
-          "work_basket_default_state": "TODO"
-        }
-      ]
-    }
+			"arrayInMap": [
+				{
+					"id": "{{CCD_CASEWORKER_AUTOTEST_EMAIL}}",
+					"jurisdictions": [
+						{
+							"id": "BEFTA_JURISDICTION_3"
+						}
+					],
+					"work_basket_default_jurisdiction": "BEFTA_JURISDICTION_2",
+					"work_basket_default_case_type": "BEFTA_CASETYPE_2_1",
+					"work_basket_default_state": "TODO"
+				}
+			]
+		}
 	},
+
 	"expectedResponse": {
 		"_extends_": "User_Profile_Common_200_Response"
 	}
