@@ -1,20 +1,22 @@
 package uk.gov.hmcts.ccd.data.userprofile;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.GenericGenerator;
-import uk.gov.hmcts.ccd.repository.PostgreSQLEnumType;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+
+import lombok.Getter;
+import lombok.Setter;
+import uk.gov.hmcts.ccd.repository.PostgreSQLEnumType;
 
 
 @Entity
@@ -27,8 +29,7 @@ import java.time.LocalDateTime;
 public class UserProfileAuditEntity {
 
     @Id
-    @GenericGenerator(name = "incrementGenerator", strategy = "increment")
-    @GeneratedValue(generator = "incrementGenerator")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_profile_audit_id_seq")
     @Getter
     private Integer id;
 
