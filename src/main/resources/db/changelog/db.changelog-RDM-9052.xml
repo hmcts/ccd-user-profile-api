@@ -4,8 +4,8 @@
 
     
     <changeSet id="RDM-9052-1" author="henry">
-		<sql dbms="postgresql">create SEQUENCE user_profile_audit_id_seq incrementBy="1", startValue="1"</sql> 
-    </changeSet>
+	    <createSequence sequenceName="user_profile_audit_id_seq" startValue="1" incrementBy="1"/>     
+	</changeSet>
     <changeSet id="RDM-9052-2" author="henry">
 		<sql dbms="postgresql">select setval('user_profile_audit_id_seq', max(id)+1) from user_profile_audit</sql> 
     </changeSet>
