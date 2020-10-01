@@ -4,9 +4,12 @@
 
     
     <changeSet id="RDM-9052-1" author="henry">
-		<sql dbms="postgresql">create SEQUENCE user_profile_audit_id_seq increment by 50</sql> 
+		<sql dbms="postgresql">create SEQUENCE user_profile_audit_id_seq incrementBy="1", startValue="1"</sql> 
     </changeSet>
     <changeSet id="RDM-9052-2" author="henry">
 		<sql dbms="postgresql">select setval('user_profile_audit_id_seq', max(id)+1) from user_profile_audit</sql> 
+    </changeSet>
+    <changeSet id="RDM-9052-3" author="henry">
+		<sql dbms="postgresql">Alter SEQUENCE user_profile_audit_id_seq increment by 50</sql> 
     </changeSet>
 </databaseChangeLog>
