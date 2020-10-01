@@ -8,5 +8,5 @@ maintainers:
     email: ccd-devops@HMCTS.NET
 dependencies:
   - name: java
-    version: 2.18.1
+    version: 3.4.2
     repository: '@hmctspublic'
