@@ -20,7 +20,11 @@
 	"expectedResponse": {
 		"_extends_": "User_Profile_Common_403_Response",
 		"body": {
-			"message": "Access Denied"
+			"timestamp": "[[ANYTHING_PRESENT]]",
+			"status": 403,
+			"error": "Forbidden",
+			"message": "",
+			"path": "/users"
 		}
 	}
 }
