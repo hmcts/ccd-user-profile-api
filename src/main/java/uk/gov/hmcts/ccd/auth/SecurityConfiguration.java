@@ -33,6 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                                    "/swagger-resources/**",
                                    "/v2/**",
                                    "/health",
+                                   "/health/readiness",
                                    "/health/liveness",
                                    "/status/health",
                                    "/loggers/**");
