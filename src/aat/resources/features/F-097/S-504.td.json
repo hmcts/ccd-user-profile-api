@@ -23,7 +23,7 @@
 			"timestamp": "[[ANYTHING_PRESENT]]",
 			"status": 403,
 			"error": "Forbidden",
-			"message": "",
+			"message": "Access Denied",
 			"path": "/users"
 		}
 	}
