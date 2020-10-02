@@ -20,7 +20,7 @@
 	"expectedResponse": {
 		"_extends_": "User_Profile_Common_403_Response",
 		"body": {
-			"message": "Forbidden"
+			"message": "Access Denied"
 		}
 	}
 }
