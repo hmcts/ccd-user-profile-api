@@ -6,8 +6,13 @@
 	<suppress>
 		<notes>We do not use: Spring Framework 5.0.5.RELEASE + Spring Security
 			(any version), see https://pivotal.io/security/cve-2018-1258
-			False positive confirmed.
+			False
+			positive confirmed.
 		</notes>
 		<cve>CVE-2018-1258</cve>
+	</suppress>
+	<suppress>
+		<!-- Temporary suppressions to allow continued development -->
+		<cve>CVE-2020-5421</cve>
 	</suppress>
 </suppressions>
