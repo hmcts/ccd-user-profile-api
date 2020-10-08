@@ -130,8 +130,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     compile("org.springframework.boot:spring-boot-starter-actuator")
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
+    compile group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
     compile group: 'org.liquibase', name: 'liquibase-core', version: '3.8.9'
     compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.1.4'
     compile group: 'org.yaml', name: 'snakeyaml', version: '1.26'
