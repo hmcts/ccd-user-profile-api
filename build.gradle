@@ -46,7 +46,6 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "org.sonarqube"
 apply plugin: 'jacoco'
-apply plugin: 'pmd'
 apply plugin: "com.github.kt3k.coveralls"
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.ben-manes.versions'
@@ -223,14 +222,6 @@ pitest {
     failWhenNoMutations = false
     detectInlinedCode = true
 
-}
-
-pmd {
-    toolVersion = '6.18.0'
-    // https://github.com/pmd/pmd/issues/876
-    ruleSets = []
-    ruleSetFiles = files("config/pmd/ruleset.xml")
-    ignoreFailures = true
 }
 
 compileJava {
