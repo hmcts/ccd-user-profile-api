@@ -2,10 +2,10 @@ package uk.gov.hmcts.ccd.data.jurisdiction;
 
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 
-@SuppressWarnings("PMD.ClassNamingConventions") // name is appropriate
 public final class JurisdictionMapper {
 
-    private JurisdictionMapper() {}
+    private JurisdictionMapper() {
+    }
 
     public static Jurisdiction entityToModel(JurisdictionEntity jurisdictionEntity) {
         Jurisdiction jurisdiction = new Jurisdiction();

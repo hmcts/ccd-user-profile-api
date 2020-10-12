@@ -54,11 +54,9 @@ public class UserProfileOperation {
             final UserProfile userProfileFound = userProfileRepository.findById(userProfile.getId(), actionedBy);
 
             if (null == userProfileFound) {
-                LOG.info("User profile for {} not found. Creating one...", userProfile.getId());
                 createUserProfileOperation.execute(populateProfileJurisdiction(userProfile), actionedBy);
             } else {
                 if (isUpdateRequired(userProfileFound, userProfile)) {
-                    LOG.info("User profile for {} found. Updating...", userProfile.getId());
                     userProfileFound.setWorkBasketDefaultCaseType(userProfile.getWorkBasketDefaultCaseType());
                     userProfileFound.setWorkBasketDefaultJurisdiction(userProfile.getWorkBasketDefaultJurisdiction());
                     userProfileFound.setWorkBasketDefaultState(userProfile.getWorkBasketDefaultState());
