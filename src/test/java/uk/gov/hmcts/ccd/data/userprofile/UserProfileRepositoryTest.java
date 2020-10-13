@@ -24,7 +24,9 @@ import java.util.Map;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.CREATE;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.DELETE;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.READ;
@@ -117,7 +119,7 @@ public class UserProfileRepositoryTest {
     public void updateUserProfileWhenItDoesNotExist() {
         final UserProfile userProfile = createUserProfile("user2@hmcts.net", "TEST");
         exceptionRule.expect(BadRequestException.class);
-        exceptionRule.expectMessage("User does not exist with Id " + userProfile.getId());
+        exceptionRule.expectMessage("User does not exist");
         classUnderTest.updateUserProfile(userProfile, "exceptionexpected@example.com");
         assertEquals(0, countUserProfitAudits());
     }
@@ -242,7 +244,7 @@ public class UserProfileRepositoryTest {
     public void updateUserProfileOnCreateWhenItDoesNotExist() {
         final UserProfile userProfile = createUserProfile("user2@hmcts.net", "TEST");
         exceptionRule.expect(BadRequestException.class);
-        exceptionRule.expectMessage("User does not exist with ID " + userProfile.getId());
+        exceptionRule.expectMessage("User does not exist");
         classUnderTest.updateUserProfileOnCreate(userProfile, ACTIONED_BY_EMAIL);
         assertEquals(0, countUserProfitAudits());
     }
@@ -273,7 +275,7 @@ public class UserProfileRepositoryTest {
         userProfile.setWorkBasketDefaultCaseType("Test case");
         userProfile.setWorkBasketDefaultState("Create case");
         exceptionRule.expect(BadRequestException.class);
-        exceptionRule.expectMessage("User with ID " + userProfile.getId() + " is already a member of the "
+        exceptionRule.expectMessage("User is already a member of the "
             + userProfile.getWorkBasketDefaultJurisdiction() + " jurisdiction");
         classUnderTest.updateUserProfileOnCreate(userProfile, ACTIONED_BY_EMAIL);
         assertEquals(0, countUserProfitAudits());
@@ -285,7 +287,7 @@ public class UserProfileRepositoryTest {
         final Jurisdiction jurisdiction = new Jurisdiction();
         jurisdiction.setId(userProfile.getWorkBasketDefaultJurisdiction());
         exceptionRule.expect(BadRequestException.class);
-        exceptionRule.expectMessage("User does not exist with ID " + userProfile.getId());
+        exceptionRule.expectMessage("User does not exist");
         classUnderTest.deleteJurisdictionFromUserProfile(userProfile, jurisdiction, ACTIONED_BY_EMAIL);
         assertEquals(0, countUserProfitAudits());
     }

@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.domain.service;
 
+import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -12,8 +13,6 @@ import uk.gov.hmcts.ccd.data.userprofile.UserProfileRepository;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
-
-import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -59,7 +58,7 @@ class DeleteUserProfileJurisdictionOperationTest {
 
             BadRequestException exception = assertThrows(BadRequestException.class,
                 () -> classUnderTest.deleteAssociation(USER_ID, JURISDICTION_ID, ACTIONED_BY));
-            assertEquals("User does not exist with ID " + USER_ID, exception.getMessage());
+            assertEquals("User does not exist", exception.getMessage());
         }
 
         @Test
@@ -70,7 +69,7 @@ class DeleteUserProfileJurisdictionOperationTest {
 
             BadRequestException exception = assertThrows(BadRequestException.class,
                 () -> classUnderTest.deleteAssociation(USER_ID, "TEST2", ACTIONED_BY));
-            assertEquals("User with ID " + USER_ID + " is not a member of the TEST2 jurisdiction",
+            assertEquals("User is not a member of the TEST2 jurisdiction",
                 exception.getMessage());
         }
 
@@ -149,7 +148,7 @@ class DeleteUserProfileJurisdictionOperationTest {
 
             BadRequestException exception = assertThrows(BadRequestException.class,
                 () -> classUnderTest.deleteAssociation(USER_ID, JURISDICTION_ID, ACTIONED_BY));
-            assertEquals("User with ID " + USER_ID + " is not a member of any Jurisdictions",
+            assertEquals("User is not a member of any Jurisdictions",
                 exception.getMessage());
         }
 

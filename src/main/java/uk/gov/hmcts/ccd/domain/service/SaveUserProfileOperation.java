@@ -44,7 +44,6 @@ public class SaveUserProfileOperation {
         final UserProfile foundUserProfile = userProfileRepository.findById(userProfile.getId(), actionedBy);
 
         if (foundUserProfile == null) {
-            LOG.info("No User Profile for {} found. Creating new User Profile...", userProfile.getId());
             return createUserProfileOperation.execute(userProfile, actionedBy);
         } else {
             // Attempt to update the user profile (UserProfileRepository will throw an exception if the user is being
