@@ -1,5 +1,4 @@
 variable "product" {
-  type    = "string"
 }
 
 variable "raw_product" {
@@ -7,20 +6,16 @@ variable "raw_product" {
 }
 
 variable "component" {
-  type    = "string"
 }
 
 variable "location" {
-  type    = "string"
   default = "UK South"
 }
 
 variable "env" {
-  type = "string"
 }
 
 variable "subscription" {
-  type = "string"
 }
 
 ////////////////////////////////
@@ -36,5 +31,5 @@ variable "database_name" {
 }
 
 variable "common_tags" {
-  type = "map"
+  type = map(string)
 }
