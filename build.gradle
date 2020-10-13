@@ -147,6 +147,7 @@ dependencies {
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     compile group: 'org.liquibase', name: 'liquibase-core', version: '3.6.3'
+    compile group: 'org.yaml', name: 'snakeyaml', version: '1.26'
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
     compile group: 'javax.inject', name: 'javax.inject', version: '1'
@@ -387,12 +388,12 @@ task smoke() {
   finalizedBy {
     generateCucumberReports {
       doLast{
-        new File("${rootDir}/befta-reports/smoke").mkdirs()
-        file("${rootDir}/target/cucumber/cucumber-html-reports").renameTo(file("${rootDir}/befta-reports/smoke"))
+        new File("${rootDir}/BEFTA Report for Smoke Tests").mkdirs()
+        file("${rootDir}/target/cucumber/cucumber-html-reports").renameTo(file("${rootDir}/BEFTA Report for Smoke Tests"))
       }
     }
   }
-  
+
   outputs.upToDateWhen { false }
 }
 
@@ -419,8 +420,8 @@ task functional() {
   finalizedBy {
     generateCucumberReports {
       doLast{
-        new File("${rootDir}/befta-reports/functional").mkdirs()
-        file("${rootDir}/target/cucumber/cucumber-html-reports").renameTo(file("${rootDir}/befta-reports/functional"))
+        new File("${rootDir}/BEFTA Report for Functional Tests").mkdirs()
+        file("${rootDir}/target/cucumber/cucumber-html-reports").renameTo(file("${rootDir}/BEFTA Report for Functional Tests"))
       }
     }
   }
