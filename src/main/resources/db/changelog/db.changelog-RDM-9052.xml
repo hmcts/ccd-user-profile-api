@@ -5,8 +5,10 @@
 <!-- from version 3.7.0 onwards liquibase doesn't create the sequence unless the autoincrement is defined-->    
     <changeSet id="RDM-9052-1" author="henry">
 	    <preConditions onFail="MARK_RAN">
-			<sqlCheck expectedResult="0">SELECT count(c.relname) FROM pg_class c WHERE c.relkind = 'S' and c.relname = 'user_profile_audit_id_seq'</sqlCheck>
+			<sqlCheck expectedResult="1">select count (a.relname) from pg_class a where a.relname ='user_profile_audit' and Not Exists (SELECT c.relname FROM pg_class c WHERE c.relkind = 'S' and c.relname = 'user_profile_audit_id_seq')</sqlCheck>
 	    </preConditions>
 		<addAutoIncrement columnDataType="int" columnName="id" tableName="user_profile_audit"/>  
 	</changeSet>
 </databaseChangeLog>
+
+
