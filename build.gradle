@@ -23,7 +23,7 @@ plugins {
     id 'net.ltgt.apt' version '0.21'
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.14'
     id "info.solidsoft.pitest" version '1.4.0'
-    id 'uk.gov.hmcts.java' version '0.11.0'
+    id 'uk.gov.hmcts.java' version '0.12.0'
 }
 
 dependencyUpdates.resolutionStrategy = {
@@ -47,7 +47,6 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "org.sonarqube"
 apply plugin: 'jacoco'
-apply plugin: 'pmd'
 apply plugin: "com.github.kt3k.coveralls"
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.ben-manes.versions'
@@ -165,7 +164,7 @@ dependencies {
     testCompile group: 'com.opentable.components', name: 'otj-pg-embedded', version: '0.13.1'
     testCompile group: 'com.github.tomakehurst', name: 'wiremock-standalone', version: '2.21.0'
     testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '2.1.0.RELEASE'
-    testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '5.7.0'
+    testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '5.14.0'
 }
 // end::dependencies[]
 
@@ -222,14 +221,6 @@ pitest {
     failWhenNoMutations = false
     detectInlinedCode = true
 
-}
-
-pmd {
-    toolVersion = '6.18.0'
-    // https://github.com/pmd/pmd/issues/876
-    ruleSets = []
-    ruleSetFiles = files("config/pmd/ruleset.xml")
-    ignoreFailures = true
 }
 
 compileJava {
