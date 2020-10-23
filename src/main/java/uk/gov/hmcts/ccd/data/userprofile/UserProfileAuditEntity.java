@@ -29,7 +29,7 @@ public class UserProfileAuditEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Getter
-    private String id;
+    private Long id;
 
     @Column(name = "jurisdiction_id")
     @Getter
