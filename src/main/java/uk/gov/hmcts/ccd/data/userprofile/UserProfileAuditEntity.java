@@ -6,7 +6,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.GenericGenerator;
 import uk.gov.hmcts.ccd.repository.PostgreSQLEnumType;
 
 import javax.persistence.Column;
@@ -16,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "user_profile_audit")
@@ -27,10 +27,9 @@ import java.time.LocalDateTime;
 public class UserProfileAuditEntity {
 
     @Id
-    @GenericGenerator(name = "incrementGenerator", strategy = "increment")
-    @GeneratedValue(generator = "incrementGenerator")
+    @GeneratedValue(strategy = IDENTITY)
     @Getter
-    private Integer id;
+    private Long id;
 
     @Column(name = "jurisdiction_id")
     @Getter
