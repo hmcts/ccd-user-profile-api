@@ -8,8 +8,13 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import uk.gov.hmcts.ccd.repository.PostgreSQLEnumType;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
+import static javax.persistence.GenerationType.IDENTITY;
 
 
 @Entity
@@ -22,10 +27,9 @@ import java.time.LocalDateTime;
 public class UserProfileAuditEntity {
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_profile_audit_id_seq")
+    @GeneratedValue(strategy = IDENTITY)
     @Getter
-    private Integer id;
+    private String id;
 
     @Column(name = "jurisdiction_id")
     @Getter
