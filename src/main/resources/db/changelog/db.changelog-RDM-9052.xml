@@ -13,6 +13,7 @@
 		<sql>
 		     ALTER SEQUENCE case_field_id_seq increment by 50;
 		</sql>
+	</changeSet>
 </databaseChangeLog>
 
 
