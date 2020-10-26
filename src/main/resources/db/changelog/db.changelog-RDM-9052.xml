@@ -11,7 +11,7 @@
 	</changeSet>
 	<changeSet id="RDM-9052-2" author="henry">
 		<sql>
-		     ALTER SEQUENCE case_field_id_seq increment by 50;
+		     ALTER SEQUENCE user_profile_audit_id_seq increment by 50;
 		</sql>
 	</changeSet>
 </databaseChangeLog>

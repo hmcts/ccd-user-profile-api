@@ -11,10 +11,11 @@ import uk.gov.hmcts.ccd.repository.PostgreSQLEnumType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
-import static javax.persistence.GenerationType.IDENTITY;
 
 
 @Entity
@@ -27,9 +28,17 @@ import static javax.persistence.GenerationType.IDENTITY;
 public class UserProfileAuditEntity {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(
+        strategy = GenerationType.SEQUENCE,
+        generator = "user_profile_audit_id_seq"
+    )
+    @SequenceGenerator(
+        name = "user_profile_audit_id_seq",
+        allocationSize = 50
+    )
+    @Column(name = "id")
     @Getter
-    private String id;
+    private Long id;
 
     @Column(name = "jurisdiction_id")
     @Getter
@@ -71,3 +80,4 @@ public class UserProfileAuditEntity {
     @Getter
     private LocalDateTime timestamp;
 }
+
