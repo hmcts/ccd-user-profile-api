@@ -8,4 +8,5 @@
     <include file="db/changelog/db.changelog-RDM-2761-UserProfileAuditTable.xml"/>
     <include file="db/changelog/db.changelog-RDM-3853.xml"/>
     <include file="db/changelog/db.changelog-RDM-5499.xml"/>
+    <include file="db/changelog/db.changelog-RDM-10028.xml"/>
 </databaseChangeLog>
