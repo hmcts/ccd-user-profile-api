@@ -445,8 +445,8 @@ configurations.all {
                 details.useVersion '5.4.21.Final'
             }
             if (details.requested.group == 'org.hibernate' && details.requested.name == 'hibernate-envers') {
-                details.useVersion '5.4.21.Final'            }
-
+                details.useVersion '5.4.21.Final'
+            }
         }
     }
 }
