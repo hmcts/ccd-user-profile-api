@@ -115,12 +115,12 @@ class SaveUserProfileOperationTest {
             when(userProfileRepository.findById(userProfile.getId(), ACTIONED_BY)).thenReturn(userProfile);
 
             when(userProfileRepository.updateUserProfileOnCreate(userProfile, ACTIONED_BY))
-                .thenThrow(new BadRequestException("User with ID " + userProfile.getId() + " is already a member of "
+                .thenThrow(new BadRequestException("User is already a member of "
                     + "the " + userProfile.getWorkBasketDefaultJurisdiction() + " jurisdiction"));
 
             BadRequestException exception =
                 assertThrows(BadRequestException.class, () -> classUnderTest.saveUserProfile(userProfile, ACTIONED_BY));
-            assertEquals("User with ID " + userProfile.getId() + " is already a member of the "
+            assertEquals("User is already a member of the "
                 + userProfile.getWorkBasketDefaultJurisdiction() + " jurisdiction", exception.getMessage());
         }
 

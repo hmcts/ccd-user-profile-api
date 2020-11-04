@@ -405,7 +405,7 @@ public class UserProfileEndpointIT extends BaseTest {
         final MvcResult mvcResult = mockMvc.perform(get(FIND_PROFILE_FOR_USER_1)).andReturn();
 
         assertEquals("Unexpected response status", 404, mvcResult.getResponse().getStatus());
-        assertEquals("Unexpected response message", "Cannot find profile for user 'USER1'",
+        assertEquals("Unexpected response message", "Cannot find user profile",
 
             mvcResult.getResponse().getContentAsString());
 
@@ -733,7 +733,7 @@ public class UserProfileEndpointIT extends BaseTest {
 
         // Then an HTTP 400 (Bad Request) status should be returned
         assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
-        assertEquals("Unexpected response message", "User with ID user1 is already a member of the "
+        assertEquals("Unexpected response message", "User is already a member of the "
             + "TEST2 jurisdiction", mvcResult.getResponse().getContentAsString());
 
         final int auditRowRead = JdbcTestUtils.countRowsInTableWhere(template,
@@ -807,7 +807,7 @@ public class UserProfileEndpointIT extends BaseTest {
 
         // Then an HTTP 400 (Bad Request) status should be returned
         assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
-        assertEquals("Unexpected response message", "User with ID user5 is not a member of the TEST1 "
+        assertEquals("Unexpected response message", "User is not a member of the TEST1 "
             + "jurisdiction", mvcResult.getResponse().getContentAsString());
 
         final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");

@@ -8,10 +8,10 @@ import uk.gov.hmcts.ccd.domain.model.UserProfileLight;
 
 import java.util.Map;
 
-@SuppressWarnings("PMD.ClassNamingConventions") // name is appropriate
 public final class UserProfileMapper {
 
-    private UserProfileMapper() {}
+    private UserProfileMapper() {
+    }
 
     static UserProfileLight entityToModel(UserProfileLightEntity userProfileLightEntity) {
         if (userProfileLightEntity == null) {

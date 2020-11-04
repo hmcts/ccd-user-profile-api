@@ -2,40 +2,12 @@
 <suppressions
 	xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
 
-	<suppress>
-		<notes>
-			ldap and groovy related and they are not used in production
-		</notes>
-		<cve>CVE-2016-6497</cve>
-	</suppress>
-	<suppress>
-		<notes>postgresql-42.2.2.jar (org.postgresql:postgresql:42.2.2,
-			cpe:/a:postgresql:postgresql:42.2.2,
-			cpe:/a:postgresql:postgresql_jdbc_driver:42.2.2) : CVE-2018-1115
-		</notes>
-		<cve>CVE-2018-1115</cve>
-	</suppress>
-	<suppress>
-		<notes>CVE-2016-7048: only for Postgres lt 9.6 and we use 9.6 on
-			Azure. Also only impacts the installer.
-		</notes>
-		<cve>CVE-2016-7048</cve>
-	</suppress>
-	<suppress>
-		<notes>h2database is not used in production</notes>
-		<cve>CVE-2018-10054</cve>
-	</suppress>
-	<suppress>
-		<notes>h2database is pulled in by liquibase, it is not used in
-			development or production
-		</notes>
-		<cve>CVE-2018-14335</cve>
-	</suppress>
-
 	<!-- THIS WILL BE FIXED IN THE USER PROFILE SPRING CVEs TICKET -->
 	<suppress>
 		<notes>We do not use: Spring Framework 5.0.5.RELEASE + Spring Security
 			(any version), see https://pivotal.io/security/cve-2018-1258
+			False
+			positive confirmed.
 		</notes>
 		<cve>CVE-2018-1258</cve>
 	</suppress>
@@ -185,11 +157,4 @@
 		<cve>CVE-2017-18640</cve>
 		<cve>CVE-2020-13943</cve>
 	</suppress>
-<suppress>
-   <notes><![CDATA[
-   file name: snakeyaml-1.25.jar
-   ]]></notes>
-   <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
-   <cve>CVE-2017-18640</cve>
-</suppress>
 </suppressions>

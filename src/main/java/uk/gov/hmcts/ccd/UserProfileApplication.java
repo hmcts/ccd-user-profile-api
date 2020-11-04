@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@SuppressWarnings({"PMD.UseUtilityClass", "HideUtilityClassConstructor"})
+@SuppressWarnings("HideUtilityClassConstructor")
 public class UserProfileApplication {
     public static void main(String[] args) {
         SpringApplication.run(UserProfileApplication.class, args);
