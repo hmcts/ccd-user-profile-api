@@ -63,6 +63,9 @@
 				"ping": {
 					"status": "UP"
 				},
+				"readiness": {
+					"status": "UP"
+				},
 				"refreshScope": {
 					"status": "UP"
 				}
