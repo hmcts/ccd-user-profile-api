@@ -12,7 +12,7 @@ def component = "user-profile-api"
 
 // Variables to switch pipeline logic and wiring per type of build
 def definitionStoreDevelopPr = "PR-575" // This doesn't change frequently, but when it does, only change this value.
-def userProfileApiDevelopPr  = "PR-335" // This doesn't change frequently, but when it does, only change this value.
+def userProfileApiDevelopPr  = "PR-340" // This doesn't change frequently, but when it does, only change this value.
 def prsToUseAat             = "PR-306" // Set this value to a PR number, or add it as a comma-separated value, if it's to follow CI/CD.
 
 def secrets = [
@@ -69,6 +69,11 @@ withPipeline(type, product, component) {
     onPR {
         enableSlackNotifications('#ccd-pr-builds')
     }
+
+    if (env.BRANCH_NAME.toLowerCase() == userProfileApiDevelopPr.toLowerCase()) {
+	echo 'slack notification enabled'
+        enableSlackNotifications('#ccd-develop-builds')
+    }  
 
     // Check if the build should be wired to an environment higher than 'preview'.
     if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'demo' || env.BRANCH_NAME == 'perftest' || env.BRANCH_NAME == 'ithc' || prsToUseAat.toLowerCase().contains(env.BRANCH_NAME.toLowerCase())) {
