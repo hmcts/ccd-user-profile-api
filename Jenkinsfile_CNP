@@ -71,9 +71,10 @@ withPipeline(type, product, component) {
     }
 
     if (env.BRANCH_NAME.toLowerCase() == userProfileApiDevelopPr.toLowerCase()) {
-	echo 'slack notification enabled'
+        env.BUILD_NOTICES_SLACK_CHANNEL = "#ccd-develop-builds"
+	    echo 'slack notification enabled'
         enableSlackNotifications('#ccd-develop-builds')
-    }  
+    }
 
     // Check if the build should be wired to an environment higher than 'preview'.
     if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'demo' || env.BRANCH_NAME == 'perftest' || env.BRANCH_NAME == 'ithc' || prsToUseAat.toLowerCase().contains(env.BRANCH_NAME.toLowerCase())) {
