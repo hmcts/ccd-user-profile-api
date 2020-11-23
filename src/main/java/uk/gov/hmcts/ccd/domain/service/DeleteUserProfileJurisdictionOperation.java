@@ -50,7 +50,7 @@ public class DeleteUserProfileJurisdictionOperation {
                     + jurisdictionId + " jurisdiction"));
 
 
-        LOG.info("Deleting association to {} jurisdiction for User Profile ...", jurisdictionId);
+        LOG.info("Deleting association to {} jurisdiction for User Profile ...", jurisdictionId.replaceAll("[\n|\r|\t]", "_"));
         return userProfileRepository.deleteJurisdictionFromUserProfile(userProfile, jurisdiction, actionedBy);
     }
 }

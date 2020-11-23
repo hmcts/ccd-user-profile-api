@@ -34,7 +34,7 @@ public class SaveUserProfileOperation {
         if (existingJurisdiction == null) {
             final JurisdictionEntity newJurisdiction = new JurisdictionEntity();
             newJurisdiction.setId(userProfile.getWorkBasketDefaultJurisdiction());
-            LOG.info("No Jurisdiction entity for {} found. Creating new Jurisdiction...", newJurisdiction.getId());
+            LOG.info("No Jurisdiction entity for {} found. Creating new Jurisdiction...", newJurisdiction.getId().replaceAll("[\n|\r|\t]", "_"));
             jurisdictionRepository.create(newJurisdiction);
         }
 
