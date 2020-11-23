@@ -71,6 +71,7 @@ public class UserProfileEndpoint {
         userProfileOperation.execute(userProfiles, actionedBy);
     }
 
+    @Transactional
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Get a user profile")
