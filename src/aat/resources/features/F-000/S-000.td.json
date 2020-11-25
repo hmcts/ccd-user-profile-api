@@ -45,7 +45,8 @@
 					"status": "UP",
 					"details": {
 						"database": "PostgreSQL",
-						"validationQuery": "isValid()"
+						"result": 1,
+						"validationQuery": "SELECT 1"
 					}
 				},
 				"diskSpace": {
@@ -53,24 +54,22 @@
 					"details": {
 						"total": "[[ANY_NUMBER_NOT_NULLABLE]]",
 						"free": "[[ANY_NUMBER_NOT_NULLABLE]]",
-						"threshold": "[[ANY_INTEGER_NOT_NULLABLE]]",
-			            "exists" : true
+						"threshold": "[[ANY_INTEGER_NOT_NULLABLE]]"
 					}
 				},
-				"livenessState": {
+				"liveness": {
 					"status": "UP"
 				},
 				"ping": {
 					"status": "UP"
 				},
-			    "readinessState" : {
-			        "status" : "UP"
-			    },
+				"readiness": {
+					"status": "UP"
+				},
 				"refreshScope": {
 					"status": "UP"
 				}
-			},
-			"groups" : [ "liveness", "readiness" ]			
+			}
 		}
 	}
 }
