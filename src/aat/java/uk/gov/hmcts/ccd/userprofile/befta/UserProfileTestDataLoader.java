@@ -7,6 +7,6 @@ public final class UserProfileTestDataLoader {
     }
 
     public static void main(String[] args) {
-        new DefaultTestAutomationAdapter();
+        new DefaultTestAutomationAdapter().loadTestDataIfNecessary();
     }
 }
