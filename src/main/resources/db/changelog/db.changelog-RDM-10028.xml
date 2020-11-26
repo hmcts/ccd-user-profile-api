@@ -1,0 +1,10 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="RDM-10028" author="daniel.lysiak1@hmcts.net">
+        <sql>
+            SELECT setval('user_profile_audit_id_seq', COALESCE((SELECT MAX(id)+1000 FROM user_profile_audit), 1), false);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

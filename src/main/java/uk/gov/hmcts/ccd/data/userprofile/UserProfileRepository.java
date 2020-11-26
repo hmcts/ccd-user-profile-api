@@ -31,6 +31,7 @@ import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.UPDATE;
 public class UserProfileRepository {
 
     public static final String NOT_APPLICABLE = "N/A";
+    private static final String USER_DEOS_NOT_EXIST = "User does not exist";
     private final JurisdictionRepository jurisdictionRepository;
     private final UserProfileAuditEntityRepository userProfileAuditEntityRepository;
 
@@ -98,7 +99,7 @@ public class UserProfileRepository {
 
         final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
         if (null == userProfileEntity) {
-            throw new BadRequestException("User does not exist");
+            throw new BadRequestException(USER_DEOS_NOT_EXIST);
         }
 
         final boolean auditable = isAuditable(userProfileEntity);
@@ -227,7 +228,7 @@ public class UserProfileRepository {
 
         final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
         if (null == userProfileEntity) {
-            throw new BadRequestException("User does not exist");
+            throw new BadRequestException(USER_DEOS_NOT_EXIST);
         }
 
         final UserProfile audit = UserProfileMapper.entityToModel(userProfileEntity);
@@ -283,7 +284,7 @@ public class UserProfileRepository {
                                                          final String actionedBy) {
         final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
         if (userProfileEntity == null) {
-            throw new BadRequestException("User does not exist");
+            throw new BadRequestException(USER_DEOS_NOT_EXIST);
         }
 
         final String currentJurisdiction = userProfileEntity.getWorkBasketDefaultJurisdiction();
