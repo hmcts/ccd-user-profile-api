@@ -70,7 +70,7 @@
 					"status": "UP"
 				}
 			},
-			"groups" : [ "liveness", "readiness" ]			
+			"groups" : [ "liveness", "readiness" ]
 		}
 	}
 }
