@@ -50,6 +50,7 @@ class UserProfileController {
         this.appInsights = appInsights;
     }
 
+    @Transactional
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get User Profiles",

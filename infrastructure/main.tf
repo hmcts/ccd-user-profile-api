@@ -21,7 +21,9 @@ data "azurerm_key_vault" "ccd_shared_key_vault" {
 
 module "user-profile-db" {
   source          = "git@github.com:hmcts/cnp-module-postgres?ref=master"
-  product         = "${local.app_full_name}-postgres-db"
+  product         = var.product
+  component       = var.component
+  name            = "${local.app_full_name}-postgres-db"
   location        = "${var.location}"
   env             = "${var.env}"
   subscription    = "${var.subscription}"
