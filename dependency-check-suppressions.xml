@@ -12,8 +12,4 @@
 		<cve>CVE-2018-1258</cve>
 	</suppress>
 
-	<suppress>
-		<cve>CVE-2020-8908</cve>
-	</suppress>
-
 </suppressions>
