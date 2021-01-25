@@ -257,12 +257,8 @@ public class UserProfileRepository {
                                                                               actionedBy,
                                                                               audit.getWorkBasketDefaultJurisdiction());
             }
-            return UserProfileMapper.entityToModel(userProfileEntity);
-        } else {
-            throw new BadRequestException("User is already a member of the "
-                                          + userProfile.getWorkBasketDefaultJurisdiction()
-                                          + " jurisdiction");
         }
+        return UserProfileMapper.entityToModel(userProfileEntity);
     }
 
     /**

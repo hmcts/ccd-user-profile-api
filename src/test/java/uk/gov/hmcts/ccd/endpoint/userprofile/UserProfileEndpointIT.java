@@ -725,21 +725,29 @@ public class UserProfileEndpointIT extends BaseTest {
         Jurisdiction jurisdiction = new Jurisdiction();
         jurisdiction.setId("TEST2");
         userProfile.addJurisdiction(jurisdiction);
-        final MvcResult mvcResult = mockMvc.perform(
+        mockMvc.perform(
             put(SAVE_USER_PROFILE)
                 .contentType(contentType)
                 .content(mapper.writeValueAsBytes(userProfile)))
-            .andReturn();
+            .andExpect(status().is(200));
 
-        // Then an HTTP 400 (Bad Request) status should be returned
-        assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
-        assertEquals("Unexpected response message", "User is already a member of the "
-            + "TEST2 jurisdiction", mvcResult.getResponse().getContentAsString());
+        // Then no new Jurisdiction is created (the total number remains the same)
+        assertEquals(3,
+            template.queryForObject(COUNT_ALL_JURISDICTIONS_QUERY, Integer.class).intValue());
+
+        // And the User Profile is updated; the user should now belong to two Jurisdictions instead of one
+        final UserProfileEntity userProfileEntity =
+            template.queryForObject(GET_USER_PROFILE_QUERY, this::mapUserProfileData, "user1");
+        assertEquals("user1", userProfileEntity.getId());
+        assertEquals("TEST2", userProfileEntity.getWorkBasketDefaultJurisdiction());
+        assertEquals(3,
+            template.queryForObject(COUNT_USER_PROFILE_ALL_JURISDICTIONS_QUERY, Integer.class, "user1")
+                .intValue());
 
         final int auditRowRead = JdbcTestUtils.countRowsInTableWhere(template,
                                                                        "user_profile_audit",
                                                                        "action = 'READ' and user_profile_id = 'user1'");
-        assertEquals("Unexpected number of audit roles", 0, auditRowRead);
+        assertEquals("Unexpected number of audit roles", 1, auditRowRead);
     }
 
     @Test
