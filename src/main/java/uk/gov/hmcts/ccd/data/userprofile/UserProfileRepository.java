@@ -222,7 +222,7 @@ public class UserProfileRepository {
      *     for audit trail
      * @return The updated UserProfile
      * @throws BadRequestException
-     *     If there is no such user, or if the user already belongs to the given Jurisdiction
+     *       If there is no such user
      */
     public UserProfile updateUserProfileOnCreate(final UserProfile userProfile, final String actionedBy) {
 
