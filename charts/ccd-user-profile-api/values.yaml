@@ -11,7 +11,6 @@ java:
     USER_PROFILE_DB_HOST: ccd-user-profile-api-postgres-db-{{ .Values.global.environment }}.postgres.database.azure.com
     USER_PROFILE_DB_PORT: 5432
     USER_PROFILE_DB_NAME: ccd_user_profile
-    USER_PROFILE_DB_USERNAME: ccd@ccd-user-profile-api-postgres-db-{{ .Values.global.environment }}
     USER_PROFILE_DB_OPTIONS: "?stringtype=unspecified&gssEncMode=disable"
     LOGBACK_REQUIRE_ALERT_LEVEL: 'false'
     LOGBACK_REQUIRE_ERROR_CODE: 'false'    
@@ -20,5 +19,6 @@ java:
   keyVaults:
     ccd:
       secrets:
+        - user-profile-api-POSTGRES-USER
         - user-profile-api-POSTGRES-PASS
         - AppInsightsInstrumentationKey
