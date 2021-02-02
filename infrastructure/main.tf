@@ -72,7 +72,7 @@ resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
 
 
 ////////////////////////////////
-// DB version 11             //
+// DB version 11              //
 ////////////////////////////////
 
 module "user-profile-db-v11" {
