@@ -725,21 +725,29 @@ public class UserProfileEndpointIT extends BaseTest {
         Jurisdiction jurisdiction = new Jurisdiction();
         jurisdiction.setId("TEST2");
         userProfile.addJurisdiction(jurisdiction);
-        final MvcResult mvcResult = mockMvc.perform(
+        mockMvc.perform(
             put(SAVE_USER_PROFILE)
                 .contentType(contentType)
                 .content(mapper.writeValueAsBytes(userProfile)))
-            .andReturn();
+            .andExpect(status().is(200));
 
-        // Then an HTTP 400 (Bad Request) status should be returned
-        assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
-        assertEquals("Unexpected response message", "User is already a member of the "
-            + "TEST2 jurisdiction", mvcResult.getResponse().getContentAsString());
+        // Then no new Jurisdiction is created (the total number remains the same)
+        assertEquals(3,
+            template.queryForObject(COUNT_ALL_JURISDICTIONS_QUERY, Integer.class).intValue());
+
+        // And the User Profile is updated; the user should now belong to two Jurisdictions instead of one
+        final UserProfileEntity userProfileEntity =
+            template.queryForObject(GET_USER_PROFILE_QUERY, this::mapUserProfileData, "user1");
+        assertEquals("user1", userProfileEntity.getId());
+        assertEquals("TEST2", userProfileEntity.getWorkBasketDefaultJurisdiction());
+        assertEquals(3,
+            template.queryForObject(COUNT_USER_PROFILE_ALL_JURISDICTIONS_QUERY, Integer.class, "user1")
+                .intValue());
 
         final int auditRowRead = JdbcTestUtils.countRowsInTableWhere(template,
                                                                        "user_profile_audit",
                                                                        "action = 'READ' and user_profile_id = 'user1'");
-        assertEquals("Unexpected number of audit roles", 0, auditRowRead);
+        assertEquals("Unexpected number of audit roles", 1, auditRowRead);
     }
 
     @Test
@@ -840,6 +848,100 @@ public class UserProfileEndpointIT extends BaseTest {
                                                                   "user_profile_audit",
                                                                   "action = 'DELETE' and user_profile_id = 'user5'");
         assertEquals("Unexpected number of audit roles", 1, auditRows);
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
+        scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
+    public void populateUserProfileWithSameJurisdiction() throws Exception {
+        List<UserProfile> userProfiles = new ArrayList<>();
+        UserProfile userProfile = createUserProfile("user3", null, "TEST2", null);
+        Jurisdiction jurisdiction = new Jurisdiction();
+        jurisdiction.setId("TEST2");
+        userProfile.addJurisdiction(jurisdiction);
+
+        userProfiles.add(userProfile);
+
+        mockMvc.perform(put(USER_PROFILE_USERS_DEFAULTS)
+            .contentType(contentType)
+            .content(mapper.writeValueAsBytes(userProfiles)))
+            .andExpect(status().is(200))
+            .andReturn();
+
+        // And the User Profile is updated; the user should now belong to two Jurisdictions instead of one
+        final UserProfileEntity userProfileEntity =
+            template.queryForObject(GET_USER_PROFILE_QUERY, this::mapUserProfileData, "user3");
+        assertEquals("user3", userProfileEntity.getId());
+        assertEquals("TEST2", userProfileEntity.getWorkBasketDefaultJurisdiction());
+        assertEquals(1,
+            template.queryForObject(COUNT_USER_PROFILE_ALL_JURISDICTIONS_QUERY, Integer.class, "user3")
+                .intValue());
+
+        final int auditRowRead = JdbcTestUtils.countRowsInTableWhere(template,
+            "user_profile_audit",
+            "action = 'READ' and user_profile_id = 'user3'");
+        assertEquals("Unexpected number of audit roles", 0, auditRowRead);
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
+        scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
+    public void populateUserProfileWithNoJurisdiction() throws Exception {
+        List<UserProfile> userProfiles = new ArrayList<>();
+        UserProfile userProfile = createUserProfile("user3", null, "TEST2", null);
+        userProfiles.add(userProfile);
+
+        mockMvc.perform(put(USER_PROFILE_USERS_DEFAULTS)
+            .contentType(contentType)
+            .content(mapper.writeValueAsBytes(userProfiles)))
+            .andExpect(status().is(200))
+            .andReturn();
+
+        // And the User Profile is updated; the user should now belong to two Jurisdictions instead of one
+        final UserProfileEntity userProfileEntity =
+            template.queryForObject(GET_USER_PROFILE_QUERY, this::mapUserProfileData, "user3");
+        assertEquals("user3", userProfileEntity.getId());
+        assertEquals("TEST2", userProfileEntity.getWorkBasketDefaultJurisdiction());
+        assertEquals(1,
+            template.queryForObject(COUNT_USER_PROFILE_ALL_JURISDICTIONS_QUERY, Integer.class, "user3")
+                .intValue());
+
+        final int auditRowRead = JdbcTestUtils.countRowsInTableWhere(template,
+            "user_profile_audit",
+            "action = 'READ' and user_profile_id = 'user3'");
+        assertEquals("Unexpected number of audit roles", 0, auditRowRead);
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
+        scripts = { "classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql" })
+    public void populateUserProfileWithDifferentJurisdiction() throws Exception {
+        List<UserProfile> userProfiles = new ArrayList<>();
+        UserProfile userProfile = createUserProfile("user3", null, "TEST2", null);
+        Jurisdiction jurisdiction = new Jurisdiction();
+        jurisdiction.setId("TEST1");
+        userProfile.addJurisdiction(jurisdiction);
+        userProfiles.add(userProfile);
+
+        mockMvc.perform(put(USER_PROFILE_USERS_DEFAULTS)
+            .contentType(contentType)
+            .content(mapper.writeValueAsBytes(userProfiles)))
+            .andExpect(status().is(200))
+            .andReturn();
+
+        // And the User Profile is updated; the user should now belong to two Jurisdictions instead of one
+        final UserProfileEntity userProfileEntity =
+            template.queryForObject(GET_USER_PROFILE_QUERY, this::mapUserProfileData, "user3");
+        assertEquals("user3", userProfileEntity.getId());
+        assertEquals("TEST2", userProfileEntity.getWorkBasketDefaultJurisdiction());
+        assertEquals(2,
+            template.queryForObject(COUNT_USER_PROFILE_ALL_JURISDICTIONS_QUERY, Integer.class, "user3")
+                .intValue());
+
+        final int auditRowRead = JdbcTestUtils.countRowsInTableWhere(template,
+            "user_profile_audit",
+            "action = 'READ' and user_profile_id = 'user3'");
+        assertEquals("Unexpected number of audit roles", 0, auditRowRead);
     }
 
     private static UserProfile createUserProfile(final String id,

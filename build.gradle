@@ -60,7 +60,7 @@ dependencyCheck {
     suppressionFile = 'dependency-check-suppressions.xml'
 }
 
-// tag::repositories[]
+ // tag::repositories[]
 repositories {
     mavenLocal()
     jcenter()
