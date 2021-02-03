@@ -5,5 +5,5 @@ spring:
       paths: /mnt/secrets/ccd
       aliases:
         user-profile-api-POSTGRES-USER: USER_PROFILE_DB_USERNAME
-        user-profile-api-POSTGRES-PASS-V11: USER_PROFILE_DB_PASSWORD
+        user-profile-api-POSTGRES-PASS: USER_PROFILE_DB_PASSWORD
         AppInsightsInstrumentationKey: azure.application-insights.instrumentation-key
