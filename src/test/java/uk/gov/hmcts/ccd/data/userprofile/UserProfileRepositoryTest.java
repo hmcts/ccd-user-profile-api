@@ -274,11 +274,18 @@ public class UserProfileRepositoryTest {
         final UserProfile userProfile = createUserProfile("user@hmcts.net", "TEST2");
         userProfile.setWorkBasketDefaultCaseType("Test case");
         userProfile.setWorkBasketDefaultState("Create case");
-        exceptionRule.expect(BadRequestException.class);
-        exceptionRule.expectMessage("User is already a member of the "
-            + userProfile.getWorkBasketDefaultJurisdiction() + " jurisdiction");
-        classUnderTest.updateUserProfileOnCreate(userProfile, ACTIONED_BY_EMAIL);
-        assertEquals(0, countUserProfitAudits());
+        final UserProfile retrievedUserProfile = classUnderTest.updateUserProfileOnCreate(userProfile,
+            ACTIONED_BY_EMAIL);
+
+        assertEquals(userProfile.getId(), retrievedUserProfile.getId());
+        assertEquals("TEST2", retrievedUserProfile.getWorkBasketDefaultJurisdiction());
+        assertEquals("Test case", retrievedUserProfile.getWorkBasketDefaultCaseType());
+        assertEquals("Create case", retrievedUserProfile.getWorkBasketDefaultState());
+        assertEquals(1, retrievedUserProfile.getJurisdictions().size());
+        assertEquals("TEST2", retrievedUserProfile.getJurisdictions().get(0).getId());
+
+        final List<UserProfileAuditEntity> audits = findUserProfitAudits("user@hmcts.net");
+        assertThat(audits.size(), is(0));
     }
 
     @Test
