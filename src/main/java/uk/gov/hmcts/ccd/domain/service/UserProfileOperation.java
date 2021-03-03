@@ -93,8 +93,12 @@ public class UserProfileOperation {
         final Jurisdiction jurisdiction = new Jurisdiction();
         jurisdiction.setId(userProfile.getWorkBasketDefaultJurisdiction());
 
-        // link user profile and jurisdiction
-        userProfile.addJurisdiction(jurisdiction);
+        if (userProfile.getJurisdictions() == null
+            || userProfile.getJurisdictions().stream().map(Jurisdiction::getId)
+            .noneMatch(jurisdiction.getId()::equals)) {
+            // link user profile and jurisdiction
+            userProfile.addJurisdiction(jurisdiction);
+        }
 
         return userProfile;
     }

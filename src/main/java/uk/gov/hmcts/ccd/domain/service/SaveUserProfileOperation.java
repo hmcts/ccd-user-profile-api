@@ -47,8 +47,7 @@ public class SaveUserProfileOperation {
         if (foundUserProfile == null) {
             return createUserProfileOperation.execute(userProfile, actionedBy);
         } else {
-            // Attempt to update the user profile (UserProfileRepository will throw an exception if the user is being
-            // added to a Jurisdiction they already belong to)
+            // Attempt to update the user profile
             return userProfileRepository.updateUserProfileOnCreate(userProfile, actionedBy);
         }
     }
