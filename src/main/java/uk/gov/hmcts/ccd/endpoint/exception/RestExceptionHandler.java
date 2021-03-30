@@ -12,6 +12,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import uk.gov.hmcts.ccd.AppInsights;
 
+import java.sql.SQLException;
+
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     private static final Logger LOG = LoggerFactory.getLogger(RestExceptionHandler.class);
@@ -38,6 +40,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             return handleExceptionInternal(e, errorMsg, headers, HttpStatus.NOT_FOUND, request);
         }
         LOG.warn("exception with message {}, {}, {}", errorMsg, HttpStatus.INTERNAL_SERVER_ERROR, request, e);
+        return handleExceptionInternal(e, errorMsg, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+
+    @ExceptionHandler(SQLException.class)
+    protected ResponseEntity<Object> handleSQLException(final SQLException e, final WebRequest request) {
+        final String errorMsg = "SQL Exception thrown during API operation, " + HttpStatus.INTERNAL_SERVER_ERROR;
+        appInsights.trackException(e);
+
+        LOG.warn(errorMsg);
         return handleExceptionInternal(e, errorMsg, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 }
