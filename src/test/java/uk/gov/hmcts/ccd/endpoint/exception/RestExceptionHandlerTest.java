@@ -7,11 +7,13 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.request.WebRequest;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 import uk.gov.hmcts.ccd.domain.service.CreateUserProfileOperation;
@@ -23,9 +25,12 @@ import uk.gov.hmcts.ccd.endpoint.userprofile.UserProfileEndpoint;
 import java.nio.charset.Charset;
 import java.sql.SQLException;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -53,6 +58,8 @@ public class RestExceptionHandlerTest {
     @Mock
     private AppInsights appInsights;
 
+    private RestExceptionHandler classUnderTest;
+
     private MockMvc mockMvc;
 
     @Before
@@ -60,7 +67,7 @@ public class RestExceptionHandlerTest {
         initMocks(this);
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-        RestExceptionHandler classUnderTest = new RestExceptionHandler(appInsights);
+        classUnderTest = new RestExceptionHandler(appInsights);
         final UserProfileEndpoint controller = new UserProfileEndpoint(
             createUserProfileOperation, userProfileOperation, findUserProfileOperation, appInsights);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
@@ -101,5 +108,17 @@ public class RestExceptionHandlerTest {
         result.andExpect(status().isInternalServerError());
         result.andExpect(content()
             .string(SQL_EXCEPTION_MESSAGE));
+    }
+
+    @Test
+    public void handleSQLException_directCall() {
+        SQLException exceptionThrown = new SQLException();
+        WebRequest request = mock(WebRequest.class);
+
+        ResponseEntity<Object> result = classUnderTest.handleSQLException(exceptionThrown, request);
+
+        verify(appInsights).trackException(exceptionThrown);
+        assertEquals(500, result.getStatusCodeValue());
+        assertEquals(SQL_EXCEPTION_MESSAGE, result.getBody());
     }
 }
