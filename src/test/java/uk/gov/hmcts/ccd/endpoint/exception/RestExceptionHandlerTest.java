@@ -75,6 +75,18 @@ public class RestExceptionHandlerTest {
     }
 
     @Test
+    public void handleSQLException_directCall() {
+        SQLException exceptionThrown = new SQLException();
+        WebRequest request = mock(WebRequest.class);
+
+        ResponseEntity<Object> result = classUnderTest.handleSQLException(exceptionThrown, request);
+
+        verify(appInsights).trackException(exceptionThrown);
+        assertEquals(500, result.getStatusCodeValue());
+        assertEquals(Collections.singletonMap("errorMessage", SQL_EXCEPTION_MESSAGE), result.getBody());
+    }
+
+    @Test
     public void handleSQLException_shouldReturnHttpErrorResponse() throws Exception {
         UserProfile userProfile = new UserProfile();
         userProfile.setId("user1");
@@ -104,17 +116,5 @@ public class RestExceptionHandlerTest {
         result.andExpect(status().isInternalServerError());
         result.andExpect(content()
             .string(ERROR_RESPONSE_BODY));
-    }
-
-    @Test
-    public void handleSQLException_directCall() {
-        SQLException exceptionThrown = new SQLException();
-        WebRequest request = mock(WebRequest.class);
-
-        ResponseEntity<Object> result = classUnderTest.handleSQLException(exceptionThrown, request);
-
-        verify(appInsights).trackException(exceptionThrown);
-        assertEquals(500, result.getStatusCodeValue());
-        assertEquals(Collections.singletonMap("errorMessage", SQL_EXCEPTION_MESSAGE), result.getBody());
     }
 }
