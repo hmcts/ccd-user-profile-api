@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import uk.gov.hmcts.ccd.AppInsights;
 
 import java.sql.SQLException;
+import java.util.Collections;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -45,10 +46,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(SQLException.class)
     protected ResponseEntity<Object> handleSQLException(final SQLException e, final WebRequest request) {
-        final String errorMsg = "SQL Exception thrown during API operation, " + HttpStatus.INTERNAL_SERVER_ERROR;
+        final String errorMsg = "SQL Exception thrown during API operation";
         appInsights.trackException(e);
 
-        LOG.warn(errorMsg);
-        return handleExceptionInternal(e, errorMsg, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+        LOG.error(errorMsg);
+        handleExceptionInternal(e, errorMsg, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(Collections.singletonMap("errorMessage", errorMsg));
     }
 }

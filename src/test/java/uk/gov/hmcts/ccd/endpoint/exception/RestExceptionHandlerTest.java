@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.request.WebRequest;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
@@ -24,6 +23,7 @@ import uk.gov.hmcts.ccd.endpoint.userprofile.UserProfileEndpoint;
 
 import java.nio.charset.Charset;
 import java.sql.SQLException;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,7 +42,9 @@ public class RestExceptionHandlerTest {
     private static final String TEST_URL = "/user-profile/users";
 
     private static final String SQL_EXCEPTION_MESSAGE =
-        "SQL Exception thrown during API operation, 500 INTERNAL_SERVER_ERROR";
+        "SQL Exception thrown during API operation";
+    private static final String ERROR_RESPONSE_BODY =
+        "{\"errorMessage\":\"SQL Exception thrown during API operation\"}";
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
@@ -102,12 +104,9 @@ public class RestExceptionHandlerTest {
                 .header("actionedBy", "<UNKNOWN>")
                 .content(mapper.writeValueAsBytes(userProfile)));
 
-        result.andDo(MockMvcResultHandlers.print());
-
-
         result.andExpect(status().isInternalServerError());
         result.andExpect(content()
-            .string(SQL_EXCEPTION_MESSAGE));
+            .string(ERROR_RESPONSE_BODY));
     }
 
     @Test
@@ -119,6 +118,6 @@ public class RestExceptionHandlerTest {
 
         verify(appInsights).trackException(exceptionThrown);
         assertEquals(500, result.getStatusCodeValue());
-        assertEquals(SQL_EXCEPTION_MESSAGE, result.getBody());
+        assertEquals(Collections.singletonMap("errorMessage", SQL_EXCEPTION_MESSAGE), result.getBody());
     }
 }
