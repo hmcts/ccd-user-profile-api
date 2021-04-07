@@ -2,8 +2,8 @@ package uk.gov.hmcts.ccd.endpoint.exception;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -64,7 +64,7 @@ public class RestExceptionHandlerTest {
 
     private MockMvc mockMvc;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         initMocks(this);
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
