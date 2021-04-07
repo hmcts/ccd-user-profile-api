@@ -398,7 +398,8 @@ sonarqube {
     properties {
         property "sonar.projectName", "ccd-user-profile-api"
         property "sonar.projectKey", "ccd-user-profile-api"
-        property "sonar.exclusions", "**/PostgreSQLEnumType.java"
+        property "sonar.exclusions", "**/PostgreSQLEnumType.java,**/RestExceptionHandler.java"
+        // RestExceptionHandler excluded temporarily due to issue with Sonar (ticket raised with Platops: DTSPO-2243)
     }
 }
 
