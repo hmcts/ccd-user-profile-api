@@ -38,6 +38,7 @@ public class RestExceptionHandlerTest {
 
     private static final String TEST_URL = "/user-profile/users";
 
+    private static final String ERROR_MESSAGE = "Error during execution";
     private static final String SQL_EXCEPTION_MESSAGE =
         "SQL Exception thrown during API operation";
     private static final String ERROR_RESPONSE_BODY =
@@ -59,6 +60,8 @@ public class RestExceptionHandlerTest {
 
     private RestExceptionHandler classUnderTest;
 
+    private UserProfile userProfile;
+
     private MockMvc mockMvc;
 
     @Before
@@ -66,12 +69,130 @@ public class RestExceptionHandlerTest {
         initMocks(this);
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
+        Jurisdiction jurisdiction1 = new Jurisdiction();
+        jurisdiction1.setId("TEST1");
+
+        userProfile = new UserProfile();
+        userProfile.setId("user1");
+        userProfile.addJurisdiction(jurisdiction1);
+        userProfile.setWorkBasketDefaultJurisdiction("TEST1");
+        userProfile.setWorkBasketDefaultCaseType("Default-Case-Type");
+        userProfile.setWorkBasketDefaultState("Default-state");
+
         classUnderTest = new RestExceptionHandler(appInsights);
         final UserProfileEndpoint controller = new UserProfileEndpoint(
             createUserProfileOperation, userProfileOperation, findUserProfileOperation, appInsights);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
             .setControllerAdvice(classUnderTest)
             .build();
+    }
+
+    @Test
+    public void handleBadRequestException_directCall() {
+        BadRequestException exceptionThrown = new BadRequestException(ERROR_MESSAGE);
+        WebRequest request = mock(WebRequest.class);
+
+        ResponseEntity<Object> result = classUnderTest.handleException(exceptionThrown, request);
+
+        verify(appInsights).trackException(exceptionThrown);
+        assertEquals(400, result.getStatusCodeValue());
+        assertEquals(ERROR_MESSAGE, result.getBody().toString());
+    }
+
+    @Test
+    public void handleBadRequestException_shouldReturnHttpErrorResponse() throws Exception {
+        BadRequestException exceptionThrown = new BadRequestException(ERROR_MESSAGE);
+
+        doAnswer(
+            apiCall -> {
+                throw exceptionThrown;
+            })
+            .when(createUserProfileOperation)
+            .execute(any(), eq("<UNKNOWN>"));
+
+        ResultActions result = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post(TEST_URL)
+                .contentType(contentType)
+                .header("actionedBy", "<UNKNOWN>")
+                .content(mapper.writeValueAsBytes(userProfile)));
+
+        verify(appInsights).trackException(exceptionThrown);
+        result.andExpect(status().isBadRequest());
+        result.andExpect(content()
+            .string(ERROR_MESSAGE));
+    }
+
+    @Test
+    public void handleNotFoundException_directCall() {
+        NotFoundException exceptionThrown = new NotFoundException(ERROR_MESSAGE);
+        WebRequest request = mock(WebRequest.class);
+
+        ResponseEntity<Object> result = classUnderTest.handleException(exceptionThrown, request);
+
+        verify(appInsights).trackException(exceptionThrown);
+        assertEquals(404, result.getStatusCodeValue());
+        assertEquals(ERROR_MESSAGE, result.getBody().toString());
+    }
+
+    @Test
+    public void handleNotFoundException_shouldReturnHttpErrorResponse() throws Exception {
+        NotFoundException exceptionThrown = new NotFoundException(ERROR_MESSAGE);
+
+        doAnswer(
+            apiCall -> {
+                throw exceptionThrown;
+            })
+            .when(createUserProfileOperation)
+            .execute(any(), eq("<UNKNOWN>"));
+
+        ResultActions result = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post(TEST_URL)
+                .contentType(contentType)
+                .header("actionedBy", "<UNKNOWN>")
+                .content(mapper.writeValueAsBytes(userProfile)));
+
+        verify(appInsights).trackException(exceptionThrown);
+        result.andExpect(status().isNotFound());
+        result.andExpect(content()
+            .string(ERROR_MESSAGE));
+    }
+
+    @Test
+    public void handleException_directCall() {
+        RuntimeException exceptionThrown = new RuntimeException(ERROR_MESSAGE);
+        WebRequest request = mock(WebRequest.class);
+
+        ResponseEntity<Object> result = classUnderTest.handleException(exceptionThrown, request);
+
+        verify(appInsights).trackException(exceptionThrown);
+        assertEquals(500, result.getStatusCodeValue());
+        assertEquals(ERROR_MESSAGE, result.getBody().toString());
+    }
+
+    @Test
+    public void handleException_shouldReturnHttpErrorResponse() throws Exception {
+        RuntimeException exceptionThrown = new RuntimeException(ERROR_MESSAGE);
+
+        doAnswer(
+            apiCall -> {
+                throw exceptionThrown;
+            })
+            .when(createUserProfileOperation)
+            .execute(any(), eq("<UNKNOWN>"));
+
+        ResultActions result = mockMvc.perform(
+            MockMvcRequestBuilders
+                .post(TEST_URL)
+                .contentType(contentType)
+                .header("actionedBy", "<UNKNOWN>")
+                .content(mapper.writeValueAsBytes(userProfile)));
+
+        verify(appInsights).trackException(exceptionThrown);
+        result.andExpect(status().isInternalServerError());
+        result.andExpect(content()
+            .string(ERROR_MESSAGE));
     }
 
     @Test
@@ -88,20 +209,11 @@ public class RestExceptionHandlerTest {
 
     @Test
     public void handleSQLException_shouldReturnHttpErrorResponse() throws Exception {
-        UserProfile userProfile = new UserProfile();
-        userProfile.setId("user1");
-
-        Jurisdiction jurisdiction1 = new Jurisdiction();
-        jurisdiction1.setId("TEST1");
-
-        userProfile.addJurisdiction(jurisdiction1);
-        userProfile.setWorkBasketDefaultJurisdiction("TEST1");
-        userProfile.setWorkBasketDefaultCaseType("Default-Case-Type");
-        userProfile.setWorkBasketDefaultState("Default-state");
+        SQLException exceptionThrown = new SQLException();
 
         doAnswer(
             apiCall -> {
-                throw new SQLException();
+                throw exceptionThrown;
             })
             .when(createUserProfileOperation)
             .execute(any(), eq("<UNKNOWN>"));
@@ -113,6 +225,7 @@ public class RestExceptionHandlerTest {
                 .header("actionedBy", "<UNKNOWN>")
                 .content(mapper.writeValueAsBytes(userProfile)));
 
+        verify(appInsights).trackException(exceptionThrown);
         result.andExpect(status().isInternalServerError());
         result.andExpect(content()
             .string(ERROR_RESPONSE_BODY));
