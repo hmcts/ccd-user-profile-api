@@ -161,7 +161,7 @@ dependencies {
     testCompile group: 'com.opentable.components', name: 'otj-pg-embedded', version: '0.13.1'
     testCompile group: 'com.github.tomakehurst', name: 'wiremock-standalone', version: '2.21.0'
     testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '2.1.0.RELEASE'
-    testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '6.13.3-jp1'
+    testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '6.13.3-jp1'
 }
 // end::dependencies[]
 
@@ -401,10 +401,6 @@ sonarqube {
 
 //Needs a token from https://app.codacy.com/app/%OrgOrOwner%/ccd-user-profile-api/settings/coverage
 configurations { codacy }
-repositories {
-    maven { url "https://jitpack.io" }
-    maven { url "http://dl.bintray.com/typesafe/maven-releases" }
-}
 dependencies {
     codacy 'com.github.codacy:codacy-coverage-reporter:5.0.275'
 }
