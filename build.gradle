@@ -5,9 +5,6 @@ buildscript {
     dependencies {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622"
     }
-    dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
-    }
 }
 
 plugins {
@@ -21,7 +18,7 @@ plugins {
     id 'jacoco'
     id "com.github.kt3k.coveralls" version "2.8.2"
     id 'net.ltgt.apt' version '0.21'
-    id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.14'
+    id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.23'
     id "info.solidsoft.pitest" version '1.4.0'
     id 'uk.gov.hmcts.java' version '0.12.0'
 }
@@ -48,7 +45,6 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: "org.sonarqube"
 apply plugin: 'jacoco'
 apply plugin: "com.github.kt3k.coveralls"
-apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'se.patrikerdes.use-latest-versions'
 
@@ -65,7 +61,7 @@ repositories {
     mavenLocal()
     jcenter()
     maven {
-        url  "https://dl.bintray.com/hmcts/hmcts-maven"
+        url  "https://jitpack.io"
     }
 }
 // end::repositories[]
@@ -165,7 +161,7 @@ dependencies {
     testCompile group: 'com.opentable.components', name: 'otj-pg-embedded', version: '0.13.1'
     testCompile group: 'com.github.tomakehurst', name: 'wiremock-standalone', version: '2.21.0'
     testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '2.1.0.RELEASE'
-    testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '6.3.0'
+    testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '6.13.4'
 }
 // end::dependencies[]
 
@@ -398,16 +394,13 @@ sonarqube {
     properties {
         property "sonar.projectName", "ccd-user-profile-api"
         property "sonar.projectKey", "ccd-user-profile-api"
-        property "sonar.exclusions", "**/PostgreSQLEnumType.java"
+        property "sonar.exclusions", "**/PostgreSQLEnumType.java,**/RestExceptionHandler.java"
+        // RestExceptionHandler excluded temporarily due to issue with Sonar (ticket raised with Platops: DTSPO-2243)
     }
 }
 
 //Needs a token from https://app.codacy.com/app/%OrgOrOwner%/ccd-user-profile-api/settings/coverage
 configurations { codacy }
-repositories {
-    maven { url "https://jitpack.io" }
-    maven { url "http://dl.bintray.com/typesafe/maven-releases" }
-}
 dependencies {
     codacy 'com.github.codacy:codacy-coverage-reporter:5.0.275'
 }
