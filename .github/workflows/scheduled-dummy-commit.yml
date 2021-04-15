@@ -19,4 +19,5 @@ jobs:
           skip_dirty_check: true
           commit_message: "Trigger build with empty commit"
           commit_options: "--allow-empty"
+          push_options: '--force'
           branch: 'develop'
