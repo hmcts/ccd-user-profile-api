@@ -24,7 +24,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           skip_dirty_check: true
-          commit_message: "Trigger build with empty commit"
+          commit_message: "skip-checks: true"
           commit_options: "--allow-empty"
           push_options: '--force'
           branch: 'develop'
