@@ -48,8 +48,6 @@ apply plugin: "com.github.kt3k.coveralls"
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'se.patrikerdes.use-latest-versions'
 
-apply from: 'liquibase.gradle'
-
 mainClassName = 'uk.gov.hmcts.ccd.UserProfileApplication'
 
 dependencyCheck {
@@ -126,7 +124,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     compile("org.springframework.boot:spring-boot-starter-actuator")
     implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
-    compile group: 'org.liquibase', name: 'liquibase-core', version: '3.10.3'
+    compile "org.flywaydb:flyway-core:6.5.7"
     compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.1.4'
     compile group: 'org.yaml', name: 'snakeyaml', version: '1.26'
     compile group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
@@ -161,7 +159,8 @@ dependencies {
     testCompile group: 'com.opentable.components', name: 'otj-pg-embedded', version: '0.13.1'
     testCompile group: 'com.github.tomakehurst', name: 'wiremock-standalone', version: '2.21.0'
     testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '2.1.0.RELEASE'
-    testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '6.13.4'
+    testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '6.14.2'
+
 }
 // end::dependencies[]
 
