@@ -52,14 +52,13 @@ resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
   key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
 }
 
-
 ////////////////////////////////
 // DB version 11              //
 ////////////////////////////////
 
 module "user-profile-db-v11" {
   source          = "git@github.com:hmcts/cnp-module-postgres?ref=master"
-  product         = "${var.component}-db-v11"
+  product         = var.product
   component       = var.component
   name            = "${local.app_full_name}-postgres-db-v11"
   location        = "${var.location}"

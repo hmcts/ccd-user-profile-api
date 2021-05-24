@@ -5,9 +5,6 @@ buildscript {
     dependencies {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622"
     }
-    dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
-    }
 }
 
 plugins {
@@ -21,7 +18,7 @@ plugins {
     id 'jacoco'
     id "com.github.kt3k.coveralls" version "2.8.2"
     id 'net.ltgt.apt' version '0.21'
-    id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.14'
+    id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.23'
     id "info.solidsoft.pitest" version '1.4.0'
     id 'uk.gov.hmcts.java' version '0.12.0'
 }
@@ -48,11 +45,8 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: "org.sonarqube"
 apply plugin: 'jacoco'
 apply plugin: "com.github.kt3k.coveralls"
-apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'se.patrikerdes.use-latest-versions'
-
-apply from: 'liquibase.gradle'
 
 mainClassName = 'uk.gov.hmcts.ccd.UserProfileApplication'
 
@@ -65,7 +59,7 @@ repositories {
     mavenLocal()
     jcenter()
     maven {
-        url  "https://dl.bintray.com/hmcts/hmcts-maven"
+        url  "https://jitpack.io"
     }
 }
 // end::repositories[]
@@ -130,10 +124,10 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     compile("org.springframework.boot:spring-boot-starter-actuator")
     implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
-    compile group: 'org.liquibase', name: 'liquibase-core', version: '3.10.3'
+    compile "org.flywaydb:flyway-core:6.5.7"
     compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.1.4'
     compile group: 'org.yaml', name: 'snakeyaml', version: '1.26'
-    compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
+    compile group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
     compile group: 'javax.inject', name: 'javax.inject', version: '1'
     compile (group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: '2.1.3') {
@@ -146,10 +140,10 @@ dependencies {
 
 
     // Force to use the latest org.springframework.security
-    compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.3.2.RELEASE'
-    compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.3.2.RELEASE'
-    compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.3.2.RELEASE'
-    compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.3.2.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.3.8.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.3.8.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.3.8.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.3.8.RELEASE'
 
 
     compile 'uk.gov.hmcts.reform:properties-volume-spring-boot-starter:0.0.4'
@@ -165,14 +159,15 @@ dependencies {
     testCompile group: 'com.opentable.components', name: 'otj-pg-embedded', version: '0.13.1'
     testCompile group: 'com.github.tomakehurst', name: 'wiremock-standalone', version: '2.21.0'
     testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '2.1.0.RELEASE'
-    testCompile group: 'uk.gov.hmcts', name: 'befta-fw', version: '6.3.0'
+    testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '6.14.2'
+
 }
 // end::dependencies[]
 
 dependencyManagement {
     dependencies {
         // CVE-2019-0232 - Java and Command Line injections in Windows
-        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.40') {
+        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.43') {
             entry 'tomcat-embed-core'
             entry 'tomcat-embed-el'
             entry 'tomcat-embed-websocket'
@@ -398,16 +393,13 @@ sonarqube {
     properties {
         property "sonar.projectName", "ccd-user-profile-api"
         property "sonar.projectKey", "ccd-user-profile-api"
-        property "sonar.exclusions", "**/PostgreSQLEnumType.java"
+        property "sonar.exclusions", "**/PostgreSQLEnumType.java,**/RestExceptionHandler.java"
+        // RestExceptionHandler excluded temporarily due to issue with Sonar (ticket raised with Platops: DTSPO-2243)
     }
 }
 
 //Needs a token from https://app.codacy.com/app/%OrgOrOwner%/ccd-user-profile-api/settings/coverage
 configurations { codacy }
-repositories {
-    maven { url "https://jitpack.io" }
-    maven { url "http://dl.bintray.com/typesafe/maven-releases" }
-}
 dependencies {
     codacy 'com.github.codacy:codacy-coverage-reporter:5.0.275'
 }
