@@ -4,9 +4,3 @@ java:
   environment:
     USER_PROFILE_DB_HOST: ccd-user-profile-api-postgres-db-v11-aat.postgres.database.azure.com
     USER_PROFILE_DB_NAME: ccd_user_profile
-  keyVaults:
-    ccd:
-      secrets:
-        - user-profile-api-POSTGRES-USER-V11
-        - user-profile-api-POSTGRES-PASS-V11
-        - AppInsightsInstrumentationKey
