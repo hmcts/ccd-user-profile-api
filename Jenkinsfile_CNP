@@ -52,6 +52,7 @@ env.BEFTA_S2S_CLIENT_ID = "ccd_data"
 env.CCD_API_GATEWAY_OAUTH2_REDIRECT_URL = "https://www-ccd.aat.platform.hmcts.net/oauth2redirect"
 env.CCD_CASEWORKER_AUTOTEST_EMAIL = "auto.test.cnp@gmail.com"
 env.BEFTA_RESPONSE_HEADER_CHECK_POLICY="JUST_WARN" // Temporary workaround for platform changes: turn BEFTA header checks to warning mode
+env.TEST_DATA_LOAD_SKIP_PERIOD=1
 
 withPipeline(type, product, component) {
     onMaster {
