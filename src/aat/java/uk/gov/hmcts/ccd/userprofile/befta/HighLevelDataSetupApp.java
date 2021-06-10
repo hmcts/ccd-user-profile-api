@@ -13,4 +13,8 @@ public class HighLevelDataSetupApp extends DataLoaderToDefinitionStore {
         main(HighLevelDataSetupApp.class, args);
     }
 
+    @Override
+    protected boolean shouldTolerateDataSetupFailure() {
+        return true;
+    }
 }
