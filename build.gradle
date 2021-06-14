@@ -161,7 +161,7 @@ dependencies {
     testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '2.1.0.RELEASE'
 
     testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.0.0'
-    testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '8.0.6'
+    testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '8.0.7'
 
 }
 // end::dependencies[]
