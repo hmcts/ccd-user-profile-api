@@ -18,6 +18,9 @@ java:
   keyVaults:
     ccd:
       secrets:
-        - user-profile-api-POSTGRES-USER
-        - user-profile-api-POSTGRES-PASS
-        - AppInsightsInstrumentationKey
+        - name: user-profile-api-POSTGRES-USER
+          alias: USER_PROFILE_DB_USERNAME
+        - name: user-profile-api-POSTGRES-PASS
+          alias: USER_PROFILE_DB_PASSWORD
+        - name: AppInsightsInstrumentationKey
+          alias: azure.application-insights.instrumentation-key
