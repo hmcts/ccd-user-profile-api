@@ -5,7 +5,7 @@ properties([
     pipelineTriggers([cron('H 05 * * *')])
 ])
 
-@Library("Infrastructure")
+@Library("Infrastructure@ccd-1257")
 
 def type = "java"
 def product = "ccd"
@@ -26,9 +26,13 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
     ]
 }
 
+//env.FORTIFY_EXCLUDE_PATTERN = "*.jar|*.zip|*.tar"
+//env.FORTIFY_SEVERITY = "HIGH"
+env.FORTIFY_RELEASE_ID = "65430"
+
 withNightlyPipeline(type, product, component) {
     loadVaultSecrets(secrets)
     enableMutationTest()
-    enableDbMigration()
+    enableDbMigration('ccd')
     enableSlackNotifications('#ccd-nightly-builds')
 }
