@@ -12,7 +12,13 @@ def product = "ccd"
 def component = "user-profile-api"
 
 def secrets = [
+    'ccd-${env}': [
+        secret('ccd-api-gateway-oauth2-client-secret', 'CCD_API_GATEWAY_OAUTH2_CLIENT_SECRET'),
+        secret('definition-importer-username', 'DEFINITION_IMPORTER_USERNAME'),
+        secret('definition-importer-password', 'DEFINITION_IMPORTER_PASSWORD')
+    ],
     's2s-${env}': [
+        secret('microservicekey-ccd-data', 'BEFTA_S2S_CLIENT_SECRET'),
         secret('microservicekey-ccd-data', 'CCD_DS_SERVICE_SECRET')
     ]
 ]
@@ -31,4 +37,5 @@ withNightlyPipeline(type, product, component) {
     enableMutationTest()
     enableDbMigration('ccd')
     enableSlackNotifications('#ccd-nightly-builds')
+    enableHighLevelDataSetup()
 }
