@@ -8,6 +8,12 @@ VALUES ('user1', 'TEST2', 'case', 'state');
 INSERT INTO user_profile(id, work_basket_default_jurisdiction, work_basket_default_case_type, work_basket_default_state)
 VALUES ('user5', 'TEST2', 'case', 'state');
 
+INSERT INTO user_profile(id, work_basket_default_jurisdiction, work_basket_default_case_type, work_basket_default_state)
+VALUES ('caseworker1@hmcts.net', 'TEST1', 'case1', 'state1');
+
+INSERT INTO user_profile(id, work_basket_default_jurisdiction, work_basket_default_case_type, work_basket_default_state)
+VALUES ('caseworker2@hmcts.net', 'TEST2', 'case2', 'state2');
+
 INSERT INTO user_profile(id) VALUES ('user2+a@example.com');
 INSERT INTO user_profile(id) VALUES ('user4');
 

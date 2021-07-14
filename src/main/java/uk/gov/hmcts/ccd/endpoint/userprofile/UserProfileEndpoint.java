@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriUtils;
 import uk.gov.hmcts.ccd.AppInsights;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 import uk.gov.hmcts.ccd.domain.service.CreateUserProfileOperation;
@@ -48,8 +47,8 @@ public class UserProfileEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation("Create a new User Profile")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created User Profile"),
-            @ApiResponse(code = 400, message = "Unable to create User Profile")
+        @ApiResponse(code = 201, message = "Created User Profile"),
+        @ApiResponse(code = 400, message = "Unable to create User Profile")
     })
     public UserProfile createUserProfile(@RequestBody final UserProfile userProfile,
                                          @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
@@ -76,17 +75,26 @@ public class UserProfileEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Get a user profile")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Found user profile default settings"),
-        @ApiResponse(code = 400, message = "Unable to find User Profile")
+        @ApiResponse(code = 200, message = "Found user profile(s) default settings"),
+        @ApiResponse(code = 400, message = "Bad request - Email Id(s) not valid")
     })
-    public UserProfile userProfileGet(@RequestParam("uid") final String uid,
-                                      @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
-                                      final String actionedBy) {
+    public Object getUserProfiles(@RequestParam(value = "uid", required = false)
+                                 final String uid,
+                                 @RequestHeader(value = "email-ids-users-to-find", required = false)
+                                 final List<String> emailIds,
+                                 @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
+                                 final String actionedBy) {
         Instant start = Instant.now();
-        String decodedUid = UriUtils.decode(uid, "UTF-8");
-        UserProfile userProfile = findUserProfileOperation.execute(decodedUid, actionedBy);
+        Object responsePayload;
+
+        if (emailIds == null) {
+            responsePayload = findUserProfileOperation.execute(uid, actionedBy);
+        } else {
+            responsePayload = findUserProfileOperation.execute(emailIds, actionedBy);
+        }
+
         final Duration between = Duration.between(start, Instant.now());
         appInsights.trackRequest(between, true);
-        return userProfile;
+        return responsePayload;
     }
 }
