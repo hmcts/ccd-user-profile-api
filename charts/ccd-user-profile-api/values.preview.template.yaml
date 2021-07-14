@@ -4,7 +4,8 @@ java:
   keyVaults:
     ccd:
       secrets:
-      - AppInsightsInstrumentationKey
+        - name: AppInsightsInstrumentationKey
+          alias: azure.application-insights.instrumentation-key
   environment:
     USER_PROFILE_DB_HOST: "{{ .Release.Name }}-postgresql"
     USER_PROFILE_DB_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
