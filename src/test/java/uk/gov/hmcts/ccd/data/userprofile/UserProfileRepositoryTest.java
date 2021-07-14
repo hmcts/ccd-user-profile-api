@@ -23,10 +23,12 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.emptyList;
-import static org.hamcrest.core.Is.is;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.CREATE;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.DELETE;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.READ;
@@ -94,8 +96,8 @@ public class UserProfileRepositoryTest {
         assertEquals("TEST3", retrievedUserProfile.getJurisdictions().get(1).getId());
 
         final List<UserProfileAuditEntity> audits = findUserProfitAudits("user@hmcts.net");
-        assertThat(audits.size(), is(1));
-        assertThat(audits.get(0).getAction(), is(UPDATE));
+        assertEquals(1, audits.size());
+        assertEquals(UPDATE, audits.get(0).getAction());
     }
 
     @Test
@@ -138,7 +140,7 @@ public class UserProfileRepositoryTest {
         assertEquals("TEST2", retrievedUserProfile.getJurisdictions().get(0).getId());
         assertEquals("TEST3", retrievedUserProfile.getJurisdictions().get(1).getId());
         final List<UserProfileAuditEntity> audits = findUserProfitAudits("user@hmcts.net");
-        assertThat(audits.size(), is(1));
+        assertEquals(1, audits.size());
         assertAuditEntry(audits.get(0),
                          UPDATE,
                          ACTIONED_BY_EMAIL,
@@ -162,6 +164,37 @@ public class UserProfileRepositoryTest {
                          "TEST",
                          DEFAULT_CASE_TYPE,
                          DEFAULT_STATE);
+    }
+
+    @Test
+    public void findAllUserProfilesByIds() {
+        assertEquals(0, countUserProfitAudits());
+        final List<UserProfile> userProfiles = classUnderTest.findAllByIds(
+            asList("user@hmcts.net", "user3@hmcts.net"), ACTIONED_BY_EMAIL);
+
+        assertFalse(userProfiles.isEmpty());
+        assertEquals("user@hmcts.net", userProfiles.get(0).getId());
+        assertEquals("TEST", userProfiles.get(0).getWorkBasketDefaultJurisdiction());
+        assertEquals(1, userProfiles.get(0).getJurisdictions().size());
+
+        assertEquals("user3@hmcts.net", userProfiles.get(1).getId());
+        assertEquals("TEST4", userProfiles.get(1).getWorkBasketDefaultJurisdiction());
+        assertNull(userProfiles.get(1).getJurisdictions());
+
+        assertAuditEntry("user@hmcts.net", READ, ACTIONED_BY_EMAIL, "TEST", "TEST",
+            DEFAULT_CASE_TYPE, DEFAULT_STATE);
+        assertAuditEntry("user3@hmcts.net", READ, ACTIONED_BY_EMAIL, "TEST4", "TEST4",
+            DEFAULT_CASE_TYPE, DEFAULT_STATE);
+    }
+
+    @Test
+    public void findAllUserProfilesByIdsWithUnknownUserEmailId() {
+        assertEquals(0, countUserProfitAudits());
+        final List<UserProfile> userProfiles = classUnderTest.findAllByIds(
+            singletonList("user123@hmcts.net"), ACTIONED_BY_EMAIL);
+
+        assertTrue(userProfiles.isEmpty());
+        assertEquals(0, countUserProfitAudits());
     }
 
     @Test
@@ -265,7 +298,7 @@ public class UserProfileRepositoryTest {
         assertEquals("TEST3", retrievedUserProfile.getJurisdictions().get(1).getId());
 
         final List<UserProfileAuditEntity> audits = findUserProfitAudits("user@hmcts.net");
-        assertThat(audits.size(), is(1));
+        assertEquals(1, audits.size());
         assertAuditEntry(audits.get(0), UPDATE, ACTIONED_BY_EMAIL, "TEST", "TEST", DEFAULT_CASE_TYPE, DEFAULT_STATE);
     }
 
@@ -285,7 +318,7 @@ public class UserProfileRepositoryTest {
         assertEquals("TEST2", retrievedUserProfile.getJurisdictions().get(0).getId());
 
         final List<UserProfileAuditEntity> audits = findUserProfitAudits("user@hmcts.net");
-        assertThat(audits.size(), is(0));
+        assertTrue(audits.isEmpty());
     }
 
     @Test
@@ -311,7 +344,7 @@ public class UserProfileRepositoryTest {
         assertEquals(1, retrievedUserProfile.getJurisdictions().size());
         assertEquals("TEST6", retrievedUserProfile.getJurisdictions().get(0).getId());
         final List<UserProfileAuditEntity> audits = findUserProfitAudits(userProfileWithMultipleJurisdictions.getId());
-        assertThat(audits.size(), is(1));
+        assertEquals(1, audits.size());
         assertAuditEntry(audits.get(0), DELETE, ACTIONED_BY_EMAIL, "TEST", "TEST", DEFAULT_CASE_TYPE, DEFAULT_STATE);
     }
 
@@ -327,7 +360,7 @@ public class UserProfileRepositoryTest {
         assertNull(retrievedUserProfile.getJurisdictions());
         assertNull(retrievedUserProfile.getWorkBasketDefaultJurisdiction());
         final List<UserProfileAuditEntity> audits = findUserProfitAudits(userProfile.getId());
-        assertThat(audits.size(), is(1));
+        assertEquals(1, audits.size());
         assertAuditEntry(audits.get(0), DELETE, ACTIONED_BY_EMAIL, "TEST", "TEST", DEFAULT_CASE_TYPE, DEFAULT_STATE);
     }
 
@@ -416,11 +449,11 @@ public class UserProfileRepositoryTest {
                                   final String defaultJurisdiction,
                                   final String defaultCaseType,
                                   final String defaultState) {
-        assertThat(auditObject.getAction(), is(action));
-        assertThat(auditObject.getActionedBy(), is(actionedBy));
-        assertThat(auditObject.getJurisdictionId(), is(jurisdictionId));
-        assertThat(auditObject.getWorkBasketDefaultJurisdiction(), is(defaultJurisdiction));
-        assertThat(auditObject.getWorkBasketDefaultCaseType(), is(defaultCaseType));
-        assertThat(auditObject.getWorkBasketDefaultState(), is(defaultState));
+        assertEquals(action, auditObject.getAction());
+        assertEquals(actionedBy, auditObject.getActionedBy());
+        assertEquals(jurisdictionId, auditObject.getJurisdictionId());
+        assertEquals(defaultJurisdiction, auditObject.getWorkBasketDefaultJurisdiction());
+        assertEquals(defaultCaseType, auditObject.getWorkBasketDefaultCaseType());
+        assertEquals(defaultState, auditObject.getWorkBasketDefaultState());
     }
 }
