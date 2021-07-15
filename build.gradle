@@ -164,6 +164,7 @@ dependencies {
 
     testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.0.0'
     testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '8.2.0'
+    testCompile 'com.github.hmcts:fortify-client:1.2.0:all'
     testCompile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0'
 }
 // end::dependencies[]
@@ -327,6 +328,13 @@ sourceSets {
         }
     }
 }
+
+task fortifyScan(type: JavaExec)  {
+    main = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
+    classpath += sourceSets.test.runtimeClasspath
+    jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
+}
+
 
 task highLevelDataSetup(type: JavaExec) {
     dependsOn aatClasses
