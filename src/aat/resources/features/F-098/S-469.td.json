@@ -1,0 +1,39 @@
+{
+  "_guid_": "S-469",
+  "_extends_": "F-097_Test_Data_Base",
+  "title": "should fetch user profiles",
+
+  "operationName": "Get User Profiles by Unknown Email Id",
+
+  "method": "GET",
+  "uri": "/user-profile/users",
+
+  "users": {
+    "invokingUser": {
+      "username": "[[$CCD_CASEWORKER_AUTOTEST_EMAIL]]",
+      "password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
+    }
+  },
+
+  "specs": [
+    "has the 200 OK code"
+  ],
+
+  "request": {
+    "headers": {
+      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
+      "Content-Type": "application/json",
+      "email-ids-users-to-find": "unknown@hmcts.net"
+    }
+  },
+
+  "expectedResponse": {
+    "_extends_": "User_Profile_Common_200_Response",
+    "headers": {
+      "Content-Encoding": "[[ANY_STRING_NULLABLE]]"
+    },
+    "body": {
+      "user_profiles": []
+    }
+  }
+}
