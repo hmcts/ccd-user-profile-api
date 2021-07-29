@@ -49,7 +49,7 @@ public class UserProfileRepository {
         AuditAction auditAction;
         Map<String, JurisdictionEntity> existingJurisdictions = existingJurisdictions(userProfile);
 
-        UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
+        UserProfileEntity userProfileEntity = em.find(UserProfileEntity.class, userProfile.getId());
         if (userProfileEntity == null) {
             auditAction = CREATE;
             userProfileEntity = UserProfileMapper.modelToEntity(userProfile, existingJurisdictions);
@@ -97,7 +97,7 @@ public class UserProfileRepository {
      */
     public UserProfile updateUserProfile(final UserProfile userProfile, final String actionedBy) {
 
-        final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
+        final UserProfileEntity userProfileEntity = em.find(UserProfileEntity.class, userProfile.getId());
         if (null == userProfileEntity) {
             throw new BadRequestException(USER_DEOS_NOT_EXIST);
         }
@@ -138,21 +138,17 @@ public class UserProfileRepository {
      * @return UserProfile
      */
     public UserProfile findById(String id, final String actionedBy) {
-        return UserProfileMapper.entityToModel(findEntityById(id, actionedBy, true));
-    }
-
-    private UserProfileEntity findEntityById(String id, final String actionedBy, final Boolean toAudit) {
         final UserProfileEntity userProfileEntity = em.find(UserProfileEntity.class, id);
+        final UserProfile userProfile = UserProfileMapper.entityToModel(userProfileEntity);
 
-        // check whether we need to audit
-        if (toAudit && isAuditable(userProfileEntity)) {
-            final UserProfile audit = UserProfileMapper.entityToModel(userProfileEntity);
-            userProfileAuditEntityRepository.createUserProfileAuditEntity(audit,
-                                                                          READ,
-                                                                          actionedBy,
-                                                                          audit.getWorkBasketDefaultJurisdiction());
+        if (isAuditable(userProfileEntity)) {
+            userProfileAuditEntityRepository.createUserProfileAuditEntity(userProfile,
+                READ,
+                actionedBy,
+                userProfile.getWorkBasketDefaultJurisdiction());
         }
-        return userProfileEntity;
+
+        return userProfile;
     }
 
     private boolean isAuditable(final UserProfileEntity entity) {
@@ -226,7 +222,7 @@ public class UserProfileRepository {
      */
     public UserProfile updateUserProfileOnCreate(final UserProfile userProfile, final String actionedBy) {
 
-        final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
+        final UserProfileEntity userProfileEntity = em.find(UserProfileEntity.class, userProfile.getId());
         if (null == userProfileEntity) {
             throw new BadRequestException(USER_DEOS_NOT_EXIST);
         }
@@ -278,7 +274,7 @@ public class UserProfileRepository {
     public UserProfile deleteJurisdictionFromUserProfile(final UserProfile userProfile,
                                                          final Jurisdiction jurisdiction,
                                                          final String actionedBy) {
-        final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
+        final UserProfileEntity userProfileEntity = em.find(UserProfileEntity.class, userProfile.getId());
         if (userProfileEntity == null) {
             throw new BadRequestException(USER_DEOS_NOT_EXIST);
         }
