@@ -1,10 +1,8 @@
 {
-  "_guid_": "S-469",
+  "_guid_": "F-098.base",
   "_extends_": "F-097_Test_Data_Base",
-  "title": "should fetch user profiles",
 
-  "operationName": "Get User Profiles by Unknown Email Id",
-
+  "operationName": "Get User Profiles by Email Id",
   "method": "GET",
   "uri": "/user-profile/users",
 
@@ -15,15 +13,10 @@
     }
   },
 
-  "specs": [
-    "has the 200 OK code"
-  ],
-
   "request": {
     "headers": {
       "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
-      "Content-Type": "application/json",
-      "email-ids-users-to-find": "unknown@hmcts.net"
+      "Content-Type": "application/json"
     }
   },
 
@@ -33,7 +26,6 @@
       "Content-Encoding": "[[ANY_STRING_NULLABLE]]"
     },
     "body": {
-      "user_profiles": []
     }
   }
 }
