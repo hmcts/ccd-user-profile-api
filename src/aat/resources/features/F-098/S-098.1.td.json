@@ -1,0 +1,37 @@
+{
+  "_guid_": "S-098.1",
+  "_extends_": "F-098.base",
+  "title": "should fetch a user profile for a given email id in request header",
+
+  "specs": [
+    "contains in the related header the email id of the user whose profile was created above",
+    "contains the user profile queried successfully returned"
+  ],
+
+  "request": {
+    "headers": {
+      "email-ids-users-to-find": "{{CCD_CASEWORKER_AUTOTEST_EMAIL}}"
+    }
+  },
+
+  "expectedResponse": {
+    "body": {
+      "user_profiles": [
+        {
+          "id": "{{CCD_CASEWORKER_AUTOTEST_EMAIL}}",
+          "jurisdictions": [
+            {
+              "id": "BEFTA_JURISDICTION_3"
+            },
+            {
+              "id": "BEFTA_JURISDICTION_2"
+            }
+          ],
+          "work_basket_default_jurisdiction": "BEFTA_JURISDICTION_2",
+          "work_basket_default_case_type": "BEFTA_CASETYPE_2_1",
+          "work_basket_default_state": "TODO"
+        }
+      ]
+    }
+  }
+}
