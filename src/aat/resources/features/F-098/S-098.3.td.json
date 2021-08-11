@@ -17,14 +17,7 @@
   "expectedResponse": {
     "body": {
       "id": "{{CCD_CASEWORKER_AUTOTEST_EMAIL}}",
-      "jurisdictions": [
-        {
-          "id": "BEFTA_JURISDICTION_3"
-        },
-        {
-          "id": "BEFTA_JURISDICTION_2"
-        }
-      ],
+      "jurisdictions": "[[ANY_NULLABLE]]",
       "work_basket_default_jurisdiction": "BEFTA_JURISDICTION_2",
       "work_basket_default_case_type": "BEFTA_CASETYPE_2_1",
       "work_basket_default_state": "TODO"
