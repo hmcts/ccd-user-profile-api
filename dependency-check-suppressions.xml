@@ -11,4 +11,9 @@
 		</notes>
 		<cve>CVE-2018-1258</cve>
 	</suppress>
+
+	<suppress until="2021-08-25">
+		<cve>CVE-2021-28170</cve>
+	</suppress>
+
 </suppressions>
