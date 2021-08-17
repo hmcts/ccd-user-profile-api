@@ -1,0 +1,26 @@
+{
+  "_guid_": "S-098.3",
+  "_extends_": "F-098.base",
+  "title": "should fetch a user profile for a given email id in query parameter",
+
+  "specs": [
+    "contains the user profile queried successfully returned",
+    "contains in the related query parameter the email id of the user whose profile was created above"
+  ],
+
+  "request": {
+    "queryParams": {
+      "uid": "{{CCD_CASEWORKER_AUTOTEST_EMAIL}}"
+    }
+  },
+
+  "expectedResponse": {
+    "body": {
+      "id": "{{CCD_CASEWORKER_AUTOTEST_EMAIL}}",
+      "jurisdictions": "[[ANY_NULLABLE]]",
+      "work_basket_default_jurisdiction": "BEFTA_JURISDICTION_2",
+      "work_basket_default_case_type": "BEFTA_CASETYPE_2_1",
+      "work_basket_default_state": "TODO"
+    }
+  }
+}
