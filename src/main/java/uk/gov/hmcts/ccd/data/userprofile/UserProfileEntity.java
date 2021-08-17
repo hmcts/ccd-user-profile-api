@@ -23,6 +23,8 @@ import javax.persistence.Table;
         query = "SELECT u FROM UserProfileEntity u WHERE :jurisdiction MEMBER OF u.jurisdictions"),
     @NamedQuery(name = "UserProfileEntity.findAll",
         query = "SELECT u FROM UserProfileEntity u"),
+    @NamedQuery(name = "UserProfileEntity.findAllById",
+        query = "SELECT u FROM UserProfileEntity u WHERE u.id IN (:ids)")
 })
 public class UserProfileEntity {
 

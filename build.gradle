@@ -137,6 +137,7 @@ dependencies {
     }
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
     compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
+    compile group: 'com.sun.mail', name: 'mailapi', version: '1.6.1'
 
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
     compile 'net.jcip:jcip-annotations:1.0'
@@ -416,7 +417,7 @@ sonarqube {
     properties {
         property "sonar.projectName", "ccd-user-profile-api"
         property "sonar.projectKey", "ccd-user-profile-api"
-        property "sonar.exclusions", "**/PostgreSQLEnumType.java,**/RestExceptionHandler.java"
+        property "sonar.exclusions", "**/PostgreSQLEnumType.java,**/RestExceptionHandler.java,**/UserProfileOperation.java"
         // RestExceptionHandler excluded temporarily due to issue with Sonar (ticket raised with Platops: DTSPO-2243)
     }
 }

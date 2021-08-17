@@ -14,11 +14,10 @@ import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
+import java.util.Optional;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.ObjectUtils.allNotNull;
@@ -31,7 +30,7 @@ import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.UPDATE;
 public class UserProfileRepository {
 
     public static final String NOT_APPLICABLE = "N/A";
-    private static final String USER_DEOS_NOT_EXIST = "User does not exist";
+    private static final String USER_DOES_NOT_EXIST = "User does not exist";
     private final JurisdictionRepository jurisdictionRepository;
     private final UserProfileAuditEntityRepository userProfileAuditEntityRepository;
 
@@ -99,7 +98,7 @@ public class UserProfileRepository {
 
         final UserProfileEntity userProfileEntity = em.find(UserProfileEntity.class, userProfile.getId());
         if (null == userProfileEntity) {
-            throw new BadRequestException(USER_DEOS_NOT_EXIST);
+            throw new BadRequestException(USER_DOES_NOT_EXIST);
         }
 
         final boolean auditable = isAuditable(userProfileEntity);
@@ -149,6 +148,45 @@ public class UserProfileRepository {
         }
 
         return userProfile;
+    }
+
+    public List<UserProfile> findAllByIds(List<String> ids, final String actionedBy) {
+        TypedQuery<UserProfileEntity> query = em.createNamedQuery(
+            "UserProfileEntity.findAllById", UserProfileEntity.class);
+        query.setParameter("ids", ids);
+
+        List<UserProfile> userProfiles = Optional.of(query.getResultList().stream()
+            .map(UserProfileMapper::entityToModel)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList())).orElse(new ArrayList<>());
+
+        userProfiles.stream().filter(this::isAuditable)
+            .forEach(userProfile -> userProfileAuditEntityRepository.createUserProfileAuditEntity(userProfile,
+                READ,
+                actionedBy,
+                userProfile.getWorkBasketDefaultJurisdiction()));
+
+        return userProfiles;
+    }
+
+    private UserProfileEntity findEntityById(String id, final String actionedBy, final Boolean toAudit) {
+        final UserProfileEntity userProfileEntity = em.find(UserProfileEntity.class, id);
+
+        // check whether we need to audit
+        if (toAudit && isAuditable(userProfileEntity)) {
+            final UserProfile audit = UserProfileMapper.entityToModel(userProfileEntity);
+            userProfileAuditEntityRepository.createUserProfileAuditEntity(audit,
+                                                                          READ,
+                                                                          actionedBy,
+                                                                          audit.getWorkBasketDefaultJurisdiction());
+        }
+        return userProfileEntity;
+    }
+
+    private boolean isAuditable(final UserProfile userProfile) {
+        return allNotNull(userProfile) && allNotNull(userProfile.getWorkBasketDefaultJurisdiction(),
+            userProfile.getWorkBasketDefaultCaseType(),
+            userProfile.getWorkBasketDefaultState());
     }
 
     private boolean isAuditable(final UserProfileEntity entity) {
@@ -224,7 +262,7 @@ public class UserProfileRepository {
 
         final UserProfileEntity userProfileEntity = em.find(UserProfileEntity.class, userProfile.getId());
         if (null == userProfileEntity) {
-            throw new BadRequestException(USER_DEOS_NOT_EXIST);
+            throw new BadRequestException(USER_DOES_NOT_EXIST);
         }
 
         final UserProfile audit = UserProfileMapper.entityToModel(userProfileEntity);
@@ -276,7 +314,7 @@ public class UserProfileRepository {
                                                          final String actionedBy) {
         final UserProfileEntity userProfileEntity = em.find(UserProfileEntity.class, userProfile.getId());
         if (userProfileEntity == null) {
-            throw new BadRequestException(USER_DEOS_NOT_EXIST);
+            throw new BadRequestException(USER_DOES_NOT_EXIST);
         }
 
         final String currentJurisdiction = userProfileEntity.getWorkBasketDefaultJurisdiction();
