@@ -14,7 +14,10 @@ import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.Optional;
 import java.util.ArrayList;
@@ -167,20 +170,6 @@ public class UserProfileRepository {
                 userProfile.getWorkBasketDefaultJurisdiction()));
 
         return userProfiles;
-    }
-
-    private UserProfileEntity findEntityById(String id, final String actionedBy, final Boolean toAudit) {
-        final UserProfileEntity userProfileEntity = em.find(UserProfileEntity.class, id);
-
-        // check whether we need to audit
-        if (toAudit && isAuditable(userProfileEntity)) {
-            final UserProfile audit = UserProfileMapper.entityToModel(userProfileEntity);
-            userProfileAuditEntityRepository.createUserProfileAuditEntity(audit,
-                                                                          READ,
-                                                                          actionedBy,
-                                                                          audit.getWorkBasketDefaultJurisdiction());
-        }
-        return userProfileEntity;
     }
 
     private boolean isAuditable(final UserProfile userProfile) {
