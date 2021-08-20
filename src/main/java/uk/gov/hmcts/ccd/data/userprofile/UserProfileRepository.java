@@ -14,13 +14,13 @@ import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
 import java.util.Optional;
 import java.util.ArrayList;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.ObjectUtils.allNotNull;
@@ -51,7 +51,7 @@ public class UserProfileRepository {
         AuditAction auditAction;
         Map<String, JurisdictionEntity> existingJurisdictions = existingJurisdictions(userProfile);
 
-        UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
+        UserProfileEntity userProfileEntity = em.find(UserProfileEntity.class, userProfile.getId());
         if (userProfileEntity == null) {
             auditAction = CREATE;
             userProfileEntity = UserProfileMapper.modelToEntity(userProfile, existingJurisdictions);
@@ -99,7 +99,7 @@ public class UserProfileRepository {
      */
     public UserProfile updateUserProfile(final UserProfile userProfile, final String actionedBy) {
 
-        final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
+        final UserProfileEntity userProfileEntity = em.find(UserProfileEntity.class, userProfile.getId());
         if (null == userProfileEntity) {
             throw new BadRequestException(USER_DOES_NOT_EXIST);
         }
@@ -140,7 +140,17 @@ public class UserProfileRepository {
      * @return UserProfile
      */
     public UserProfile findById(String id, final String actionedBy) {
-        return UserProfileMapper.entityToModel(findEntityById(id, actionedBy, true));
+        final UserProfileEntity userProfileEntity = em.find(UserProfileEntity.class, id);
+        final UserProfile userProfile = UserProfileMapper.entityToModel(userProfileEntity);
+
+        if (isAuditable(userProfileEntity)) {
+            userProfileAuditEntityRepository.createUserProfileAuditEntity(userProfile,
+                READ,
+                actionedBy,
+                userProfile.getWorkBasketDefaultJurisdiction());
+        }
+
+        return userProfile;
     }
 
     public List<UserProfile> findAllByIds(List<String> ids, final String actionedBy) {
@@ -160,20 +170,6 @@ public class UserProfileRepository {
                 userProfile.getWorkBasketDefaultJurisdiction()));
 
         return userProfiles;
-    }
-
-    private UserProfileEntity findEntityById(String id, final String actionedBy, final Boolean toAudit) {
-        final UserProfileEntity userProfileEntity = em.find(UserProfileEntity.class, id);
-
-        // check whether we need to audit
-        if (toAudit && isAuditable(userProfileEntity)) {
-            final UserProfile audit = UserProfileMapper.entityToModel(userProfileEntity);
-            userProfileAuditEntityRepository.createUserProfileAuditEntity(audit,
-                                                                          READ,
-                                                                          actionedBy,
-                                                                          audit.getWorkBasketDefaultJurisdiction());
-        }
-        return userProfileEntity;
     }
 
     private boolean isAuditable(final UserProfile userProfile) {
@@ -253,7 +249,7 @@ public class UserProfileRepository {
      */
     public UserProfile updateUserProfileOnCreate(final UserProfile userProfile, final String actionedBy) {
 
-        final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
+        final UserProfileEntity userProfileEntity = em.find(UserProfileEntity.class, userProfile.getId());
         if (null == userProfileEntity) {
             throw new BadRequestException(USER_DOES_NOT_EXIST);
         }
@@ -305,7 +301,7 @@ public class UserProfileRepository {
     public UserProfile deleteJurisdictionFromUserProfile(final UserProfile userProfile,
                                                          final Jurisdiction jurisdiction,
                                                          final String actionedBy) {
-        final UserProfileEntity userProfileEntity = findEntityById(userProfile.getId(), actionedBy, false);
+        final UserProfileEntity userProfileEntity = em.find(UserProfileEntity.class, userProfile.getId());
         if (userProfileEntity == null) {
             throw new BadRequestException(USER_DOES_NOT_EXIST);
         }
