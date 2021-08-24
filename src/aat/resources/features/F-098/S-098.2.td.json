@@ -1,0 +1,22 @@
+{
+  "_guid_": "S-098.2",
+  "_extends_": "F-098.base",
+  "title": "should fetch no user profiles for some unknown email ids",
+
+  "specs": [
+    "an active profile to play this scenario",
+    "contains an empty user profile list successfully returned"
+  ],
+
+  "request": {
+    "headers": {
+      "email-ids-users-to-find": "unknown_12984@hmcts.net,unknown-12$984@hmcts.net"
+    }
+  },
+
+  "expectedResponse": {
+    "body": {
+      "user_profiles": []
+    }
+  }
+}

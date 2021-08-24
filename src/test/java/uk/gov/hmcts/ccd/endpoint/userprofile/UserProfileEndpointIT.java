@@ -19,6 +19,7 @@ import uk.gov.hmcts.ccd.BaseTest;
 import uk.gov.hmcts.ccd.data.userprofile.UserProfileEntity;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
+import uk.gov.hmcts.ccd.domain.model.UserProfileCollection;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserProfileEndpointIT extends BaseTest {
 
     private static final String CREATE_USER_PROFILE = "/user-profile/users";
+    private static final String FIND_USER_PROFILE = "/user-profile/users";
     private static final String FIND_PROFILE_FOR_USER_1 = "/user-profile/users?uid=USER1";
     private static final String FIND_JURISDICTION_FOR_USER_1 = "/user-profile/users?uid=user1";
     private static final String FIND_JURISDICTION_FOR_USER_2 = "/user-profile/users?uid=user2%2Ba%40example.com";
@@ -58,6 +60,11 @@ public class UserProfileEndpointIT extends BaseTest {
     private static final String JURISDICTION_ID_1 = "TEST1";
     private static final String JURISDICTION_ID_2 = "TEST2";
     private static final String JURISDICTION_ID_3 = "TEST3";
+
+    private static final String EMAIL_ID_HEADER_NAME = "email-ids-users-to-find";
+    private static final String UNKNOWN_EMAIL = "caseworker@hmcts.net";
+    private static final String CASE_WORKER_1_EMAIL = "caseworker1@hmcts.net";
+    private static final String CASE_WORKER_2_EMAIL = "caseworker2@hmcts.net";
 
     private static final String GET_USER_PROFILE_QUERY = "SELECT * FROM user_profile where id = ?";
     private static final String COUNT_JURISDICTION_QUERY = "SELECT count(1) FROM jurisdiction where id = ?";
@@ -372,6 +379,36 @@ public class UserProfileEndpointIT extends BaseTest {
     }
 
     @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+        scripts = {"classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql"})
+    public void getUserProfiles() throws Exception {
+        final MvcResult mvcResult = mockMvc.perform(get(FIND_USER_PROFILE)
+            .header(EMAIL_ID_HEADER_NAME, CASE_WORKER_1_EMAIL + "," + UNKNOWN_EMAIL + "," + CASE_WORKER_2_EMAIL))
+            .andReturn();
+
+        assertEquals("Unexpected response status", 200, mvcResult.getResponse().getStatus());
+
+        final UserProfileCollection userProfileCollection = mapper.readValue(
+            mvcResult.getResponse().getContentAsString(), UserProfileCollection.class);
+
+        final List<UserProfile> userProfiles = userProfileCollection.getUserProfiles();
+        assertEquals(2, userProfiles.size());
+
+        assertEquals(CASE_WORKER_1_EMAIL, userProfiles.get(0).getId());
+        assertEquals("TEST1", userProfiles.get(0).getWorkBasketDefaultJurisdiction());
+        assertEquals("state1", userProfiles.get(0).getWorkBasketDefaultState());
+        assertEquals("case1", userProfiles.get(0).getWorkBasketDefaultCaseType());
+
+        assertEquals(CASE_WORKER_2_EMAIL, userProfiles.get(1).getId());
+        assertEquals("TEST2", userProfiles.get(1).getWorkBasketDefaultJurisdiction());
+        assertEquals("state2", userProfiles.get(1).getWorkBasketDefaultState());
+        assertEquals("case2", userProfiles.get(1).getWorkBasketDefaultCaseType());
+
+        final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
+        assertEquals("Unexpected number of audit roles", 2, auditRows);
+    }
+
+    @Test
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, // checkstyle line break
         scripts = {"classpath:sql/init_db.sql", "classpath:sql/create_user_profile.sql"})
     public void noJurisdictionsForUserProfile() throws Exception {
@@ -407,6 +444,34 @@ public class UserProfileEndpointIT extends BaseTest {
         assertEquals("Unexpected response status", 404, mvcResult.getResponse().getStatus());
         assertEquals("Unexpected response message", "Cannot find user profile",
 
+            mvcResult.getResponse().getContentAsString());
+
+        final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
+        assertEquals("Unexpected number of audit roles", 0, auditRows);
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:sql/init_db.sql" })
+    public void getProfilesForNonExistentUser() throws Exception {
+        final MvcResult mvcResult = mockMvc.perform(get(FIND_USER_PROFILE)
+            .header(EMAIL_ID_HEADER_NAME, UNKNOWN_EMAIL)).andReturn();
+
+        assertEquals("Unexpected response status", 200, mvcResult.getResponse().getStatus());
+        assertEquals("Unexpected response message", "{\"user_profiles\":[]}",
+            mvcResult.getResponse().getContentAsString());
+
+        final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
+        assertEquals("Unexpected number of audit roles", 0, auditRows);
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = { "classpath:sql/init_db.sql" })
+    public void getProfilesForInvalidUser() throws Exception {
+        final MvcResult mvcResult = mockMvc.perform(get(FIND_USER_PROFILE)
+            .header(EMAIL_ID_HEADER_NAME, USER_ID_1)).andReturn();
+
+        assertEquals("Unexpected response status", 400, mvcResult.getResponse().getStatus());
+        assertEquals("Unexpected response message", "Email Id(s) not valid",
             mvcResult.getResponse().getContentAsString());
 
         final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
@@ -600,7 +665,7 @@ public class UserProfileEndpointIT extends BaseTest {
             Arrays.asList(mapper.readValue(mvcResult.getResponse().getContentAsString(), UserProfile[].class));
 
         // Then a list with four User Profiles is returned
-        assertEquals("Unexpected number of User Profiles", 4, userProfiles.size());
+        assertEquals("Unexpected number of User Profiles", 6, userProfiles.size());
 
         final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");
         assertEquals("Unexpected number of audit roles", 0, auditRows);
