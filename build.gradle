@@ -143,16 +143,19 @@ dependencies {
     compile 'net.jcip:jcip-annotations:1.0'
 
     // Force to use the latest org.springframework.security
-    compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.4.5'
-    compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.4.5'
-    compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.4.5'
-    compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.4.5'
+    compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.4.7'
+    compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.4.7'
+    compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.4.7'
+    compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.4.7'
 
 
     compile 'uk.gov.hmcts.reform:properties-volume-spring-boot-starter:0.0.4'
 
     compile "com.fasterxml.jackson.core:jackson-databind:2.11.0.rc1"
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.11.0.rc1'
+
+    // CVE-2021-28170
+    compile "org.glassfish:jakarta.el:4.0.1"
 
     aatCompile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0'
     testCompile "org.junit.jupiter:junit-jupiter-api"
