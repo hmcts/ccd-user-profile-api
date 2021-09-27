@@ -12,4 +12,9 @@
 		<cve>CVE-2018-1258</cve>
 	</suppress>
 
+	<!-- Temporary suppression -->
+	<suppress until="2021-09-25">
+		<cve>CVE-2018-1258</cve>
+	</suppress>
+
 </suppressions>
