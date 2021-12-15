@@ -110,7 +110,7 @@ ext {
 ext['junit-jupiter.version'] = '5.7.0'
 ext['junit-vintage.version'] = '5.7.0'
 ext['spring-framework.version'] = '5.3.12'
-ext['log4j2.version'] = '2.15.0'
+ext['log4j2.version'] = '2.16.0'
 
 dependencies {
     compile('org.projectlombok:lombok:1.18.6')
