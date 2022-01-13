@@ -9,6 +9,7 @@ import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -25,6 +26,7 @@ public class DeleteUserProfileJurisdictionOperation {
         this.userProfileRepository = userProfileRepository;
     }
 
+    @Transactional
     public UserProfile deleteAssociation(final String userId, final String jurisdictionId, final String actionedBy) {
         final UserProfile userProfile = Optional.ofNullable(userProfileRepository.findById(userId, actionedBy))
             .orElseThrow(() -> new BadRequestException("User does not exist"));

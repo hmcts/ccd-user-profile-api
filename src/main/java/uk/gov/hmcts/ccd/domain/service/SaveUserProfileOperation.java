@@ -9,6 +9,7 @@ import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionRepository;
 import uk.gov.hmcts.ccd.data.userprofile.UserProfileRepository;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 
+import javax.transaction.Transactional;
 import java.util.Locale;
 
 @Service
@@ -28,6 +29,7 @@ public class SaveUserProfileOperation {
         this.createUserProfileOperation = createUserProfileOperation;
     }
 
+    @Transactional
     public UserProfile saveUserProfile(final UserProfile userProfile, final String actionedBy) {
         final JurisdictionEntity existingJurisdiction = jurisdictionRepository.findEntityById(
             userProfile.getWorkBasketDefaultJurisdiction());

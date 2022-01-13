@@ -7,6 +7,8 @@ import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
 
+import javax.transaction.Transactional;
+
 @Service
 public class CreateUserProfileOperation {
     private final UserProfileRepository userProfileRepository;
@@ -16,6 +18,7 @@ public class CreateUserProfileOperation {
         this.userProfileRepository = userProfileRepository;
     }
 
+    @Transactional
     public UserProfile execute(UserProfile userProfile, String actionedBy) {
         if (null == userProfile.getId()) {
             throw new BadRequestException("A User Profile must have an Id");
