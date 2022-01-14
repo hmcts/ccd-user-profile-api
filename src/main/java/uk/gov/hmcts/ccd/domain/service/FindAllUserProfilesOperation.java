@@ -6,6 +6,7 @@ import uk.gov.hmcts.ccd.data.userprofile.UserProfileRepository;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 import uk.gov.hmcts.ccd.domain.model.UserProfileLight;
 
+import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -20,22 +21,26 @@ public class FindAllUserProfilesOperation {
         this.userProfileRepository = userProfileRepository;
     }
 
+    @Transactional
     public List<UserProfile> getAll(String jurisdictionId, String actionedBy) {
         final Optional<List<UserProfile>> userProfiles =
             Optional.ofNullable(userProfileRepository.findAll(jurisdictionId, actionedBy));
         return userProfiles.orElse(Collections.emptyList());
     }
 
+    @Transactional
     public List<UserProfile> getAll() {
         final Optional<List<UserProfile>> userProfiles = Optional.ofNullable(userProfileRepository.findAll());
         return userProfiles.orElse(Collections.emptyList());
     }
 
+    @Transactional
     public List<UserProfileLight> getAllLight() {
         final Optional<List<UserProfileLight>> userProfiles = Optional.ofNullable(userProfileRepository.findAllLight());
         return userProfiles.orElse(Collections.emptyList());
     }
 
+    @Transactional
     public List<UserProfileLight> getAllLight(String jurisdictionId, String actionedBy) {
         final Optional<List<UserProfileLight>> userProfiles =
             Optional.ofNullable(userProfileRepository.findAllLight(jurisdictionId, actionedBy));
