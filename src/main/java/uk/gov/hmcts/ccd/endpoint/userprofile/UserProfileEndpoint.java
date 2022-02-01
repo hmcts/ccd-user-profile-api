@@ -21,7 +21,6 @@ import uk.gov.hmcts.ccd.domain.service.UserProfileOperation;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
-import javax.transaction.Transactional;
 
 @RestController
 @RequestMapping("/user-profile")
@@ -42,7 +41,6 @@ public class UserProfileEndpoint {
         this.appInsights = appInsights;
     }
 
-    @Transactional
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation("Create a new User Profile")
@@ -56,7 +54,6 @@ public class UserProfileEndpoint {
         return createUserProfileOperation.execute(userProfile, actionedBy);
     }
 
-    @Transactional
     @RequestMapping(value = "/users", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Update a new User Profile",
@@ -70,7 +67,6 @@ public class UserProfileEndpoint {
         userProfileOperation.execute(userProfiles, actionedBy);
     }
 
-    @Transactional
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Get a user profile")

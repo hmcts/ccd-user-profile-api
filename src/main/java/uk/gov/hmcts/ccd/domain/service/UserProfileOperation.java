@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 @Service
 public class UserProfileOperation {
@@ -34,6 +35,7 @@ public class UserProfileOperation {
         this.createUserProfileOperation = createUserProfileOperation;
     }
 
+    @Transactional
     public void execute(final List<UserProfile> userProfiles, final String actionedBy) {
         for (UserProfile userProfile : userProfiles) {
 

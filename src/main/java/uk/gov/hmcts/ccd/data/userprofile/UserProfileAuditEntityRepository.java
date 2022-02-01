@@ -5,7 +5,6 @@ import uk.gov.hmcts.ccd.domain.model.UserProfile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 
 @Repository
 public class UserProfileAuditEntityRepository {
@@ -13,7 +12,6 @@ public class UserProfileAuditEntityRepository {
     @PersistenceContext
     private EntityManager em;
 
-    @Transactional
     public void createUserProfileAuditEntity(UserProfile userProfile,
                                              AuditAction action,
                                              String actionedBy,

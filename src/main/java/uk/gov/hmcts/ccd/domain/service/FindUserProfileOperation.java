@@ -15,6 +15,7 @@ import uk.gov.hmcts.ccd.endpoint.exception.NotFoundException;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.transaction.Transactional;
 
 @Service
 public class FindUserProfileOperation {
@@ -29,6 +30,7 @@ public class FindUserProfileOperation {
         this.applicationParams = applicationParams;
     }
 
+    @Transactional
     public UserProfile execute(String userProfileId, String actionedBy) {
         String decodedUid = UriUtils.decode(userProfileId, "UTF-8");
         final UserProfile userProfile = userProfileRepository.findById(decodedUid, actionedBy);
@@ -36,6 +38,7 @@ public class FindUserProfileOperation {
             .orElseThrow(() -> new NotFoundException("Cannot find user profile"));
     }
 
+    @Transactional
     public UserProfileCollection execute(List<String> emailIds, String actionedBy) {
         validateRequest(emailIds);
         return new UserProfileCollection(userProfileRepository.findAllByIds(emailIds, actionedBy));
