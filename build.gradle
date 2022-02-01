@@ -57,7 +57,7 @@ dependencyCheck {
  // tag::repositories[]
 repositories {
     mavenLocal()
-    jcenter()
+    mavenCentral()
     maven {
         url  "https://jitpack.io"
     }
@@ -95,7 +95,7 @@ sourceCompatibility = 11
 targetCompatibility = 11
 
 ext {
-    reformLogging= '5.1.1-BETA'
+    reformLogging= '5.1.9'
     springCloudVersion = '2020.0.1'
     limits = [
             'instruction': 86,
@@ -115,9 +115,9 @@ ext['log4j2.version'] = '2.17.0'
 dependencies {
     compile('org.projectlombok:lombok:1.18.6')
     annotationProcessor 'org.projectlombok:lombok:1.18.6'
-    compile group: 'uk.gov.hmcts.reform', name: 'logging', version: reformLogging
-    compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: reformLogging
-    testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    compile group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
+    compile group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLogging
+//    testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile(group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc') {
         exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
@@ -132,10 +132,11 @@ dependencies {
     compile group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
     compile group: 'javax.inject', name: 'javax.inject', version: '1'
-    compile (group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: '2.1.3') {
+    compile (group: 'com.github.hmcts', name: 'auth-checker-lib', version: '2.1.5') {
         // TODO remove when auth-checker-lib upgrades its dependency to spring boot 2.0.x
-        exclude group: 'uk.gov.hmcts.reform', module: 'java-logging-spring'
+//        exclude group: 'uk.gov.hmcts.reform', module: 'java-logging-spring'
     }
+
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
     compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
     compile group: 'com.sun.mail', name: 'mailapi', version: '1.6.1'
@@ -149,7 +150,6 @@ dependencies {
     compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.4.7'
     compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.4.7'
 
-
     compile 'uk.gov.hmcts.reform:properties-volume-spring-boot-starter:0.0.4'
 
     compile "com.fasterxml.jackson.core:jackson-databind:2.11.0.rc1"
@@ -158,7 +158,7 @@ dependencies {
     // CVE-2021-28170
     compile "org.glassfish:jakarta.el:4.0.1"
 
-    aatCompile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '2.0.0'
+    aatCompile group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3'
     testCompile "org.junit.jupiter:junit-jupiter-api"
     testRuntime "org.junit.jupiter:junit-jupiter-engine"
     testRuntime "org.junit.vintage:junit-vintage-engine"
@@ -167,8 +167,8 @@ dependencies {
     testCompile group: 'com.github.tomakehurst', name: 'wiremock-standalone', version: '2.21.0'
     testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '2.1.0.RELEASE'
 
-    testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.0.0'
-    testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '8.2.0'
+    testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.9.1'
+    testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.1'
     testCompile 'com.github.hmcts:fortify-client:1.2.0:all'
     testCompile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0'
 }
@@ -338,6 +338,8 @@ task fortifyScan(type: JavaExec)  {
     main = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
     classpath += sourceSets.test.runtimeClasspath
     jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
+    // Uncomment the line below to prevent the build from failing if the Fortify scan detects issues
+    //ignoreExitValue = true
 }
 
 
