@@ -26,7 +26,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-import javax.transaction.Transactional;
 
 @RestController
 @Slf4j
@@ -50,7 +49,6 @@ class UserProfileController {
         this.appInsights = appInsights;
     }
 
-    @Transactional
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get User Profiles",
@@ -63,7 +61,6 @@ class UserProfileController {
                                                   @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
                                                  final String actionedBy) {
         Instant start = Instant.now();
-
         List<UserProfileLight> allUserProfiles = jurisdictionOptional
             .map(j -> findAllUserProfilesOperation.getAllLight(j, actionedBy))
             .orElseGet(findAllUserProfilesOperation::getAllLight);
@@ -78,7 +75,6 @@ class UserProfileController {
         return allUserProfiles;
     }
 
-    @Transactional
     @RequestMapping(value = "/users", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Update a new User Profile",
@@ -92,7 +88,6 @@ class UserProfileController {
         userProfileOperation.execute(userProfiles, actionedBy);
     }
 
-    @Transactional
     @RequestMapping(value = "/users/save", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Save a User Profile",
@@ -109,7 +104,6 @@ class UserProfileController {
         return saveUserProfileOperation.saveUserProfile(userProfile, actionedBy);
     }
 
-    @Transactional
     @RequestMapping(value = "/users", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete the association to a Jurisdiction from a User Profile",
