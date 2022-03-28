@@ -148,10 +148,10 @@ dependencies {
     compile 'net.jcip:jcip-annotations:1.0'
 
     // Force to use the latest org.springframework.security
-    compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.4.7'
-    compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.4.7'
-    compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.4.7'
-    compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.4.7'
+    compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.6.1'
+    compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.6.1'
+    compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.6.1'
+    compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.6.1'
 
     compile 'uk.gov.hmcts.reform:properties-volume-spring-boot-starter:0.0.4'
 
