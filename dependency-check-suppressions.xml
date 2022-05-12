@@ -10,9 +10,6 @@
 		<cve>CVE-2018-1258</cve>
 	</suppress>
   <!-- Suppress until fixed -->
-  <suppress until="2022-05-25">
-    <cve>CVE-2022-21724</cve>
-  </suppress>
 
 	<suppress until="2022-05-25">
 		<notes><![CDATA[
