@@ -58,12 +58,6 @@
 		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-web@.*$</packageUrl>
 		<cve>CVE-2018-1258</cve>
 	</suppress>
-	<suppress until="2022-06-25">
-		<notes><![CDATA[
-   file name: spring-core-5.3.18.jar
-   ]]></notes>
-		<cve>CVE-2016-1000027</cve>
-	</suppress>
 
 	<suppress until="2022-06-25">
 		<notes><![CDATA[
@@ -96,5 +90,8 @@
 		<cve>CVE-2022-22971</cve>
 	</suppress>
 
-
+	<suppress until="2022-06-25">
+		<notes>False-positive. See CCD-3257</notes>
+		<cve>CVE-2016-1000027</cve>
+	</suppress>
 </suppressions>
