@@ -13,14 +13,6 @@
 
 	<suppress until="2022-06-25">
 		<notes><![CDATA[
-   file name: jackson-databind-2.11.0.rc1.jar
-   ]]></notes>
-		<packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson\-databind@.*$</packageUrl>
-		<cve>CVE-2020-36518</cve>
-	</suppress>
-
-	<suppress until="2022-06-25">
-		<notes><![CDATA[
    file name: postgresql-42.2.16.jar
    ]]></notes>
 		<packageUrl regex="true">^pkg:maven/org\.postgresql/postgresql@.*$</packageUrl>
@@ -58,7 +50,7 @@
 		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-web@.*$</packageUrl>
 		<cve>CVE-2018-1258</cve>
 	</suppress>
-  
+
 	<suppress until="2022-06-25">
 		<notes>False-positive. See CCD-3257</notes>
 		<cve>CVE-2016-1000027</cve>
