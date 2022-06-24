@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
 
-	<!-- THIS WILL BE FIXED IN THE USER PROFILE SPRING CVEs TICKET -->
+	<!--Please add all the false positives under the below section-->
 	<suppress>
-		<notes>We do not use: Spring Framework 5.0.5.RELEASE + Spring Security
-			(any version), see https://pivotal.io/security/cve-2018-1258
-			False positive confirmed.
+		<notes>False Positives
+			CVE-2018-1258 https://tools.hmcts.net/jira/browse/CCD-496
+			CVE-2016-1000027 https://tools.hmcts.net/jira/browse/CCD-3257
 		</notes>
 		<cve>CVE-2018-1258</cve>
-	</suppress>
-
-	<suppress>
-		<notes>False-positive. See CCD-3257</notes>
 		<cve>CVE-2016-1000027</cve>
 	</suppress>
+	<!--End of false positives section -->
+
 
 </suppressions>
