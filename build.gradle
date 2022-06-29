@@ -370,8 +370,10 @@ task smoke() {
     javaexec {
       main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
       classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
-      args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', '@Smoke', '--glue',
-              'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
+      args = ['--plugin', "json:${rootDir}/target/cucumber.json",
+              '--plugin', "junit:${buildDir}/test-results/smoke/cucumber.xml",
+              '--tags', '@Smoke',
+              '--glue', 'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
       jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
     }
   }
@@ -402,8 +404,10 @@ task functional() {
     javaexec {
       main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
       classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
-      args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', 'not @Ignore', '--glue',
-              'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
+      args = ['--plugin', "json:${rootDir}/target/cucumber.json",
+              '--plugin', "junit:${buildDir}/test-results/smoke/cucumber.xml",
+              '--tags', '@Smoke',
+              '--glue', 'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
       jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
     }
   }
