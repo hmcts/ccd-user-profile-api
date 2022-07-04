@@ -109,7 +109,7 @@ ext {
 
 ext['junit-jupiter.version'] = '5.7.0'
 ext['junit-vintage.version'] = '5.7.0'
-ext['spring-framework.version'] = '5.3.19'
+ext['spring-framework.version'] = '5.3.20'
 ext['log4j2.version'] = '2.17.0'
 ext['jackson.version'] = '2.13.2'
 
@@ -184,7 +184,7 @@ dependencyManagement {
     }
     dependencies {
         // CVE-2022-23181
-        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.58') {
+        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.63') {
             entry 'tomcat-embed-core'
             entry 'tomcat-embed-el'
             entry 'tomcat-embed-websocket'
@@ -370,8 +370,10 @@ task smoke() {
     javaexec {
       main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
       classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
-      args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', '@Smoke', '--glue',
-              'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
+      args = ['--plugin', "json:${rootDir}/target/cucumber.json",
+              '--plugin', "junit:${buildDir}/test-results/smoke/cucumber.xml",
+              '--tags', '@Smoke',
+              '--glue', 'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
       jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
     }
   }
@@ -402,8 +404,10 @@ task functional() {
     javaexec {
       main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
       classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
-      args = ['--plugin', "json:${rootDir}/target/cucumber.json", '--tags', 'not @Ignore', '--glue',
-              'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
+      args = ['--plugin', "json:${rootDir}/target/cucumber.json",
+              '--plugin', "junit:${buildDir}/test-results/functional/cucumber.xml",
+              '--tags', 'not @Ignore',
+              '--glue', 'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
       jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
     }
   }
