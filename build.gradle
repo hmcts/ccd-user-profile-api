@@ -171,8 +171,9 @@ dependencies {
     testCompile group: 'com.github.tomakehurst', name: 'wiremock-standalone', version: '2.21.0'
     testCompile group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '2.1.0.RELEASE'
 
-    testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.19.3'
-    testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.2-Categories'
+    testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.19.5-CCD-3694.1'
+    testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.7-CCD-3694'
+
     testCompile 'com.github.hmcts:fortify-client:1.2.0:all'
     testCompile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0'
 }
