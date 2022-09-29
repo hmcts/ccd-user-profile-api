@@ -65,7 +65,6 @@ repositories {
 // end::repositories[]
 
 group 'uk.gov.hmcts.ccd'
-version '1.2.0-SNAPSHOT'
 
 // tag::jar[]
 jar {
