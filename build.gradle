@@ -132,7 +132,7 @@ dependencies {
     implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
     compile "org.flywaydb:flyway-core:6.5.7"
     compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.13.2'
-    compile group: 'org.yaml', name: 'snakeyaml', version: '1.31'
+    compile group: 'org.yaml', name: 'snakeyaml', version: '1.32'
     compile group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.4.1'
     compile group: 'javax.inject', name: 'javax.inject', version: '1'
