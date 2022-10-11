@@ -1,4 +1,5 @@
 #!groovy
+import uk.gov.hmcts.contino.GithubAPI
 properties(
         [[$class: 'GithubProjectProperty', projectUrlStr: 'https://git.reform.hmcts.net/case-management/user-profile-app'],
          pipelineTriggers([[$class: 'GitHubPushTrigger']])]
@@ -70,6 +71,11 @@ withPipeline(type, product, component) {
     }
     onPR {
         enableSlackNotifications('#ccd-pr-builds')
+
+        def githubApi = new GithubAPI(this)
+        if (!githubApi.getLabelsbyPattern(env.BRANCH_NAME, "keep-helm")) {
+            enableCleanupOfHelmReleaseOnSuccess()
+        }
     }
 
     // Check if the build should be wired to a preview instance of definition store
