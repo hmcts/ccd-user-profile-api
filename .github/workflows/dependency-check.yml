@@ -1,11 +1,11 @@
 name: Suppressions
 
-on: [ pull_request, workflow_dispatch ]
-#  schedule:
+on:
+  schedule:
     # H allow predefined but random minute see https://en.wikipedia.org/wiki/Cron#Non-standard_characters
-    # every 3rd hour from 10am through 11pm
-#    - cron: "H 10-23/3 * * *"
-#  workflow_dispatch:
+     every 3rd hour from 10am through 11pm
+    - cron: "H 10-23/3 * * *"
+  workflow_dispatch:
 
 jobs:
   build:
