@@ -3,8 +3,8 @@ name: Suppressions
 on:
   schedule:
     # H allow predefined but random minute see https://en.wikipedia.org/wiki/Cron#Non-standard_characters
-     every 3rd hour from 10am through 11pm
-    - cron: "H 10-23/3 * * *"
+    # At 12 midnight and every 3rd hour from 10am through 11pm
+    - cron: "H 0,10-23/3 * * *"
   workflow_dispatch:
 
 jobs:
@@ -42,4 +42,4 @@ jobs:
         with:
           skip_dirty_check: false
           commit_message: "Suppressing CVE - Actions"
-        branch: 'master'
+          branch: 'master'
