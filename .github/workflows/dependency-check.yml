@@ -1,6 +1,6 @@
 name: Suppressions
 
-on: [ pull_request ]
+on: [ push ]
 #  schedule:
     # At 12 midnight and every 3rd hour from 10am through 11pm
 #    - cron: "0 0,10-23/3 * * *"
@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           token: ${{ steps.generate-token.outputs.token }}
-          ref: master # change to master
+          ref: ${{ github.head_ref }} # change to master
       - name: Set up Cache
         uses: actions/cache@v3
         with:
