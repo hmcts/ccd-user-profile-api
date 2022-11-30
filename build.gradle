@@ -20,7 +20,7 @@ plugins {
     id 'net.ltgt.apt' version '0.21'
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.23'
     id "info.solidsoft.pitest" version '1.5.1'
-    id 'uk.gov.hmcts.java' version '0.12.27'
+    id 'uk.gov.hmcts.java' version '0.12.28'
 }
 
 dependencyUpdates.resolutionStrategy = {
@@ -52,6 +52,7 @@ apply plugin: 'se.patrikerdes.use-latest-versions'
 
 mainClassName = 'uk.gov.hmcts.ccd.UserProfileApplication'
 
+apply from: './gradle/suppress.gradle'
 dependencyCheck {
     suppressionFile = 'dependency-check-suppressions.xml'
 }
@@ -67,7 +68,8 @@ repositories {
 // end::repositories[]
 
 def versions = [
-        jackson         : '2.14.0-rc1'
+        jackson         : '2.14.0-rc1',
+        springSecurity  : '5.6.9'
 ]
 
 group 'uk.gov.hmcts.ccd'
@@ -142,10 +144,7 @@ dependencies {
     compile group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
     runtime group: 'org.postgresql', name: 'postgresql', version: '42.4.1'
     compile group: 'javax.inject', name: 'javax.inject', version: '1'
-    compile (group: 'com.github.hmcts', name: 'auth-checker-lib', version: '2.1.5') {
-        // TODO remove when auth-checker-lib upgrades its dependency to spring boot 2.0.x
-//        exclude group: 'uk.gov.hmcts.reform', module: 'java-logging-spring'
-    }
+    compile group: 'com.github.hmcts', name: 'auth-checker-lib', version: '2.1.5'
 
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
     compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
@@ -155,12 +154,12 @@ dependencies {
     compile 'net.jcip:jcip-annotations:1.0'
 
     // Force to use the latest org.springframework.security
-    compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.6.6'
-    compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.6.6'
-    compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.6.6'
-    compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.6.6'
+    compile group: 'org.springframework.security', name: 'spring-security-core', version:versions.springSecurity
+    compile group: 'org.springframework.security', name: 'spring-security-config', version:versions.springSecurity
+    compile group: 'org.springframework.security', name: 'spring-security-web', version:versions.springSecurity
+    compile group: 'org.springframework.security', name: 'spring-security-crypto', version:versions.springSecurity
 
-    compile 'uk.gov.hmcts.reform:properties-volume-spring-boot-starter:0.0.4'
+    compile 'com.github.hmcts:properties-volume-spring-boot-starter:0.0.4'
 
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson
