@@ -140,7 +140,7 @@ dependencies {
     compile "org.flywaydb:flyway-core:6.5.7"
     compile group: 'org.yaml', name: 'snakeyaml', version: '1.32'
     compile group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
-    runtime group: 'org.postgresql', name: 'postgresql', version: '42.4.1'
+    runtime group: 'org.postgresql', name: 'postgresql', version: '42.5.1'
     compile group: 'javax.inject', name: 'javax.inject', version: '1'
     compile group: 'com.github.hmcts', name: 'auth-checker-lib', version: '2.1.5'
 
