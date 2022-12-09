@@ -5,6 +5,7 @@
 		</notes>
     <cve>CVE-2016-1000027</cve>
   </suppress>
+  <suppress>
     <notes>Temporary Suppression
         CVE-2021-37533 refer [Ticket]</notes>
     <cve>CVE-2021-37533</cve>
