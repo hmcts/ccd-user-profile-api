@@ -40,7 +40,7 @@ withNightlyPipeline(type, product, component) {
     enableDbMigration('ccd')
     enableSlackNotifications('#ccd-nightly-builds')
     enableHighLevelDataSetup()
-    after('fortify-scan') {
+    afterAlways('fortify-scan') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
     }
 }
