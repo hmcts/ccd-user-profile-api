@@ -65,7 +65,10 @@
 				},
 			    "readinessState" : {
 			        "status" : "UP"
-			    }
+			    },
+				"refreshScope": {
+					"status": "UP"
+				}
 			},
 			"groups" : [ "liveness", "readiness" ]
 		}
