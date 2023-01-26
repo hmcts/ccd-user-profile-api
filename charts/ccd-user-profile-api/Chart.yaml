@@ -2,11 +2,11 @@ description: CCD User profile
 name: ccd-user-profile-api
 apiVersion: v2
 home: https://github.com/hmcts/ccd-user-profile-api
-version: 1.6.7
+version: 1.6.8
 maintainers:
   - name: HMCTS CCD Dev Team
     email: ccd-devops@HMCTS.NET
 dependencies:
   - name: java
-    version: 4.0.4
+    version: 4.0.11
     repository: 'https://hmctspublic.azurecr.io/helm/v1/repo/'
