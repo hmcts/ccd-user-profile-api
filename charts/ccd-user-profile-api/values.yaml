@@ -6,7 +6,7 @@ java:
     maxReplicas: 8
   environment:
     USER_PROFILE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_definition,ccd_admin,rd_professional_api
-    IDAM_S2S_URL: http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
+    IDAM_S2S_URL: http://rpe-service-auth-provider-{{ .Values.global.environment }}.preview.platform.hmcts.net
     USER_PROFILE_DB_HOST: ccd-user-profile-api-postgres-db-{{ .Values.global.environment }}.postgres.database.azure.com
     USER_PROFILE_DB_PORT: 5432
     USER_PROFILE_DB_NAME: ccd_user_profile
@@ -14,7 +14,7 @@ java:
     LOGBACK_REQUIRE_ALERT_LEVEL: 'false'
     LOGBACK_REQUIRE_ERROR_CODE: 'false'
   image: 'hmctspublic.azurecr.io/ccd/user-profile-api:latest'
-  ingressHost: ccd-user-profile-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
+  ingressHost: ccd-user-profile-api-{{ .Values.global.environment }}.preview.platform.hmcts.net
   keyVaults:
     ccd:
       secrets:
