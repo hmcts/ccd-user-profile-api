@@ -24,4 +24,3 @@ java:
           alias: USER_PROFILE_DB_PASSWORD
         - name: AppInsightsInstrumentationKey
           alias: azure.application-insights.instrumentation-key
-
