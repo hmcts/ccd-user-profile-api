@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.ccd.AppInsights;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 import uk.gov.hmcts.ccd.domain.model.UserProfileLight;
 import uk.gov.hmcts.ccd.domain.service.DeleteUserProfileJurisdictionOperation;
@@ -34,19 +33,16 @@ class UserProfileController {
     private final UserProfileOperation userProfileOperation;
     private final SaveUserProfileOperation saveUserProfileOperation;
     private final DeleteUserProfileJurisdictionOperation deleteUserProfileJurisdictionOperation;
-    private final AppInsights appInsights;
 
     @Autowired
     public UserProfileController(FindAllUserProfilesOperation findAllUserProfilesOperation,
                                  UserProfileOperation userProfileOperation,
                                  SaveUserProfileOperation saveUserProfileOperation,
-                                 DeleteUserProfileJurisdictionOperation deleteUserProfileJurisdictionOperation,
-                                 AppInsights appInsights) {
+                                 DeleteUserProfileJurisdictionOperation deleteUserProfileJurisdictionOperation) {
         this.findAllUserProfilesOperation = findAllUserProfilesOperation;
         this.userProfileOperation = userProfileOperation;
         this.saveUserProfileOperation = saveUserProfileOperation;
         this.deleteUserProfileJurisdictionOperation = deleteUserProfileJurisdictionOperation;
-        this.appInsights = appInsights;
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
@@ -69,8 +65,6 @@ class UserProfileController {
         long betweenInMils = between.toMillis();
         log.info("Found {} entries", allUserProfiles.size());
         log.info("Time to execute the query: {} milliseconds", betweenInMils);
-
-        appInsights.trackRequest(between, true);
 
         return allUserProfiles;
     }

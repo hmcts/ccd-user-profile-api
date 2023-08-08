@@ -6,10 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
-
-import javax.sql.DataSource;
 
 @Configuration
 public class TestConfiguration {
@@ -22,7 +21,6 @@ public class TestConfiguration {
         LOG.info("Starting Postgres on port number {}", port);
         final EmbeddedPostgres pg = EmbeddedPostgres
             .builder()
-            .setPort(port)
             .start();
 
         return pg.getPostgresDatabase();

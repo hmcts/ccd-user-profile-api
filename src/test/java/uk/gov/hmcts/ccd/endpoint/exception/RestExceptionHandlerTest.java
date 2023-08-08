@@ -16,7 +16,6 @@ import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 import uk.gov.hmcts.ccd.domain.service.CreateUserProfileOperation;
 import uk.gov.hmcts.ccd.domain.service.FindUserProfileOperation;
-import uk.gov.hmcts.ccd.AppInsights;
 import uk.gov.hmcts.ccd.domain.service.UserProfileOperation;
 import uk.gov.hmcts.ccd.endpoint.userprofile.UserProfileEndpoint;
 
@@ -29,7 +28,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,8 +53,6 @@ public class RestExceptionHandlerTest {
     private UserProfileOperation userProfileOperation;
     @Mock
     private FindUserProfileOperation findUserProfileOperation;
-    @Mock
-    private AppInsights appInsights;
 
     private RestExceptionHandler classUnderTest;
 
@@ -79,9 +75,9 @@ public class RestExceptionHandlerTest {
         userProfile.setWorkBasketDefaultCaseType("Default-Case-Type");
         userProfile.setWorkBasketDefaultState("Default-state");
 
-        classUnderTest = new RestExceptionHandler(appInsights);
+        classUnderTest = new RestExceptionHandler();
         final UserProfileEndpoint controller = new UserProfileEndpoint(
-            createUserProfileOperation, userProfileOperation, findUserProfileOperation, appInsights);
+            createUserProfileOperation, userProfileOperation, findUserProfileOperation);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
             .setControllerAdvice(classUnderTest)
             .build();
@@ -94,7 +90,6 @@ public class RestExceptionHandlerTest {
 
         ResponseEntity<Object> result = classUnderTest.handleException(exceptionThrown, request);
 
-        verify(appInsights).trackException(exceptionThrown);
         assertEquals(400, result.getStatusCodeValue());
         assertEquals(ERROR_MESSAGE, result.getBody().toString());
     }
@@ -117,7 +112,6 @@ public class RestExceptionHandlerTest {
                 .header("actionedBy", "<UNKNOWN>")
                 .content(mapper.writeValueAsBytes(userProfile)));
 
-        verify(appInsights).trackException(exceptionThrown);
         result.andExpect(status().isBadRequest());
         result.andExpect(content()
             .string(ERROR_MESSAGE));
@@ -130,7 +124,6 @@ public class RestExceptionHandlerTest {
 
         ResponseEntity<Object> result = classUnderTest.handleException(exceptionThrown, request);
 
-        verify(appInsights).trackException(exceptionThrown);
         assertEquals(404, result.getStatusCodeValue());
         assertEquals(ERROR_MESSAGE, result.getBody().toString());
     }
@@ -153,7 +146,6 @@ public class RestExceptionHandlerTest {
                 .header("actionedBy", "<UNKNOWN>")
                 .content(mapper.writeValueAsBytes(userProfile)));
 
-        verify(appInsights).trackException(exceptionThrown);
         result.andExpect(status().isNotFound());
         result.andExpect(content()
             .string(ERROR_MESSAGE));
@@ -166,7 +158,6 @@ public class RestExceptionHandlerTest {
 
         ResponseEntity<Object> result = classUnderTest.handleException(exceptionThrown, request);
 
-        verify(appInsights).trackException(exceptionThrown);
         assertEquals(500, result.getStatusCodeValue());
         assertEquals(ERROR_MESSAGE, result.getBody().toString());
     }
@@ -189,7 +180,6 @@ public class RestExceptionHandlerTest {
                 .header("actionedBy", "<UNKNOWN>")
                 .content(mapper.writeValueAsBytes(userProfile)));
 
-        verify(appInsights).trackException(exceptionThrown);
         result.andExpect(status().isInternalServerError());
         result.andExpect(content()
             .string(ERROR_MESSAGE));
@@ -202,7 +192,6 @@ public class RestExceptionHandlerTest {
 
         ResponseEntity<Object> result = classUnderTest.handleSQLException(exceptionThrown, request);
 
-        verify(appInsights).trackException(exceptionThrown);
         assertEquals(500, result.getStatusCodeValue());
         assertEquals(Collections.singletonMap("errorMessage", SQL_EXCEPTION_MESSAGE), result.getBody());
     }
@@ -225,7 +214,6 @@ public class RestExceptionHandlerTest {
                 .header("actionedBy", "<UNKNOWN>")
                 .content(mapper.writeValueAsBytes(userProfile)));
 
-        verify(appInsights).trackException(exceptionThrown);
         result.andExpect(status().isInternalServerError());
         result.andExpect(content()
             .string(ERROR_RESPONSE_BODY));

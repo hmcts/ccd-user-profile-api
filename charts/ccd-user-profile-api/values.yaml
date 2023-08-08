@@ -22,5 +22,5 @@ java:
           alias: USER_PROFILE_DB_USERNAME
         - name: user-profile-api-POSTGRES-PASS
           alias: USER_PROFILE_DB_PASSWORD
-        - name: AppInsightsInstrumentationKey
-          alias: azure.application-insights.instrumentation-key
+        - name: app-insights-connection-string
+          alias: app-insights-connection-string

@@ -12,13 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.ccd.AppInsights;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 import uk.gov.hmcts.ccd.domain.service.CreateUserProfileOperation;
 import uk.gov.hmcts.ccd.domain.service.FindUserProfileOperation;
 import uk.gov.hmcts.ccd.domain.service.UserProfileOperation;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
@@ -28,17 +26,14 @@ public class UserProfileEndpoint {
     private final CreateUserProfileOperation createUserProfileOperation;
     private final UserProfileOperation userProfileOperation;
     private final FindUserProfileOperation findUserProfileOperation;
-    private final AppInsights appInsights;
 
     @Autowired
     public UserProfileEndpoint(CreateUserProfileOperation createUserProfileOperation,
                                UserProfileOperation userProfileOperation,
-                               FindUserProfileOperation findUserProfileOperation,
-                               AppInsights appInsights) {
+                               FindUserProfileOperation findUserProfileOperation) {
         this.createUserProfileOperation = createUserProfileOperation;
         this.userProfileOperation = userProfileOperation;
         this.findUserProfileOperation = findUserProfileOperation;
-        this.appInsights = appInsights;
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.POST)
@@ -88,9 +83,6 @@ public class UserProfileEndpoint {
         } else {
             responsePayload = findUserProfileOperation.execute(emailIds, actionedBy);
         }
-
-        final Duration between = Duration.between(start, Instant.now());
-        appInsights.trackRequest(between, true);
         return responsePayload;
     }
 }
