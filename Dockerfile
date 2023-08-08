@@ -3,7 +3,7 @@ ARG JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom"
 ARG APP_INSIGHTS_AGENT_VERSION=3.2.6
 ARG PLATFORM=""
 
-FROM hmctspublic.azurecr.io/base/java{PLATFORM}:17-distroless
+FROM hmctspublic.azurecr.io/base/java${PLATFORM}:17-distroless
 USER hmcts
 LABEL maintainer="https://github.com/hmcts/ccd-user-profile-api"
 
