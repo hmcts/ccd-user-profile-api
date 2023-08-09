@@ -67,7 +67,7 @@ jar {
 }
 
 bootJar {
-    archiveBaseName = 'user-profile.jar'
+    archiveBaseName = 'user-profile'
 }
 
 configurations {
