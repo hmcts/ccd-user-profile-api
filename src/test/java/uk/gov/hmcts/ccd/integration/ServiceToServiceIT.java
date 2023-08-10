@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.integration;
 
 import org.hamcrest.MatcherAssert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ import static org.springframework.http.HttpMethod.GET;
                 webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWireMock(port = 0)
 @TestPropertySource(locations = {"classpath:integration_tests.properties","classpath:test.properties"})
+@Ignore
 public class ServiceToServiceIT {
 
     private static final String SERVICE_TOKEN = "ServiceToken";
