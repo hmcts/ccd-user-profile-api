@@ -4,8 +4,8 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @SpringJUnitWebConfig
 @SpringBootTest
 @AutoConfigureMockMvc
-@Ignore
+@Disabled
 public class SwaggerPublisher {
 
     private MockMvc mvc;
