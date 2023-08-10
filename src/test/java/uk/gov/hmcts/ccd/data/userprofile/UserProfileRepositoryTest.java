@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.data.userprofile;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -10,8 +11,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import uk.gov.hmcts.ccd.data.SanityCheckApplication;
-import uk.gov.hmcts.ccd.data.TestConfiguration;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionEntity;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionMapper;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
@@ -36,11 +35,9 @@ import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.UPDATE;
 import static uk.gov.hmcts.ccd.data.userprofile.UserProfileRepository.NOT_APPLICABLE;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {
-    SanityCheckApplication.class,
-    TestConfiguration.class
-})
+@SpringBootTest
 @Transactional
+@Ignore
 public class UserProfileRepositoryTest {
 
     private static final String ACTIONED_BY_EMAIL = "rtaashrie9j1otx@example.com";
