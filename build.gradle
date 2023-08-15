@@ -434,7 +434,6 @@ sonarqube {
     properties {
         property "sonar.projectName", "ccd-user-profile-api"
         property "sonar.projectKey", "ccd-user-profile-api"
-        property "sonar.token", "sqa_69cfa6736be323d39284ff40babefca369d9ce91"
     }
 }
 
