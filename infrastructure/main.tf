@@ -18,19 +18,6 @@ data "azurerm_key_vault" "ccd_shared_key_vault" {
   resource_group_name = "${local.sharedResourceGroup}"
 }
 
-resource "azurerm_key_vault_secret" "AZURE_APPINSGHTS_KEY" {
-  name         = "AppInsightsInstrumentationKey"
-  value        = azurerm_application_insights.appinsights.instrumentation_key
-  key_vault_id = module.key-vault.key_vault_id
-}
-
-resource "azurerm_application_insights" "appinsights" {
-  name                = "${var.product}-${var.env}"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
-  application_type    = "web"
-  tags                = var.common_tags
-}
 
 ////////////////////////////////
 // Populate Vault with DB info
