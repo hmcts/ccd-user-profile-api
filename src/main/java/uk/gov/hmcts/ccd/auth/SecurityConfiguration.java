@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import uk.gov.hmcts.reform.auth.checker.core.RequestAuthorizer;
 import uk.gov.hmcts.reform.auth.checker.core.service.Service;
@@ -29,10 +30,10 @@ public class SecurityConfiguration {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/swagger-resources/**",
+        return web -> web.ignoring().requestMatchers("/swagger-resources/**",
             "/swagger-ui/**",
             "/webjars/**",
-            "/v2/**",
+            "/v3/**",
             "/health",
             "/health/readiness",
             "/health/liveness",
@@ -43,11 +44,11 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .addFilter(filter)
-            .sessionManagement((s) -> s.sessionCreationPolicy(STATELESS))
-            .csrf(csrf -> csrf.disable())
-            .formLogin(formLogin -> formLogin.disable())
-            .logout(logout -> logout.disable())
+            .addFilter(this.filter)
+            .sessionManagement(sm -> sm.sessionCreationPolicy(STATELESS))
+            .csrf(AbstractHttpConfigurer::disable) //NOSONAR only being flagged because of format change
+            .formLogin(AbstractHttpConfigurer::disable)
+            .logout(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
         ;
         return http.build();

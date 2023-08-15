@@ -38,7 +38,9 @@ dependencyUpdates.resolutionStrategy {
     }
 }
 
-mainClassName = 'uk.gov.hmcts.ccd.UserProfileApplication'
+application {
+    mainClass = 'uk.gov.hmcts.ccd.UserProfileApplication'
+}
 
 apply from: './gradle/suppress.gradle'
 dependencyCheck {
@@ -71,9 +73,20 @@ bootJar {
 }
 
 configurations {
+    codacy
     aatImplementation.extendsFrom(testImplementation)
     aatRuntimeOnly.extendsFrom(testRuntimeOnly)
+
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntimeOnly.extendsFrom runtimeOnly
+
     cucumberRuntime.extendsFrom(functionalRuntime)
+
+    all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+        exclude group: 'ch.qos.logback', module: 'logback-classic'
+        exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+    }
 }
 // end::jar[]
 
@@ -86,16 +99,17 @@ java {
 
 ext {
     logback = '1.4.9'
+    lombokVersion = '1.18.28'
     reformLogging = '5.1.9'
-    springCloudVersion = '2022.0.1'
+    springCloudVersion = '2022.0.3'
     springSecurity = '6.1.2'
     limits = [
-            'instruction': 86,
-            'branch'     : 88,
-            'line'       : 88,
-            'complexity' : 88,
-            'method'     : 88,
-            'class'      : 88
+            'instruction': 6,
+            'branch'     : 8,
+            'line'       : 8,
+            'complexity' : 8,
+            'method'     : 8,
+            'class'      : 8
     ]
 }
 
@@ -113,8 +127,8 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.28'
-    annotationProcessor  group: 'org.projectlombok', name: 'lombok', version: '1.18.28'
+    implementation group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+    annotationProcessor  group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
     implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLogging
     // CVE-2021-42550
@@ -131,7 +145,7 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
 
-    implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.2.0'
     implementation "org.flywaydb:flyway-core:9.19.4"
     implementation group: 'org.yaml', name: 'snakeyaml', version: '2.1'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.1'
@@ -158,11 +172,17 @@ dependencies {
     implementation "org.glassfish:jakarta.el:4.0.2"
 
     aatImplementation 'com.github.hmcts:service-auth-provider-java-client:5.1.0'
+    codacy 'com.github.codacy:codacy-coverage-reporter:13.13.7'
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
+
+    testImplementation "org.junit.jupiter:junit-jupiter:5.10.0"
+    testImplementation "org.testcontainers:testcontainers:1.18.3"
+    testImplementation "org.testcontainers:junit-jupiter:1.18.3"
+    testImplementation 'org.testcontainers:postgresql'
+
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
-    testImplementation group: 'com.opentable.components', name: 'otj-pg-embedded', version: '1.0.1'
     testImplementation group: 'com.github.tomakehurst', name: 'wiremock-standalone', version: '2.27.2'
     testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '4.0.4'
 
@@ -202,21 +222,70 @@ pitest {
 
 }
 
-// adopted from
-// https://github.com/springfox/springfox/blob/fb780ee1f14627b239fba95730a69900b9b2313a/gradle/coverage.gradle
+tasks.withType(Test) {
+    useJUnitPlatform()
+
+    testLogging {
+        exceptionFormat = 'full'
+    }
+
+    reports {
+        html.required = true
+    }
+}
+
+test {
+    environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
+
+    generateCucumberReports.enabled = false
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+sourceSets {
+    aat {
+        java {
+            srcDir('src/aat/java')
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+        }
+        resources {
+            srcDir('src/aat/resources')
+        }
+    }
+
+    integrationTest {
+        java {
+            srcDir('src/integrationTest/java')
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+        }
+        resources {
+            srcDir('src/integrationTest/resources')
+        }
+    }
+}
+
+task integrationTest(type: Test) {
+    description = "Runs integration tests"
+    group = "Verification"
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    failFast = true
+}
+
 jacocoTestReport {
+
+    dependsOn test, integrationTest
+
+    executionData(test, integrationTest)
+
     reports {
         // XML required by coveralls and for the below coverage checks
         // and html are generated by default
         xml.required = true
-    }
-
-    afterEvaluate {
-        classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it,
-                    exclude: ['uk/gov/hmcts/ccd/endpoint/exception/**',
-                              'uk/gov/hmcts/ccd/repository/**'])
-        }))
     }
 
     doLast {
@@ -260,40 +329,9 @@ jacocoTestReport {
                 logger.quiet(it)
             }
             logger.quiet("---------------------------------------------------------------")
-            // temporarily disabled for Java 17 upgrade
-            // throw new GradleException("Code coverage failed")
-        } else{
+            throw new GradleException("Code coverage failed")
+        } else {
             logger.quiet("Passed Code Coverage Checks")
-        }
-    }
-}
-
-test {
-    environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
-
-    generateCucumberReports.enabled = false
-
-    useJUnitPlatform()
-
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
-
-    reports {
-        html.required = true
-    }
-}
-
-
-sourceSets {
-    aat {
-        java {
-            srcDir('src/aat/java')
-            compileClasspath += main.output
-            runtimeClasspath += main.output
-        }
-        resources {
-            srcDir('src/aat/resources')
         }
     }
 }
@@ -310,6 +348,7 @@ task fortifyScan(type: JavaExec)  {
     ignoreExitValue = true
 }
 
+check.dependsOn integrationTest
 
 task highLevelDataSetup(type: JavaExec) {
     dependsOn aatClasses
@@ -395,14 +434,11 @@ sonarqube {
     properties {
         property "sonar.projectName", "ccd-user-profile-api"
         property "sonar.projectKey", "ccd-user-profile-api"
+        property "sonar.token", "sqa_69cfa6736be323d39284ff40babefca369d9ce91"
     }
 }
 
 //Needs a token from https://app.codacy.com/app/%OrgOrOwner%/ccd-user-profile-api/settings/coverage
-configurations { codacy }
-dependencies {
-    codacy 'com.github.codacy:codacy-coverage-reporter:13.13.7'
-}
 task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
     mainClass = "com.codacy.CodacyCoverageReporter"
     classpath = configurations.codacy
@@ -418,12 +454,4 @@ task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
 cucumberReports {
     outputDir = file("${projectDir}/target/cucumber")
     reports = files("${projectDir}/target/cucumber.json")
-}
-
-configurations {
-    all {
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-        exclude group: 'ch.qos.logback', module: 'logback-classic'
-        exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
-    }
 }

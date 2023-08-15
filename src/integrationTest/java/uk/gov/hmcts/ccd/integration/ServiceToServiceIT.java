@@ -1,20 +1,14 @@
 package uk.gov.hmcts.ccd.integration;
 
 import org.hamcrest.MatcherAssert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-import uk.gov.hmcts.ccd.UserProfileApplication;
+import uk.gov.hmcts.ccd.BaseTest;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
@@ -32,14 +26,8 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 import static org.springframework.http.HttpMethod.GET;
 
-@ActiveProfiles("test")
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = {UserProfileApplication.class},
-                webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureWireMock(port = 0)
-@TestPropertySource(locations = {"classpath:integration_tests.properties","classpath:test.properties"})
-@Ignore
-public class ServiceToServiceIT {
+@Disabled
+public class ServiceToServiceIT extends BaseTest {
 
     private static final String SERVICE_TOKEN = "ServiceToken";
     private static final String INVALID_SERVICE_TOKEN = "InvalidServiceToken";

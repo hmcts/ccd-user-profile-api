@@ -2,15 +2,11 @@ package uk.gov.hmcts.ccd.data.userprofile;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import uk.gov.hmcts.ccd.BaseTest;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionEntity;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionMapper;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
@@ -24,21 +20,19 @@ import java.util.Map;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.CREATE;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.DELETE;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.READ;
 import static uk.gov.hmcts.ccd.data.userprofile.AuditAction.UPDATE;
 import static uk.gov.hmcts.ccd.data.userprofile.UserProfileRepository.NOT_APPLICABLE;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
 @Transactional
-@Ignore
-public class UserProfileRepositoryTest {
+public class UserProfileRepositoryTest extends BaseTest {
 
     private static final String ACTIONED_BY_EMAIL = "rtaashrie9j1otx@example.com";
     private static final String DEFAULT_CASE_TYPE = "workBasketDefaultCaseType";
@@ -53,11 +47,9 @@ public class UserProfileRepositoryTest {
     private UserProfile userProfile;
     private UserProfile userProfileWithMultipleJurisdictions;
 
-    @Rule
-    public ExpectedException exceptionRule = ExpectedException.none();
-
-    @Before
+    @BeforeEach
     public void setUp() {
+
         final Jurisdiction jurisdiction = new Jurisdiction();
         jurisdiction.setId("TEST");
         saveJurisdictionClearAndFlushSession(jurisdiction);
@@ -94,6 +86,8 @@ public class UserProfileRepositoryTest {
 
         final List<UserProfileAuditEntity> audits = findUserProfitAudits("user@hmcts.net");
         assertEquals(1, audits.size());
+        assertNotNull(audits.get(0).getId());
+        assertEquals("user@hmcts.net", audits.get(0).getUserProfileId());
         assertEquals(UPDATE, audits.get(0).getAction());
     }
 
@@ -117,9 +111,10 @@ public class UserProfileRepositoryTest {
     @Test
     public void updateUserProfileWhenItDoesNotExist() {
         final UserProfile userProfile = createUserProfile("user2@hmcts.net", "TEST");
-        exceptionRule.expect(BadRequestException.class);
-        exceptionRule.expectMessage("User does not exist");
-        classUnderTest.updateUserProfile(userProfile, "exceptionexpected@example.com");
+        Throwable t = Assertions.assertThrows(BadRequestException.class, () -> {
+            classUnderTest.updateUserProfile(userProfile, "exceptionexpected@example.com");
+        });
+        assertEquals("User does not exist", t.getMessage());
         assertEquals(0, countUserProfitAudits());
     }
 
@@ -273,9 +268,10 @@ public class UserProfileRepositoryTest {
     @Test
     public void updateUserProfileOnCreateWhenItDoesNotExist() {
         final UserProfile userProfile = createUserProfile("user2@hmcts.net", "TEST");
-        exceptionRule.expect(BadRequestException.class);
-        exceptionRule.expectMessage("User does not exist");
-        classUnderTest.updateUserProfileOnCreate(userProfile, ACTIONED_BY_EMAIL);
+        Throwable t = Assertions.assertThrows(BadRequestException.class, () -> {
+            classUnderTest.updateUserProfileOnCreate(userProfile, ACTIONED_BY_EMAIL);
+        });
+        assertEquals("User does not exist", t.getMessage());
         assertEquals(0, countUserProfitAudits());
     }
 
@@ -323,9 +319,10 @@ public class UserProfileRepositoryTest {
         final UserProfile userProfile = createUserProfile("user2@hmcts.net", "TEST");
         final Jurisdiction jurisdiction = new Jurisdiction();
         jurisdiction.setId(userProfile.getWorkBasketDefaultJurisdiction());
-        exceptionRule.expect(BadRequestException.class);
-        exceptionRule.expectMessage("User does not exist");
-        classUnderTest.deleteJurisdictionFromUserProfile(userProfile, jurisdiction, ACTIONED_BY_EMAIL);
+        Throwable t = Assertions.assertThrows(BadRequestException.class, () -> {
+            classUnderTest.deleteJurisdictionFromUserProfile(userProfile, jurisdiction, ACTIONED_BY_EMAIL);
+        });
+        assertEquals("User does not exist", t.getMessage());
         assertEquals(0, countUserProfitAudits());
     }
 

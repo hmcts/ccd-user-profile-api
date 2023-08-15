@@ -1,9 +1,9 @@
 package uk.gov.hmcts.ccd.endpoint.userprofile;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,12 +47,12 @@ class UserProfileController {
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get User Profiles",
-                  notes = "Optional filtering of results via \"jurisdiction\" request parameter")
+    @Operation(summary = "Get User Profiles",
+                  description = "Optional filtering of results via \"jurisdiction\" request parameter")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Found User Profiles")
+        @ApiResponse(responseCode = "200", description = "Found User Profiles")
     })
-    public List<UserProfileLight> getUserProfiles(@ApiParam("Jurisdiction ID") @RequestParam("jurisdiction")
+    public List<UserProfileLight> getUserProfiles(@Parameter(name = "Jurisdiction ID") @RequestParam("jurisdiction")
                                                  final Optional<String> jurisdictionOptional,
                                                   @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
                                                  final String actionedBy) {
@@ -71,10 +71,10 @@ class UserProfileController {
 
     @RequestMapping(value = "/users", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Update a new User Profile",
-                  notes = "A User Profile or Jurisdiction is created if it does not exist")
+    @Operation(summary = "Update a new User Profile",
+                  description = "A User Profile or Jurisdiction is created if it does not exist")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Updated User Profile defaults")
+        @ApiResponse(responseCode = "200", description = "Updated User Profile defaults")
     })
     public void populateUserProfiles(@RequestBody final List<UserProfile> userProfiles,
                                      @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
@@ -84,13 +84,14 @@ class UserProfileController {
 
     @RequestMapping(value = "/users/save", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Save a User Profile",
-                  notes = "A User Profile and/or Jurisdiction is created if it does not exist. Behaves exactly the "
-                    + "same as the `PUT` /users endpoint, except that an HTTP 400 Bad Request is returned if the user "
-                    + "already belongs to the given Jurisdiction")
+    @Operation(summary = "Save a User Profile",
+                  description = "A User Profile and/or Jurisdiction is created if it does not exist."
+                      + "Behaves exactly the same as the `PUT` /users endpoint, except that an HTTP 400 "
+                      + "Bad Request is returned if the user already belongs to the given Jurisdiction")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Saved User Profile"),
-        @ApiResponse(code = 400, message = "User Profile does not exist, or user already belongs to given Jurisdiction")
+        @ApiResponse(responseCode = "200", description = "Saved User Profile"),
+        @ApiResponse(responseCode = "400", description = "User Profile does not exist, or user already "
+            + "belongs to given Jurisdiction")
     })
     public UserProfile saveUserProfile(@RequestBody final UserProfile userProfile,
                                        @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
@@ -100,21 +101,21 @@ class UserProfileController {
 
     @RequestMapping(value = "/users", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation(value = "Delete the association to a Jurisdiction from a User Profile",
-                  notes = "Deletes the Jurisdiction unless it matches the user's Workbasket default Jurisdiction AND "
-                    + "the user currently belongs to more than one Jurisdiction. If the Jurisdiction being deleted "
+    @Operation(summary = "Delete the association to a Jurisdiction from a User Profile",
+                  description = "Deletes the Jurisdiction unless it matches the user's Workbasket default Jurisdiction "
+                    + "AND the user currently belongs to more than one Jurisdiction. If the Jurisdiction being deleted "
                     + "is the user's sole Jurisdiction, removal is permitted. In addition, their Workbasket defaults "
                     + "are set to null, since they no longer belong to any Jurisdictions")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Deleted Jurisdiction from User Profile"),
-        @ApiResponse(code = 400, message = "User Profile does not exist, user is not a member of specified "
-                                    + "Jurisdiction, or user's Workbasket defaults are for the Jurisdiction being "
-                                    + "removed")
+        @ApiResponse(responseCode = "204", description = "Deleted Jurisdiction from User Profile"),
+        @ApiResponse(responseCode = "400", description = "User Profile does not exist, user is not a member "
+                                    + "of specified Jurisdiction, or user's Workbasket defaults are for "
+                                    + "the Jurisdiction being removed")
     })
-    public void deleteJurisdictionFromUserProfile(@ApiParam("User Profile ID")
+    public void deleteJurisdictionFromUserProfile(@Parameter(name = "User Profile ID")
                                                   @RequestParam("uid")
                                                   final String uid,
-                                                  @ApiParam("Jurisdiction ID")
+                                                  @Parameter(name = "Jurisdiction ID")
                                                   @RequestParam("jid")
                                                   final String jid,
                                                   @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")

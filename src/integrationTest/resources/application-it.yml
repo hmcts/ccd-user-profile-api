@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: 'jdbc:tc:postgresql:11:///databasename?stringtype=unspecified'
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+# S2S
+auth:
+  provider:
+    service:
+      client:
+        baseUrl: 'http://localhost:${wiremock.server.port}/s2s'
+        microservice: 'ccd_data'
+        key: 'AAAAAAAAAAAAAAAA'
+
+azure:
+  application-insights:
+    instrumentation-key: fake-key
+
+ccd:
+  authorised:
+    unsecured:
+      - '/swagger-ui/**'
+      - '/webjars/springfox-swagger-ui/**'
+      - '/swagger-resources/**'
+      - '/v3/**'
+
+user-profile:
+  email:
+    id:
+      validation: true

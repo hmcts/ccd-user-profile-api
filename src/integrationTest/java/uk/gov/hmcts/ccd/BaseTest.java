@@ -3,23 +3,31 @@ package uk.gov.hmcts.ccd;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import uk.gov.hmcts.ccd.data.userprofile.UserProfileEntity;
+import uk.gov.hmcts.reform.auth.checker.core.service.ServiceRequestAuthorizer;
 
-import javax.sql.DataSource;
 import java.nio.charset.Charset;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@TestPropertySource(locations = "classpath:test.properties")
+
+@Testcontainers
+@ActiveProfiles("it")
+@AutoConfigureMockMvc
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class BaseTest {
 
     protected static final MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
@@ -27,9 +35,28 @@ public abstract class BaseTest {
                                                                  Charset.forName("utf8"));
     protected static final ObjectMapper mapper = new ObjectMapper();
 
+    static PostgreSQLContainer<?> postgresqlContainer = new PostgreSQLContainer<>("postgres:11.1");
+
+    @DynamicPropertySource
+    static void setProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgresqlContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", postgresqlContainer::getUsername);
+        registry.add("spring.datasource.password", postgresqlContainer::getPassword);
+    }
+
+    @BeforeAll
+    public static void beforeAll() {
+        postgresqlContainer.start();
+    }
+
+    @MockBean
+    private ServiceRequestAuthorizer requestAuthorizer;
+
+    @MockBean
+    private AuthenticationManager authenticationManager;
+
     @Autowired
-    @Qualifier("EmbeddedPostgres")
-    protected DataSource db;
+    protected MockMvc mvc;
 
     @BeforeClass
     public static void init() {

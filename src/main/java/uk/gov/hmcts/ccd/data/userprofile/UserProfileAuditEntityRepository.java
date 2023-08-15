@@ -26,4 +26,5 @@ public class UserProfileAuditEntityRepository {
         entity.setWorkBasketDefaultState(userProfile.getWorkBasketDefaultState());
         em.persist(entity);
     }
+
 }

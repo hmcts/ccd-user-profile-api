@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ccd.endpoint.userprofile;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,10 +38,10 @@ public class UserProfileEndpoint {
 
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation("Create a new User Profile")
+    @Operation(summary = "Create a new User Profile")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Created User Profile"),
-        @ApiResponse(code = 400, message = "Unable to create User Profile")
+        @ApiResponse(responseCode = "201", description = "Created User Profile"),
+        @ApiResponse(responseCode = "400", description = "Unable to create User Profile")
     })
     public UserProfile createUserProfile(@RequestBody final UserProfile userProfile,
                                          @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
@@ -51,10 +51,10 @@ public class UserProfileEndpoint {
 
     @RequestMapping(value = "/users", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Update a new User Profile",
-        notes = "a user profile or jurisdiction is created if it does not exist")
+    @Operation(summary = "Update a new User Profile",
+        description = "a user profile or jurisdiction is created if it does not exist")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Updated User Profile defaults")
+        @ApiResponse(responseCode = "201", description = "Updated User Profile defaults")
     })
     public void populateUserProfiles(@RequestBody final List<UserProfile> userProfiles,
                                      @RequestHeader(value = "actionedBy", defaultValue = "<UNKNOWN>")
@@ -64,10 +64,10 @@ public class UserProfileEndpoint {
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation("Get a user profile")
+    @Operation(summary = "Get a user profile")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Found user profile(s) default settings"),
-        @ApiResponse(code = 400, message = "Bad request - Email Id(s) not valid")
+        @ApiResponse(responseCode = "200", description = "Found user profile(s) default settings"),
+        @ApiResponse(responseCode = "400", description = "Bad request - Email Id(s) not valid")
     })
     public Object getUserProfiles(@RequestParam(value = "uid", required = false)
                                   final String uid,

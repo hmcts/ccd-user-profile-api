@@ -1,25 +1,24 @@
 package uk.gov.hmcts.ccd.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.stereotype.Component;
 
 @Component
-@ApiModel
+@Schema
 public class UserProfileLight {
 
     private String id;
 
-    @ApiModelProperty
+    @Schema
     @JsonProperty("work_basket_default_jurisdiction")
     private String defaultJurisdiction;
 
-    @ApiModelProperty
+    @Schema
     @JsonProperty("work_basket_default_case_type")
     private String defaultCaseType;
 
-    @ApiModelProperty
+    @Schema
     @JsonProperty("work_basket_default_state")
     private String defaultState;
 

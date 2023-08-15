@@ -62,6 +62,9 @@ public class UserProfileEntity {
     }
 
     public List<JurisdictionEntity> getJurisdictions() {
+        if (jurisdictions == null) {
+            jurisdictions = new ArrayList<>();
+        }
         return jurisdictions;
     }
 
