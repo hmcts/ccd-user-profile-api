@@ -3,7 +3,7 @@ java:
   ingressHost: ${SERVICE_FQDN}
   keyVaults:
     ccd:
-      secrets:
+      resourceGroup: ccd-shared
   environment:
     USER_PROFILE_DB_HOST: "{{ .Release.Name }}-postgresql"
     USER_PROFILE_DB_NAME: "{{ .Values.postgresql.auth.database}}"
