@@ -2,7 +2,7 @@ package uk.gov.hmcts.ccd.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
@@ -17,10 +17,8 @@ import uk.gov.hmcts.reform.auth.parser.idam.core.service.token.ServiceTokenParse
 import uk.gov.hmcts.reform.auth.parser.idam.core.service.token.ServiceTokenParsingException;
 import uk.gov.hmcts.reform.auth.parser.idam.spring.service.token.ServiceTokenParserConfiguration;
 
-import java.util.Collection;
-import java.util.function.Function;
-
-import static java.util.stream.Collectors.toSet;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Import({ServiceTokenParserConfiguration.class})
@@ -29,13 +27,13 @@ public class AuthCheckerFilter extends AbstractPreAuthenticatedProcessingFilter 
 
     public static final String AUTHORISATION = "ServiceAuthorization";
 
-    @Autowired
     private ServiceTokenParser serviceTokenParser;
 
-    @Autowired
-    private Function<HttpServletRequest, Collection<String>> authorizedServicesExtractor;
+    @Value("#{'${user-profile.authorised.services}'.split(',')}")
+    private List<String> authorisedSServices = new ArrayList<>();
 
-    public AuthCheckerFilter(AuthenticationManager authenticationManager) {
+    public AuthCheckerFilter(ServiceTokenParser serviceTokenParser, AuthenticationManager authenticationManager) {
+        this.serviceTokenParser = serviceTokenParser;
         this.setAuthenticationManager(authenticationManager);
     }
 
@@ -49,7 +47,7 @@ public class AuthCheckerFilter extends AbstractPreAuthenticatedProcessingFilter 
         return authorizeService(request);
     }
 
-    private Service authorizeService(HttpServletRequest request) {
+    public Service authorizeService(HttpServletRequest request) {
         try {
             return authorise(request);
         } catch (AuthCheckerException e) {
@@ -59,12 +57,7 @@ public class AuthCheckerFilter extends AbstractPreAuthenticatedProcessingFilter 
     }
 
     private Service authorise(HttpServletRequest request) throws UnauthorisedServiceException {
-        Collection<String> authorizedServices = authorizedServicesExtractor
-                    .apply(request)
-                    .stream()
-                    .map(String::toLowerCase)
-                    .collect(toSet());
-        if (authorizedServices.isEmpty()) {
+        if (authorisedSServices.isEmpty()) {
             throw new IllegalArgumentException("Must have at least one service defined");
         }
 
@@ -74,7 +67,7 @@ public class AuthCheckerFilter extends AbstractPreAuthenticatedProcessingFilter 
         }
 
         Service service = getTokenDetails(bearerToken);
-        if (!authorizedServices.contains(service.getPrincipal().toLowerCase())) {
+        if (!authorisedSServices.contains(service.getPrincipal().toLowerCase())) {
             throw new UnauthorisedServiceException();
         }
 

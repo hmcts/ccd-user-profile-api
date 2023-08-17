@@ -11,8 +11,6 @@ java:
     USER_PROFILE_DB_PORT: 5432
     USER_PROFILE_DB_NAME: ccd_user_profile
     USER_PROFILE_DB_OPTIONS: "?stringtype=unspecified&gssEncMode=disable"
-    LOGBACK_REQUIRE_ALERT_LEVEL: 'false'
-    LOGBACK_REQUIRE_ERROR_CODE: 'false'
   image: 'hmctspublic.azurecr.io/ccd/user-profile-api:latest'
   ingressHost: ccd-user-profile-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   keyVaults:
