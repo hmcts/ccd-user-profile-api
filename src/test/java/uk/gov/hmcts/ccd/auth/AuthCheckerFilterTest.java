@@ -8,11 +8,15 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.auth.checker.core.service.Service;
+import uk.gov.hmcts.reform.auth.parser.idam.core.service.token.ServiceTokenInvalidException;
 import uk.gov.hmcts.reform.auth.parser.idam.core.service.token.ServiceTokenParser;
+import uk.gov.hmcts.reform.auth.parser.idam.core.service.token.ServiceTokenParsingException;
 
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -34,22 +38,74 @@ public class AuthCheckerFilterTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         this.filter = new AuthCheckerFilter(serviceTokenParser, authenticationManager);
-        ReflectionTestUtils.setField(filter, "authorisedSServices", Arrays.asList("test"));
     }
 
     @Test
     public void testAuthorizeService() {
-
-        when(serviceTokenParser.parse(anyString())).thenReturn("test");
+        ReflectionTestUtils.setField(filter, "authorisedSServices", Arrays.asList("test"));
 
         HttpServletRequest req = mock(HttpServletRequest.class);
-        when(req.getHeader(AUTHORISATION)).thenReturn("test");
+        when(req.getHeader(AUTHORISATION)).thenReturn("token");
+
+        when(serviceTokenParser.parse(anyString())).thenReturn("test");
 
         Service service = this.filter.authorizeService(req);
 
         assertEquals("test", service.getPrincipal());
 
         verify(serviceTokenParser, times(1)).parse(anyString());
+    }
+
+    @Test
+    public void testNoServices() {
+        Throwable t = assertThrows(IllegalArgumentException.class , () -> this.filter.authorizeService(null));
+        assertEquals("Must have at least one service defined",  t.getMessage());
+    }
+
+    @Test
+    public void testNoToken() {
+        ReflectionTestUtils.setField(filter, "authorisedSServices", Arrays.asList("test"));
+
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        when(req.getHeader(AUTHORISATION)).thenReturn(null);
+
+        assertNull(this.filter.authorizeService(req));
+    }
+
+    @Test
+    public void testHandleServiceTokenInvalidException() {
+        ReflectionTestUtils.setField(filter, "authorisedSServices", Arrays.asList("test"));
+
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        when(req.getHeader(AUTHORISATION)).thenReturn("token");
+
+        when(serviceTokenParser.parse(anyString())).thenThrow(new ServiceTokenInvalidException());
+
+        assertNull(this.filter.authorizeService(req));
+    }
+
+    @Test
+    public void testHandleServiceTokenParsingException() {
+        ReflectionTestUtils.setField(filter, "authorisedSServices", Arrays.asList("test"));
+
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        when(req.getHeader(AUTHORISATION)).thenReturn("token");
+
+        when(serviceTokenParser.parse(anyString())).thenThrow(new ServiceTokenParsingException());
+
+        assertNull(this.filter.authorizeService(req));
+    }
+
+    @Test
+    public void testInvalidService() {
+        ReflectionTestUtils.setField(filter, "authorisedSServices", Arrays.asList("test"));
+
+        HttpServletRequest req = mock(HttpServletRequest.class);
+        when(req.getHeader(AUTHORISATION)).thenReturn("token");
+
+        when(serviceTokenParser.parse(anyString())).thenReturn("invalid");
+
+        assertNull(this.filter.authorizeService(req));
     }
 
 }
