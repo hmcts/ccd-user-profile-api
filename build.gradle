@@ -145,7 +145,8 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
 
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.2.0'
-    implementation "org.flywaydb:flyway-core:9.21.1"
+    // Hold fly way at 9.0.4 because of https://github.com/flyway/flyway/issues/3508
+    implementation "org.flywaydb:flyway-core:9.0.4"
     implementation group: 'org.yaml', name: 'snakeyaml', version: '2.1'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.1'
     runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.6.0'
