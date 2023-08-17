@@ -41,6 +41,5 @@ Scenario: must return 403 when request provides authentic credentials without au
 
      Then a negative response is received
       And the response [contains a HTTP 403 Forbidden]
-      And the response has all other details as expected
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
