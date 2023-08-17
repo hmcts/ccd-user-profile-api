@@ -58,7 +58,7 @@ public class AuthCheckerFilterTest {
 
     @Test
     public void testNoServices() {
-        Throwable t = assertThrows(IllegalArgumentException.class , () -> this.filter.authorizeService(null));
+        Throwable t = assertThrows(IllegalArgumentException.class, () -> this.filter.authorizeService(null));
         assertEquals("Must have at least one service defined",  t.getMessage());
     }
 
