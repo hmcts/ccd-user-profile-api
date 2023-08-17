@@ -4,6 +4,11 @@ server:
     include-message: always
   max-http-header-size: 24KB
 
+logging:
+  level:
+    org.apache:
+      WARN
+
 spring:
   application:
     name: ccd-user-profile
@@ -78,7 +83,9 @@ management:
         time-to-live: 1000ms
       group:
         readiness:
-          include: "db,ping,refreshScope"
+          include:
+            - db
+            - ping
 
 # CCD transaction timeout in seconds
 ccd:

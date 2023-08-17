@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.domain.service;
 
-import com.google.common.annotations.VisibleForTesting;
 import jakarta.transaction.Transactional;
 import org.apache.commons.codec.binary.StringUtils;
 import org.slf4j.Logger;
@@ -67,7 +66,6 @@ public class UserProfileOperation {
         }
     }
 
-    @VisibleForTesting
     boolean isUpdateRequired(final UserProfile userProfileFromRepository, final UserProfile userProfileFromDefintion) {
         return CollectionUtils.isEmpty(userProfileFromRepository.getJurisdictions()) // checkstyle line break
             || !areDefaultsEqual(userProfileFromRepository, userProfileFromDefintion);

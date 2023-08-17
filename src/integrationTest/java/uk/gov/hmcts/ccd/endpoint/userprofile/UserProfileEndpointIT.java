@@ -1,16 +1,12 @@
 package uk.gov.hmcts.ccd.endpoint.userprofile;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.jdbc.JdbcTestUtils;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.ccd.BaseTest;
 import uk.gov.hmcts.ccd.data.userprofile.UserProfileEntity;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
@@ -72,17 +68,7 @@ public class UserProfileEndpointIT extends BaseTest {
         + "user's workbasket default values to another Jurisdiction and try again.";
 
     @Autowired
-    private WebApplicationContext wac;
-
-    private MockMvc mockMvc;
-
-    @Autowired
     private JdbcTemplate template;
-
-    @BeforeEach
-    public void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-    }
 
     @Test
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,

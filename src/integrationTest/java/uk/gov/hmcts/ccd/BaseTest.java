@@ -7,9 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -17,7 +15,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import uk.gov.hmcts.ccd.data.userprofile.UserProfileEntity;
-import uk.gov.hmcts.reform.auth.checker.core.service.ServiceRequestAuthorizer;
 
 import java.nio.charset.Charset;
 import java.sql.ResultSet;
@@ -26,7 +23,7 @@ import java.sql.SQLException;
 
 @Testcontainers
 @ActiveProfiles("it")
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class BaseTest {
 
@@ -44,19 +41,13 @@ public abstract class BaseTest {
         registry.add("spring.datasource.password", postgresqlContainer::getPassword);
     }
 
+    @Autowired
+    protected MockMvc mockMvc;
+
     @BeforeAll
     public static void beforeAll() {
         postgresqlContainer.start();
     }
-
-    @MockBean
-    private ServiceRequestAuthorizer requestAuthorizer;
-
-    @MockBean
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    protected MockMvc mvc;
 
     @BeforeClass
     public static void init() {

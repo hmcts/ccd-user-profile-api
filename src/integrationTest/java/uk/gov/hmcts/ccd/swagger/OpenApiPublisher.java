@@ -16,7 +16,7 @@ public class OpenApiPublisher extends BaseTest {
     @DisplayName("Generate OpenAPI documentation")
     @Test
     public void generateDocs() throws Exception {
-        ResultActions perform = mvc.perform(MockMvcRequestBuilders.get("/v3/api-docs"));
+        ResultActions perform = mockMvc.perform(MockMvcRequestBuilders.get("/v3/api-docs"));
         byte[] specs = perform
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn()

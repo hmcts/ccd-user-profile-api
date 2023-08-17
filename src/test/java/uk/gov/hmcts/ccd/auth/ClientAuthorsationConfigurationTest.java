@@ -21,7 +21,7 @@ public class ClientAuthorsationConfigurationTest {
         allowableServices.add("reference");
         allowableServices.add("reference-2");
         when(services.getServices()).thenReturn(allowableServices);
-        AuthCheckerConfiguration subject = new AuthCheckerConfiguration(services);
+        AuthorisationCheckerConfiguration subject = new AuthorisationCheckerConfiguration(services);
 
         // this should return allowable services
         Collection<String> result = subject.authorizedServicesExtractor().apply(null);

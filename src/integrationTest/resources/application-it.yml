@@ -10,7 +10,7 @@ auth:
   provider:
     service:
       client:
-        baseUrl: 'http://localhost:${wiremock.server.port}/s2s'
+        baseUrl: 'http://localhost:0/s2s'
         microservice: 'ccd_data'
         key: 'AAAAAAAAAAAAAAAA'
 

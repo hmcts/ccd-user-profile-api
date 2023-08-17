@@ -8,11 +8,11 @@ import java.util.Collection;
 import java.util.function.Function;
 
 @Configuration
-public class AuthCheckerConfiguration {
+public class AuthorisationCheckerConfiguration {
 
     private AuthorizedConfiguration services;
 
-    public AuthCheckerConfiguration(AuthorizedConfiguration services) {
+    public AuthorisationCheckerConfiguration(AuthorizedConfiguration services) {
         this.services = services;
     }
 
@@ -20,4 +20,5 @@ public class AuthCheckerConfiguration {
     public Function<HttpServletRequest, Collection<String>> authorizedServicesExtractor() {
         return request -> services.getServices();
     }
+
 }
