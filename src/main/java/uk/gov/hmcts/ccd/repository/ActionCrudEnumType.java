@@ -9,13 +9,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static org.hibernate.type.SqlTypes.OTHER;
+import static org.hibernate.type.SqlTypes.VARCHAR;
 
 public class ActionCrudEnumType implements UserType<AuditAction> {
 
     @Override
     public int getSqlType() {
-        return OTHER;
+        return VARCHAR;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ActionCrudEnumType implements UserType<AuditAction> {
     public void nullSafeSet(PreparedStatement st, AuditAction value, int index,
                             SharedSessionContractImplementor session) throws SQLException {
         if (value == null) {
-            st.setNull(index, OTHER);
+            st.setNull(index, VARCHAR);
         } else {
             st.setString(index, value.toString());
         }
