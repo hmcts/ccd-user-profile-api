@@ -1,6 +1,10 @@
 package uk.gov.hmcts.ccd.repository;
 
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.type.descriptor.converter.spi.BasicValueConverter;
+import org.hibernate.type.descriptor.java.EnumJavaType;
+import org.hibernate.type.descriptor.java.JavaType;
+import org.hibernate.type.descriptor.java.ObjectJavaType;
 import org.hibernate.usertype.UserType;
 import uk.gov.hmcts.ccd.data.userprofile.AuditAction;
 
@@ -9,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static org.hibernate.type.SqlTypes.OTHER;
 import static org.hibernate.type.SqlTypes.VARCHAR;
 
 public class ActionCrudEnumType implements UserType<AuditAction> {
@@ -36,7 +41,7 @@ public class ActionCrudEnumType implements UserType<AuditAction> {
     @Override
     public AuditAction nullSafeGet(ResultSet rs, int position, SharedSessionContractImplementor session,
                                    Object owner) throws SQLException {
-        String string = rs.getString(position);
+        String string = rs.getObject(position).toString();
         return rs.wasNull() ? null : AuditAction.valueOf(string);
     }
 
@@ -44,9 +49,9 @@ public class ActionCrudEnumType implements UserType<AuditAction> {
     public void nullSafeSet(PreparedStatement st, AuditAction value, int index,
                             SharedSessionContractImplementor session) throws SQLException {
         if (value == null) {
-            st.setNull(index, VARCHAR);
+            st.setNull(index, OTHER, "action_crud");
         } else {
-            st.setString(index, value.toString());
+            st.setObject(index, value.name(), OTHER);
         }
     }
 
@@ -68,5 +73,31 @@ public class ActionCrudEnumType implements UserType<AuditAction> {
     @Override
     public AuditAction assemble(Serializable cached, Object owner) {
         return (AuditAction) cached;
+    }
+
+    @Override
+    public BasicValueConverter<AuditAction, Object> getValueConverter() {
+        return new BasicValueConverter<>() {
+            @Override
+            public AuditAction toDomainValue(Object relationalForm) {
+                return AuditAction.valueOf(relationalForm.toString());
+            }
+
+            @Override
+            public Object toRelationalValue(AuditAction domainForm) {
+                return domainForm.name();
+            }
+
+            @Override
+            public JavaType<AuditAction> getDomainJavaType() {
+                return new EnumJavaType(AuditAction.class);
+            }
+
+            @Override
+            public JavaType<Object> getRelationalJavaType() {
+                return new ObjectJavaType();
+            }
+
+        };
     }
 }
