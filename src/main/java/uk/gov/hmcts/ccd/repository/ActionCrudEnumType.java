@@ -14,13 +14,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.hibernate.type.SqlTypes.OTHER;
-import static org.hibernate.type.SqlTypes.VARCHAR;
 
 public class ActionCrudEnumType implements UserType<AuditAction> {
 
     @Override
     public int getSqlType() {
-        return VARCHAR;
+        return OTHER;
     }
 
     @Override

@@ -2,8 +2,6 @@ package uk.gov.hmcts.ccd.data.userprofile;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,7 +9,9 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
+import uk.gov.hmcts.ccd.repository.ActionCrudEnumType;
 
 import java.time.LocalDateTime;
 
@@ -41,8 +41,8 @@ public class UserProfileAuditEntity {
     @Column(name = "work_basket_default_state")
     private String workBasketDefaultState;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "action", nullable = false)
+    @Type(ActionCrudEnumType.class)
+    @Column(name = "action", columnDefinition = "action_crud")
     private AuditAction action;
 
     @Column(name = "actioned_by")
