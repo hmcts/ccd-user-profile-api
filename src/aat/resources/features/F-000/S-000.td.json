@@ -54,7 +54,8 @@
 						"total": "[[ANY_NUMBER_NOT_NULLABLE]]",
 						"free": "[[ANY_NUMBER_NOT_NULLABLE]]",
 						"threshold": "[[ANY_INTEGER_NOT_NULLABLE]]",
-			            "exists" : true
+            "exists" : true,
+            "path": "[[ANYTHING_PRESENT]]"
 					}
 				},
 				"livenessState": {

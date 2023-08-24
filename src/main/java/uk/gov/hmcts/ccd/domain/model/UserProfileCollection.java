@@ -1,14 +1,13 @@
 package uk.gov.hmcts.ccd.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-@ApiModel
+@Schema
 public class UserProfileCollection {
 
     private List<UserProfile> userProfiles;
@@ -20,7 +19,7 @@ public class UserProfileCollection {
         this.userProfiles = userProfiles;
     }
 
-    @ApiModelProperty
+    @Schema
     @JsonProperty("user_profiles")
     public List<UserProfile> getUserProfiles() {
         return userProfiles;
