@@ -16,7 +16,7 @@ ____
 
 ### Prerequisites
 
-- [Open JDK 8](https://openjdk.java.net/)
+- [Open JDK 17](https://openjdk.java.net/)
 - [Docker](https://www.docker.com)
 
 #### Environment variables
