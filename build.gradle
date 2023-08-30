@@ -111,6 +111,7 @@ ext {
             'method'     : 8,
             'class'      : 8
     ]
+    
 }
 
 ext['junit-jupiter.version'] = '5.10.0'
