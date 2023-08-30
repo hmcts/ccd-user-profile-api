@@ -399,7 +399,7 @@ task functional() {
     into "$buildDir/test-results/test"
   }
 
-  doFirst {
+  doLast {
     generateCucumberReports.enabled = true
     javaexec {
       mainClass = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
