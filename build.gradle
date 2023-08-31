@@ -391,16 +391,24 @@ task smoke() {
 
 task functional() {
   description = 'Executes functional tests against an the CCD User Profile API instance just deployed'
+  group = "Verification"
   dependsOn aatClasses
-    
-  new File("$buildDir/test-results/test").mkdirs()
-  copy{
-    from "src/aat/resources/DummyTest.xml"
-    into "$buildDir/test-results/test"
-  }
-
   generateCucumberReports.enabled = false
-    
+  
+  main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
+  classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+  args = [
+        '--threads', '1',
+        '--plugin', "json:${rootDir}/target/cucumber.json",
+        '--plugin', "junit:${buildDir}/test-results/functional/cucumber.xml",
+        '--tags', 'not @Ignore',
+        '--glue', 'uk.gov.hmcts.befta.player',
+        '--glue', 'uk.gov.hmcts.ccd.userprofile.befta',
+        'src/aat/resources/features'
+    ]
+    // '--add-opens=...' added to suppress 'WARNING: An illegal reflective access operation has occurred' in uk.gov.hmcts.befta.util.CucumberStepAnnotationUtils
+   jvmArgs '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED'
+
   doLast {
     generateCucumberReports.enabled = true
     javaexec {
@@ -416,6 +424,7 @@ task functional() {
   }
 
   finalizedBy {
+    generateCucumberReports.enabled = true
     generateCucumberReports {
       doLast{
         delete "${rootDir}/BEFTA Report for Functional Tests/"
@@ -425,7 +434,6 @@ task functional() {
       }
     }
   }
-
 
   outputs.upToDateWhen { false }
 }
