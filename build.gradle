@@ -399,11 +399,14 @@ task functional() {
     into "$buildDir/test-results/test"
   }
 
+  generateCucumberReports.enabled = false
+    
   doLast {
     generateCucumberReports.enabled = true
     javaexec {
-      mainClass = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
+      main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
       classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+
       args = ['--plugin', "json:${rootDir}/target/cucumber.json",
               '--plugin', "junit:${buildDir}/test-results/functional/cucumber.xml",
               '--tags', 'not @Ignore',
@@ -418,6 +421,7 @@ task functional() {
         delete "${rootDir}/BEFTA Report for Functional Tests/"
         new File("${rootDir}/BEFTA Report for Functional Tests").mkdirs()
         file("${rootDir}/target/cucumber/cucumber-html-reports").renameTo(file("${rootDir}/BEFTA Report for Functional Tests"))
+        logger.quiet("Functional test report moved to ---> file://${rootDir}/BEFTA%20Report%20for%20Functional%20Tests/overview-features.html")
       }
     }
   }
