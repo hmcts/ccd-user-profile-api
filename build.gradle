@@ -399,11 +399,15 @@ task functional() {
     into "$buildDir/test-results/test"
   }
 
-  doFirst {
+  generateCucumberReports.enabled = false
+    
+  doLast {
     generateCucumberReports.enabled = true
     javaexec {
       mainClass = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
       classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
+      classpath += sourceSets.functionalTest.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+
       args = ['--plugin', "json:${rootDir}/target/cucumber.json",
               '--plugin', "junit:${buildDir}/test-results/functional/cucumber.xml",
               '--tags', 'not @Ignore',
