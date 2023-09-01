@@ -102,6 +102,6 @@ withPipeline(type, product, component) {
     }
 
     afterAlways('functionalTest:aat') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Functional Tests/**/*'
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Functional Tests/**/*, **/cucumber-html-reports/**/*'
     }
 }
