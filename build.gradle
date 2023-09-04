@@ -20,7 +20,7 @@ plugins {
     id 'org.sonarqube' version '4.3.0.3225'
     id 'jacoco'
     id "com.github.kt3k.coveralls" version "2.12.2"
-    id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.25'
+    id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.23'
     id "info.solidsoft.pitest" version '1.9.11'
     id 'uk.gov.hmcts.java' version '0.12.43'
 }
@@ -380,8 +380,10 @@ task smoke() {
   finalizedBy {
     generateCucumberReports {
       doLast{
-        new File("${rootDir}/BEFTA Report for Smoke Tests").mkdirs()
-        file("${rootDir}/target/cucumber/cucumber-html-reports").renameTo(file("${rootDir}/BEFTA Report for Smoke Tests"))
+          delete "${rootDir}/BEFTA Report for Smoke Tests/"
+          new File("${rootDir}/BEFTA Report for Smoke Tests").mkdirs()
+          file("${rootDir}/target/cucumber/cucumber-html-reports").renameTo(file("${rootDir}/BEFTA Report for Smoke Tests"))
+          logger.quiet("Smoke test report moved to ---> file://${rootDir}/BEFTA%20Report%20for%20Smoke%20Tests/overview-features.html")
       }
     }
   }
@@ -389,37 +391,42 @@ task smoke() {
   outputs.upToDateWhen { false }
 }
 
-task functional() {
-  description = 'Executes functional tests against an the CCD User Profile API instance just deployed'
+task functional(type: JavaExec) {
+  description = "Executes functional tests against an the CCD User Profile API instance just deployed"
+  group = "Verification"
+  dependsOn aatClasses
 
-  new File("$buildDir/test-results/test").mkdirs()
-  copy{
-    from "src/aat/resources/DummyTest.xml"
-    into "$buildDir/test-results/test"
-  }
 
-  doFirst {
-    generateCucumberReports.enabled = true
-    javaexec {
-      mainClass = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
-      classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
-      args = ['--plugin', "json:${rootDir}/target/cucumber.json",
-              '--plugin', "junit:${buildDir}/test-results/functional/cucumber.xml",
-              '--tags', 'not @Ignore',
-              '--glue', 'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
-      jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
-    }
-  }
+  generateCucumberReports.enabled = false
+  main = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
+  classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+  args = [
+    '--threads', '1',
+    '--plugin', "json:${rootDir}/target/cucumber.json",
+    '--plugin', "junit:${buildDir}/test-results/functional/cucumber.xml",
+    '--tags', 'not @Ignore',
+    '--glue', 'uk.gov.hmcts.befta.player',
+    '--glue', 'uk.gov.hmcts.ccd.userprofile.befta',
+    'src/aat/resources/features'
+  ]
+  // '--add-opens=...' added to suppress 'WARNING: An illegal reflective access operation has occurred' in uk.gov.hmcts.befta.util.CucumberStepAnnotationUtils
+  jvmArgs '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED'
 
   finalizedBy {
+    generateCucumberReports.enabled = true
+      logger.quiet('enabled cucumber reports ')
     generateCucumberReports {
       doLast{
+        delete "${rootDir}/BEFTA Report for Functional Tests/"
+          logger.quiet('deleted functional test folder')
         new File("${rootDir}/BEFTA Report for Functional Tests").mkdirs()
+          logger.quiet('created functional test folder')
         file("${rootDir}/target/cucumber/cucumber-html-reports").renameTo(file("${rootDir}/BEFTA Report for Functional Tests"))
+          logger.quiet('rename file')
+        logger.quiet("Functional test report moved to ---> file://${rootDir}/BEFTA%20Report%20for%20Functional%20Tests/overview-features.html")
       }
     }
   }
-
 
   outputs.upToDateWhen { false }
 }
@@ -449,4 +456,6 @@ task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
 cucumberReports {
     outputDir = file("${projectDir}/target/cucumber")
     reports = files("${projectDir}/target/cucumber.json")
+    notFailingStatuses = ["skipped", "passed"]
 }
+
