@@ -458,3 +458,4 @@ cucumberReports {
     reports = files("${projectDir}/target/cucumber.json")
     notFailingStatuses = ["skipped", "passed"]
 }
+
