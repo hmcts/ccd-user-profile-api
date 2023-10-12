@@ -3,9 +3,7 @@ java:
   ingressHost: ${SERVICE_FQDN}
   keyVaults:
     ccd:
-      secrets:
-        - name: AppInsightsInstrumentationKey
-          alias: azure.application-insights.instrumentation-key
+      resourceGroup: ccd-shared
   environment:
     USER_PROFILE_DB_HOST: "{{ .Release.Name }}-postgresql"
     USER_PROFILE_DB_NAME: "{{ .Values.postgresql.auth.database}}"

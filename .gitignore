@@ -29,3 +29,5 @@ out/
 bin/
 /BEFTA Report for Smoke Tests/
 /BEFTA Report for Functional Tests/
+lib/applicationinsights-agent-*.jar
+lib/applicationinsights.log
