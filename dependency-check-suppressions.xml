@@ -12,10 +12,16 @@
         CVE-2020-8908 refer [Ticket]
         CVE-2023-20873 refer [Ticket]
         CVE-2023-34981 refer [Ticket]
-        CVE-2023-41080 refer [Ticket]</notes>
+        CVE-2023-41080 refer [Ticket]
+        CVE-2023-42795 refer [Ticket]
+        CVE-2023-45648 refer [Ticket]
+        CVE-2023-44487 refer [Ticket]</notes>
     <cve>CVE-2023-35116</cve>
     <cve>CVE-2023-2976</cve>
     <cve>CVE-2020-8908</cve>
     <cve>CVE-2023-41080</cve>
+    <cve>CVE-2023-42795</cve>
+    <cve>CVE-2023-45648</cve>
+    <cve>CVE-2023-44487</cve>
   </suppress>
 </suppressions>
