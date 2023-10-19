@@ -73,7 +73,7 @@ module "user-profile-db-v11" {
   storage_mb      = "51200"
   common_tags     = "${var.common_tags}"
 }
-module "postgresql-v15" {
+module "postgresql_v15" {
   source = "git@github.com:hmcts/terraform-module-postgresql-flexible?ref=master"
   providers = {
     azurerm.postgres_network = azurerm.postgres_network
@@ -104,18 +104,18 @@ module "postgresql-v15" {
 
 resource "azurerm_key_vault_secret" "POSTGRES-USER-V15" {
   name         = "${var.component}-POSTGRES-USER-V15"
-  value        = module.postgresql-v15.username
+  value        = module.postgresql_v15.username
   key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES-PASS-V15" {
   name         = "${var.component}-POSTGRES-PASS-V15"
-  value        = module.postgresql-v15.password
+  value        = module.postgresql_v15.password
   key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES-HOST-V15" {
   name         = "${var.component}-POSTGRES-HOST-V15"
-  value        = module.postgresql-v15.fqdn
+  value        = module.postgresql_v15.fqdn
   key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
 }
