@@ -18,6 +18,7 @@ data "azurerm_key_vault" "ccd_shared_key_vault" {
   resource_group_name = "${local.sharedResourceGroup}"
 }
 
+
 ////////////////////////////////
 // Populate Vault with DB info
 ////////////////////////////////

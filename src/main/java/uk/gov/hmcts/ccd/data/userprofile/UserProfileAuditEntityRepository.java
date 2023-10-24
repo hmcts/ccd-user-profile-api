@@ -1,10 +1,9 @@
 package uk.gov.hmcts.ccd.data.userprofile;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 @Repository
 public class UserProfileAuditEntityRepository {
@@ -27,4 +26,5 @@ public class UserProfileAuditEntityRepository {
         entity.setWorkBasketDefaultState(userProfile.getWorkBasketDefaultState());
         em.persist(entity);
     }
+
 }
