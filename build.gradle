@@ -165,6 +165,8 @@ dependencies {
     implementation group: 'org.springframework.security', name: 'spring-security-web', version: springSecurity
     implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: springSecurity
 
+    // dependency check
+    implementation group: 'org.owasp', name: 'dependency-check-gradle', version: '9.0.4'
 
     // CVE-2021-28170
     implementation "org.glassfish:jakarta.el:4.0.2"
@@ -458,4 +460,3 @@ cucumberReports {
     reports = files("${projectDir}/target/cucumber.json")
     notFailingStatuses = ["skipped", "passed"]
 }
-
