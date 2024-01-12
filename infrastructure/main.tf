@@ -80,6 +80,9 @@ module "postgresql_v15" {
   }
 
   subnet_suffix = "expanded"
+
+    # Setup Access Reader db user
+  force_user_permissions_trigger = "1"
   
   admin_user_object_id = var.jenkins_AAD_objectId
   business_area        = "cft"
