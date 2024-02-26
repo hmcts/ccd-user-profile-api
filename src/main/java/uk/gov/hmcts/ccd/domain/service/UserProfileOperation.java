@@ -1,6 +1,6 @@
 package uk.gov.hmcts.ccd.domain.service;
 
-import com.google.common.annotations.VisibleForTesting;
+import jakarta.transaction.Transactional;
 import org.apache.commons.codec.binary.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,11 +12,9 @@ import uk.gov.hmcts.ccd.data.userprofile.UserProfileRepository;
 import uk.gov.hmcts.ccd.domain.model.Jurisdiction;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Locale;
-
-import javax.inject.Inject;
-import javax.transaction.Transactional;
 
 @Service
 public class UserProfileOperation {
@@ -68,7 +66,6 @@ public class UserProfileOperation {
         }
     }
 
-    @VisibleForTesting
     boolean isUpdateRequired(final UserProfile userProfileFromRepository, final UserProfile userProfileFromDefintion) {
         return CollectionUtils.isEmpty(userProfileFromRepository.getJurisdictions()) // checkstyle line break
             || !areDefaultsEqual(userProfileFromRepository, userProfileFromDefintion);

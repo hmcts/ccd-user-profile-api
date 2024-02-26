@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ccd.domain.service;
 
-import java.util.List;
-import java.util.Optional;
-
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
@@ -13,9 +13,8 @@ import uk.gov.hmcts.ccd.domain.model.UserProfileCollection;
 import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
 import uk.gov.hmcts.ccd.endpoint.exception.NotFoundException;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FindUserProfileOperation {

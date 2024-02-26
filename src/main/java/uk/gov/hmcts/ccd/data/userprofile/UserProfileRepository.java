@@ -1,5 +1,8 @@
 package uk.gov.hmcts.ccd.data.userprofile;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import uk.gov.hmcts.ccd.data.jurisdiction.JurisdictionEntity;
@@ -11,16 +14,13 @@ import uk.gov.hmcts.ccd.domain.model.UserProfile;
 import uk.gov.hmcts.ccd.domain.model.UserProfileLight;
 import uk.gov.hmcts.ccd.endpoint.exception.BadRequestException;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import java.util.Map;
-import java.util.Set;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.Optional;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.ObjectUtils.allNotNull;

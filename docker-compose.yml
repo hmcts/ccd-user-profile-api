@@ -32,6 +32,7 @@ services:
       timeout: 10s
       retries: 10
     environment:
+      - POSTGRES_PASSWORD=user_profile
       - USER_PROFILE_DB_USERNAME=user_profile
       - USER_PROFILE_DB_PASSWORD=user_profile
     ports:

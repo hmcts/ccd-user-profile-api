@@ -1,12 +1,12 @@
 package uk.gov.hmcts.ccd.domain.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.data.userprofile.UserProfileRepository;
 import uk.gov.hmcts.ccd.domain.model.UserProfile;
 import uk.gov.hmcts.ccd.domain.model.UserProfileLight;
 
-import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

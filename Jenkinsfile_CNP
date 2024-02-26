@@ -69,11 +69,6 @@ withPipeline(type, product, component) {
     }
     onPR {
         enableSlackNotifications('#ccd-pr-builds')
-
-        def githubApi = new GithubAPI(this)
-        if (!githubApi.getLabelsbyPattern(env.BRANCH_NAME, "keep-helm")) {
-            enableCleanupOfHelmReleaseAlways()
-        }
     }
 
     // Check if the build should be wired to a preview instance of definition store
@@ -102,6 +97,6 @@ withPipeline(type, product, component) {
     }
 
     afterAlways('functionalTest:aat') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Functional Tests/**/*'
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Functional Tests/**/*, **/cucumber-html-reports/**/*'
     }
 }
