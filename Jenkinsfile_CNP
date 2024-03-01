@@ -49,7 +49,7 @@ def vaultOverrides = [
 // Other env variables needed for BEFTA.
 env.CCD_API_GATEWAY_OAUTH2_CLIENT_ID = "ccd_gateway"
 env.IDAM_API_URL_BASE = "https://idam-api.aat.platform.hmcts.net"
-env.S2S_URL_BASE = "http://rpe-service-auth-provider-aat.aat.platform.hmcts.net"
+env.S2S_URL_BASE = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
 env.BEFTA_S2S_CLIENT_ID = "ccd_data"
 env.CCD_API_GATEWAY_OAUTH2_REDIRECT_URL = "https://www-ccd.aat.platform.hmcts.net/oauth2redirect"
 env.CCD_CASEWORKER_AUTOTEST_EMAIL = "auto.test.cnp@gmail.com"

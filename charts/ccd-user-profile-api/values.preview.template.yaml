@@ -1,6 +1,6 @@
 java:
   image: ${IMAGE_NAME}
-  ingressHost: ${SERVICE_NAME}.preview.platform.hmcts.net
+  ingressHost: ${SERVICE_NAME}
   keyVaults:
     ccd:
       resourceGroup: ccd-shared
