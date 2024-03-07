@@ -166,7 +166,12 @@ dependencies {
     implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: springSecurity
 
     // dependency check
-    implementation group: 'org.owasp', name: 'dependency-check-gradle', version: '9.0.4'
+    implementation group: 'org.owasp', name: 'dependency-check-gradle', version: '9.0.9'
+    constraints {
+        implementation('org.apache.commons:commons-compress:1.26.0') {
+            because 'Latest version of dependency-check-gradle (9.0.9) brings in commons-compress v1.25.0 which has a CVE'
+        }
+    }
 
     // CVE-2021-28170
     implementation "org.glassfish:jakarta.el:4.0.2"
