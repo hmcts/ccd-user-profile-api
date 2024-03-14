@@ -192,7 +192,8 @@ dependencies {
 // end::dependencies[]
 
 pitest {
-
+    pitestVersion.set('1.9.11')
+    junit5PluginVersion.set('0.15')
     targetClasses = ['uk.gov.hmcts.ccd.*']
 
     targetTests = ['uk.gov.hmcts.ccd.auth.*',
@@ -217,8 +218,23 @@ pitest {
     timestampedReports = false
     failWhenNoMutations = false
     detectInlinedCode = true
+    mutators.set([
+    'CONDITIONALS_BOUNDARY',
+    'INCREMENTS',
+    'INVERT_NEGS',
+    'MATH',
+    'NEGATE_CONDITIONALS',
+    'VOID_METHOD_CALLS',
+    'EMPTY_RETURNS',
+    'FALSE_RETURNS',
+    'NULL_RETURNS',
+    'PRIMITIVE_RETURNS',
+    'TRUE_RETURNS',
+    'REMOVE_CONDITIONALS'
+  ])
 
 }
+
 
 tasks.withType(Test) {
     useJUnitPlatform()
