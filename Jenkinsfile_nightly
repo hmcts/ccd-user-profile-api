@@ -35,7 +35,6 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 
 withNightlyPipeline(type, product, component) {
     loadVaultSecrets(secrets)
-    enableMutationTest()
     enableFortifyScan()
     enableDbMigration('ccd')
     enableSlackNotifications('#ccd-nightly-builds')
