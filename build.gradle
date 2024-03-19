@@ -172,7 +172,6 @@ dependencies {
         implementation('org.owasp:dependency-check-gradle:9.0.9') {
         }
         implementation('org.owasp:dependency-check-core:9.0.9') {
-            //exclude group: 'com.h2database', module: 'com.h2database'
         }
     }
 
