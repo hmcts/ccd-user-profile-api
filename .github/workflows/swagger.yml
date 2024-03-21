@@ -23,7 +23,7 @@ jobs:
           java-version: 17
           distribution: 'temurin'
       - name: Run Swagger Publisher
-        run: ./gradlew test --tests uk.gov.hmcts.ccd.swagger.OpenApiPublisher
+        run: ./gradlew integrationTest --tests uk.gov.hmcts.ccd.swagger.OpenApiPublisher
       - name: Commit to repository
         run: |
           mkdir swagger-staging
