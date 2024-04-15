@@ -5,7 +5,6 @@
         CVE-2024-25710 refer [Ticket]
         CVE-2024-26308 refer [Ticket]
         CVE-2024-1597 refer [Ticket]
-        CVE-2023-34053 refer [Ticket]
         CVE-2023-34055 refer [Ticket]
         CVE-2023-34042 refer [Ticket]
         CVE-2023-44487 refer [Ticket]
@@ -16,7 +15,6 @@
     <cve>CVE-2024-25710</cve>
     <cve>CVE-2024-26308</cve>
     <cve>CVE-2024-1597</cve>
-    <cve>CVE-2023-34053</cve>
     <cve>CVE-2023-34055</cve>
     <cve>CVE-2023-34042</cve>
     <cve>CVE-2023-44487</cve>
