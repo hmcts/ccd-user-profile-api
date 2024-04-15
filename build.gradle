@@ -134,7 +134,7 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     annotationProcessor  group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
     implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLogging
