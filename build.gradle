@@ -86,6 +86,7 @@ configurations {
         exclude group: 'ch.qos.logback'
         exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
         exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'com.h2database', module: 'h2'
     }
 }
 // end::jar[]
@@ -116,12 +117,19 @@ ext {
 ext['junit-jupiter.version'] = '5.10.0'
 ext['junit-vintage.version'] = '5.10.0'
 ext['spring-framework.version'] = '6.0.11'
-ext['jackson.version'] = '2.15.3'
+ext['jackson.version'] = '2.16.0'
 ext['snakeyaml.version'] = '2.1'
 
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+    dependencies {
+        dependencySet(group: 'org.apache.tomcat.embed', version: '10.1.13') {
+            entry 'tomcat-embed-core'
+            entry 'tomcat-embed-el'
+            entry 'tomcat-embed-websocket'
+        }
     }
 }
 
@@ -166,8 +174,12 @@ dependencies {
     implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: springSecurity
 
     // dependency check
-    implementation group: 'org.owasp', name: 'dependency-check-gradle', version: '9.0.4'
-    implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.73'
+    implementation group: 'org.owasp', name: 'dependency-check-gradle', version: '9.0.9'
+    constraints {
+        implementation('org.apache.commons:commons-compress:1.26.0') {
+            because 'Latest version of dependency-check-gradle (9.0.9) brings in commons-compress v1.25.0 which has a CVE'
+        }
+    }
 
     // CVE-2021-28170
     implementation "org.glassfish:jakarta.el:4.0.2"
