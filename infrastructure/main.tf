@@ -12,7 +12,12 @@ locals {
   sharedResourceGroup = "${var.product}-shared-${var.env}"
 
 }
+resource "azurerm_resource_group" "rg" {
+  name     = "${var.product}-shared-${var.env}"
+  location = var.location
 
+  tags = var.common_tags
+}
 data "azurerm_key_vault" "ccd_shared_key_vault" {
   name                = "${local.vaultName}"
   resource_group_name = "${local.sharedResourceGroup}"
