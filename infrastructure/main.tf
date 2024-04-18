@@ -80,9 +80,6 @@ module "postgresql_v15" {
   }
 
   subnet_suffix = "expanded"
-
-    # Setup Access Reader db user
-  force_user_permissions_trigger = "1"
   
   admin_user_object_id = var.jenkins_AAD_objectId
   business_area        = "cft"
@@ -105,6 +102,16 @@ module "postgresql_v15" {
   name             = "${local.app_full_name}-postgres-db-v15"
   pgsql_sku        = var.pgsql_sku
   pgsql_storage_mb = var.pgsql_storage_mb
+      # Setup Access Reader db user
+  force_user_permissions_trigger = "1"
+
+  # Sets correct DB owner after migration to fix permissions
+  enable_schema_ownership = var.enable_schema_ownership
+  force_schema_ownership_trigger = "1"
+  kv_subscription = var.kv_subscription
+  kv_name = module.key-vault.key_vault_id
+  user_secret_name = azurerm_key_vault_secret.POSTGRES-USER.name
+  pass_secret_name = azurerm_key_vault_secret.POSTGRES-PASS.name
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES-USER-V15" {
