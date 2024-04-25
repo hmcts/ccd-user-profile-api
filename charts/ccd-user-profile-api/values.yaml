@@ -2,7 +2,7 @@ java:
   applicationPort: 4453
   aadIdentityName: ccd
   autoscaling:
-    enabled: true
+    enabled: false
     maxReplicas: 8
   environment:
     USER_PROFILE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_definition,ccd_admin,rd_professional_api
