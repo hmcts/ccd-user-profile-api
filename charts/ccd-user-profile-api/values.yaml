@@ -7,7 +7,7 @@ java:
   environment:
     USER_PROFILE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_definition,ccd_admin,rd_professional_api
     IDAM_S2S_URL: http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
-    USER_PROFILE_DB_HOST: ccd-user-profile-api-postgres-db-{{ .Values.global.environment }}.postgres.database.azure.com
+    USER_PROFILE_DB_HOST: ccd-user-profile-api-postgres-db-v15-{{ .Values.global.environment }}.postgres.database.azure.com
     USER_PROFILE_DB_PORT: 5432
     USER_PROFILE_DB_NAME: ccd_user_profile
     USER_PROFILE_DB_OPTIONS: "?stringtype=unspecified&gssEncMode=disable"
@@ -16,9 +16,9 @@ java:
   keyVaults:
     ccd:
       secrets:
-        - name: user-profile-api-POSTGRES-USER
+        - name: user-profile-api-POSTGRES-USER-V15
           alias: USER_PROFILE_DB_USERNAME
-        - name: user-profile-api-POSTGRES-PASS
+        - name: user-profile-api-POSTGRES-PASS-V15
           alias: USER_PROFILE_DB_PASSWORD
         - name: app-insights-connection-string
           alias: app-insights-connection-string
