@@ -26,7 +26,6 @@ data "azurerm_key_vault" "ccd_shared_key_vault" {
 // Postgres DB info  //
 ///////////////////////
 
-}
 module "postgresql_v15" {
   source = "git@github.com:hmcts/terraform-module-postgresql-flexible?ref=master"
   providers = {
