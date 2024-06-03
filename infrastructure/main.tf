@@ -32,8 +32,6 @@ module "postgresql_v15" {
     azurerm.postgres_network = azurerm.postgres_network
   }
 
-  subnet_suffix = "expanded"
-
   # Setup Access Reader db user
   force_user_permissions_trigger = "1"
 
