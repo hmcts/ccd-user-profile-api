@@ -1,9 +1,9 @@
 provider "azurerm" {
-    features {
-        resource_group {
-            prevent_deletion_if_contains_resources = false
-        }
+  features {
+    resource_group {
+      prevent_deletion_if_contains_resources = false
     }
+  }
 }
 
 locals {
@@ -18,8 +18,8 @@ locals {
 }
 
 data "azurerm_key_vault" "ccd_shared_key_vault" {
-  name                = "${local.vaultName}"
-  resource_group_name = "${local.sharedResourceGroup}"
+  name                = local.vaultName
+  resource_group_name = local.sharedResourceGroup
 }
 
 ///////////////////////
@@ -34,9 +34,9 @@ module "postgresql_v15" {
 
   subnet_suffix = "expanded"
 
-    # Setup Access Reader db user
+  # Setup Access Reader db user
   force_user_permissions_trigger = "1"
-  
+
   admin_user_object_id = var.jenkins_AAD_objectId
   business_area        = "cft"
   common_tags          = var.common_tags
@@ -93,5 +93,3 @@ resource "azurerm_key_vault_secret" "POSTGRES-DATABASE" {
   value        = var.database_name
   key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
 }
-
-
