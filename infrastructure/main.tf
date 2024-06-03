@@ -56,6 +56,7 @@ module "postgresql_v15" {
   name             = "${local.app_full_name}-postgres-db-v15"
   pgsql_sku        = var.pgsql_sku
   pgsql_storage_mb = var.pgsql_storage_mb
+  subnet_suffix    = var.subnet_suffix
 }
 
 ////////////////////////////////////
