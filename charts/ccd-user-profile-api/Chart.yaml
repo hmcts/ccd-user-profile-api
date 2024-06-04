@@ -2,7 +2,7 @@ description: CCD User profile
 name: ccd-user-profile-api
 apiVersion: v2
 home: https://github.com/hmcts/ccd-user-profile-api
-version: 1.6.14
+version: 1.6.15
 maintainers:
   - name: HMCTS CCD Dev Team
     email: ccd-devops@HMCTS.NET
