@@ -134,6 +134,8 @@ dependencyManagement {
 }
 
 dependencies {
+
+    implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.78'
     compileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     annotationProcessor  group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
