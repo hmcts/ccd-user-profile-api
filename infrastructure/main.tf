@@ -81,13 +81,13 @@ resource "azurerm_key_vault_secret" "POSTGRES-HOST-V15" {
   key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
 }
 
-resource "azurerm_key_vault_secret" "POSTGRES-PORT" {
+resource "azurerm_key_vault_secret" "POSTGRES_PORT" {
   name         = "${var.component}-POSTGRES-PORT"
   value        = "5432"
   key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
 }
 
-resource "azurerm_key_vault_secret" "POSTGRES-DATABASE" {
+resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
   name         = "${var.component}-POSTGRES-DATABASE"
   value        = var.database_name
   key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
