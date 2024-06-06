@@ -158,7 +158,7 @@ dependencies {
     implementation "org.flywaydb:flyway-core:9.21.1"
     implementation group: 'org.yaml', name: 'snakeyaml', version: '2.1'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.1'
-    runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.6.0'
+    runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.6.1'
     implementation group: 'com.github.hmcts', name: 'auth-checker-lib', version: '2.1.5'
     constraints {
         implementation('com.google.guava:guava:33.1.0-jre') {
@@ -189,7 +189,7 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter:5.10.0"
     testImplementation "org.testcontainers:testcontainers:1.18.3"
     testImplementation "org.testcontainers:junit-jupiter:1.18.3"
-    testImplementation 'org.testcontainers:postgresql'
+    testImplementation 'org.testcontainers:postgresql:42.6.1'
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
