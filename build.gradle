@@ -103,7 +103,7 @@ ext {
     lombokVersion = '1.18.28'
     reformLogging = '6.0.1'
     springCloudVersion = '2022.0.3'
-    springSecurity = '6.1.2'
+    springSecurity = '6.1.5'
     limits = [
             'instruction': 6,
             'branch'     : 8,
@@ -116,7 +116,7 @@ ext {
 
 ext['junit-jupiter.version'] = '5.10.0'
 ext['junit-vintage.version'] = '5.10.0'
-ext['spring-framework.version'] = '6.0.11'
+ext['spring-framework.version'] = '6.0.14'
 ext['jackson.version'] = '2.16.0'
 ext['snakeyaml.version'] = '2.1'
 
@@ -134,7 +134,9 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+
+    implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.78'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     annotationProcessor  group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
     implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLogging
@@ -158,6 +160,11 @@ dependencies {
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.1'
     runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.6.0'
     implementation group: 'com.github.hmcts', name: 'auth-checker-lib', version: '2.1.5'
+    constraints {
+        implementation('com.google.guava:guava:33.1.0-jre') {
+            because 'previous versions of this transitive dependency have CVEs'
+        }
+    }
     implementation group: 'javax.inject', name: 'javax.inject', version: '1'
 
     implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
@@ -172,18 +179,6 @@ dependencies {
     implementation group: 'org.springframework.security', name: 'spring-security-config', version: springSecurity
     implementation group: 'org.springframework.security', name: 'spring-security-web', version: springSecurity
     implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: springSecurity
-
-    // dependency check
-    implementation 'org.owasp:dependency-check-gradle'
-    constraints {
-        implementation('org.owasp:dependency-check-gradle:9.0.9') {
-        }
-        implementation('org.owasp:dependency-check-core:9.0.9') {
-        }
-    }
-
-    // CVE-2021-28170
-    implementation "org.glassfish:jakarta.el:4.0.2"
 
     aatImplementation 'com.github.hmcts:service-auth-provider-java-client:5.1.0'
     codacy 'com.github.codacy:codacy-coverage-reporter:13.13.7'
