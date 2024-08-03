@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -47,10 +46,6 @@ public abstract class BaseTest {
     @BeforeAll
     public static void beforeAll() {
         postgresqlContainer.start();
-    }
-
-    @BeforeClass
-    public static void init() {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
