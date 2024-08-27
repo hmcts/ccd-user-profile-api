@@ -25,14 +25,6 @@ plugins {
     id 'uk.gov.hmcts.java' version '0.12.43'
 }
 
-configurations {
-    all {
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-        exclude group: 'ch.qos.logback', module: 'logback-classic'
-        exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
-    }
-}
-
 dependencyUpdates.resolutionStrategy {
     componentSelection { rules ->
         rules.all { ComponentSelection selection ->
@@ -119,10 +111,6 @@ configurations {
         exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'com.h2database', module: 'h2'
-
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-        exclude group: 'ch.qos.logback', module: 'logback-classic'
-        //exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
     }
 }
 // end::jar[]
@@ -169,12 +157,6 @@ dependencyManagement {
     }
 }
 
-configurations {
-    all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-    all*.exclude group: 'ch.qos.logback', module: 'logback-classic'
-    all*.exclude group: 'ch.qos.logback', module: 'logback-core'
-}
-
 dependencies {
 
     implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.78'
@@ -187,7 +169,6 @@ dependencies {
     implementation group: 'org.slf4j', name: 'slf4j-simple', version: sl4jVersion
     implementation group: 'org.slf4j', name: 'slf4j-api', version: sl4jVersion
     implementation group: 'org.slf4j', name: 'jcl-over-slf4j', version: sl4jVersion
-
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
     implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc') {
@@ -240,10 +221,7 @@ dependencies {
 
     testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.22.2'
     testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: '9.0.2'
-    testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.4', classifier: 'all', {
-        exclude module: 'commons-logging'
-        exclude module: 'slf4j-simple'
-    }
+    testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.4', classifier: 'all'
     testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.9.11'
 }
 // end::dependencies[]
