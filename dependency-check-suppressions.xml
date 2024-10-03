@@ -7,8 +7,5 @@
         CVE-2023-45648 refer [Ticket]
     </notes>
     <cve>CVE-2023-34055</cve>
-    <cve>CVE-2023-42795</cve>
-    <cve>CVE-2023-44487</cve>
-    <cve>CVE-2023-45648</cve>
   </suppress>
 </suppressions>
