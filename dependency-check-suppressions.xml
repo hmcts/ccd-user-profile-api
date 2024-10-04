@@ -5,6 +5,5 @@
         CVE-2023-44487 refer [Ticket]
     </notes>
     <cve>CVE-2023-34055</cve>
-    <cve>CVE-2023-44487</cve>
   </suppress>
 </suppressions>
