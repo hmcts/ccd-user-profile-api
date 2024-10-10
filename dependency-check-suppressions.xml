@@ -8,6 +8,5 @@
     
         CVE-2024-9329 refer [Ticket]</notes>
     <cve>CVE-2023-34055</cve>
-    <cve>CVE-2024-9329</cve>
   </suppress>
 </suppressions>
