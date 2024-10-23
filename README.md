@@ -16,7 +16,7 @@ ____
 
 ### Prerequisites
 
-- [Open JDK 17](https://openjdk.java.net/)
+- [Open JDK 21](https://openjdk.java.net/)
 - [Docker](https://www.docker.com)
 
 #### Environment variables
@@ -55,7 +55,7 @@ If you want your code to become available to other Docker projects (e.g. for loc
 docker-compose build
 ```
 
-The above will build both the application and database images.  
+The above will build both the application and database images.
 If you want to build only one of them just specify the name assigned in docker compose file, e.g.:
 
 ```bash
@@ -102,9 +102,8 @@ To create a user the following example JSON can be used:
 ```
 
 ### Functional Tests
-The functional tests are located in `aat` folder. The tests are written using 
+The functional tests are located in `aat` folder. The tests are written using
 befta-fw library. To find out more about BEFTA Framework, see the repository and its README [here](https://github.com/hmcts/befta-fw).
 
 ## LICENSE
 This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
-
