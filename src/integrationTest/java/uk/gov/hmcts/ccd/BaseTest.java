@@ -32,7 +32,7 @@ public abstract class BaseTest {
                                                                  Charset.forName("utf8"));
     protected static final ObjectMapper mapper = new ObjectMapper();
 
-    static PostgreSQLContainer<?> postgresqlContainer = new PostgreSQLContainer<>("postgres:11.1");
+    static PostgreSQLContainer<?> postgresqlContainer = new PostgreSQLContainer<>("postgres:15");
 
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
