@@ -24,8 +24,8 @@
       "definitions": "[[ANYTHING_PRESENT]]",
       "swagger": "2.0",
       "info": {
-        "description": "Api Documentation",
-        "title": "Api Documentation",
+        "description": "API to store and retrieve user profile data.",
+        "title": "User Profile API",
         "contact":"[[ANYTHING_PRESENT]]",
         "license": "[[ANYTHING_PRESENT]]",
         "version": "[[ANYTHING_PRESENT]]",
