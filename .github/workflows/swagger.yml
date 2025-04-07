@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - test-swagger-publish-off-master
+      - CFTS-6684-Swagger-Enpoint-Tests
 
 jobs:
   build:
