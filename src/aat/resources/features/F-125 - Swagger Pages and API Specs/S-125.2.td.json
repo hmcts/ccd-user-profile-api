@@ -9,7 +9,7 @@
 
   "request" :{
     "pathVariables" : {
-      "ccd-definition-store-api-version": "ccd-user-profile-api.json"
+      "ccd-user-profile-api": "ccd-user-profile-api.json"
     }
   },
 
