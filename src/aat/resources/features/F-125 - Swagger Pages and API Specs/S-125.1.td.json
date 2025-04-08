@@ -8,6 +8,12 @@
   ],
 
   "request" :{
+  },
+
+  "expectedResponse": {
+    "body" : {
+      "__plainTextValue__": "${[scenarioContext][customValues][contains Swagger UI]}"
+    }
   }
 }
 
