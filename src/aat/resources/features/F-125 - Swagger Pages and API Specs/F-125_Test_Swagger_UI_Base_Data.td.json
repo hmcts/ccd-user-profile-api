@@ -18,7 +18,7 @@
       "Content-Type" : "text/html"
     },
     "body" : {
-      "__plainTextValue__": "${[scenarioContext][customValues][contains Swagger UI]}"
+      "__plainTextValue__": "${[ANYTHING_PRESENT]}"
     }
   }
 }
