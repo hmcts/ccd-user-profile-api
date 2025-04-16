@@ -11,8 +11,8 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI api() {
         return new OpenAPI()
-            .info(new Info().title("SpringShop API")
-                .description("Spring shop sample application")
+            .info(new Info().title("User Profile API")
+                .description("API to store and retrieve user profile data.")
                 .version("v0.0.1")
             );
     }
