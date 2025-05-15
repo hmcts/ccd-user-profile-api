@@ -45,7 +45,8 @@ application {
 apply from: './gradle/suppress.gradle'
 dependencyCheck {
     // Pull the key from environment variable for local + CI/CD compatibility
-    nvdApiKey = System.getenv("NVD_API_KEY")
+    //nvdApiKey = System.getenv("NVD_API_KEY")
+    nvdApiKey = System.getProperty("nvd.api.key", System.getenv("NVD_API_KEY"))
     suppressionFile = 'dependency-check-suppressions.xml'
 }
 
