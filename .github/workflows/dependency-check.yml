@@ -34,6 +34,7 @@ jobs:
         run: ./gradlew dependencyCheckAggregate
         env:
           org.owasp.dependencycheck.apiKey: ${{ secrets.NVD_API_KEY }}
+          ORG_OWASP_DEPENDENCYCHECK_APIKEY: ${{ secrets.NVD_API_KEY }}
         continue-on-error: true
       - name: Run suppressCves
         run: ./gradlew suppressCves
