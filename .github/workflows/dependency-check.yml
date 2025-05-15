@@ -31,7 +31,7 @@ jobs:
           java-version: 21
           distribution: 'zulu'
       - name: Run dependencyCheck
-        run: ./gradlew dependencyCheckAggregate -Dnvd.api.key=${{ secrets.NVD_API_KEY }} DnvdApiKey=${{ secrets.NVD_API_KEY }} -Dnvd.api.delay=20000
+        run: ./gradlew dependencyCheckAggregate -Dnvd.api.key=${{ secrets.NVD_API_KEY }} -DnvdApiKey=${{ secrets.NVD_API_KEY }} -Dnvd.api.delay=20000
         env:
           org.owasp.dependencycheck.apiKey: ${{ secrets.NVD_API_KEY }}
           ORG_OWASP_DEPENDENCYCHECK_APIKEY: ${{ secrets.NVD_API_KEY }}
