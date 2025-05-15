@@ -45,8 +45,12 @@ application {
 apply from: './gradle/suppress.gradle'
 dependencyCheck {
     // Pull the key from environment variable for local + CI/CD compatibility
-    //nvdApiKey = System.getenv("NVD_API_KEY")
+
     nvdApiKey = System.getProperty("nvd.api.key", System.getenv("NVD_API_KEY"))
+    nvdApiDelay = Integer.parseInt(System.getProperty("nvd.api.delay", "3000"))
+    println "NVD API Key set? " + (nvdApiKey != null && !nvdApiKey.isEmpty())
+    println "NVD API Delay: ${nvdApiDelay}"
+    
     suppressionFile = 'dependency-check-suppressions.xml'
 }
 
