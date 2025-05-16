@@ -1,0 +1,31 @@
+{
+  "_guid_": "S-125.2",
+  "title": "Must return a positive appropriate response when Swagger JSON URL is accessed",
+  "_extends_": "F-125_Test_Swagger_JSON_Base_Data",
+
+  "specs": [
+    "to observe the swagger json content"
+  ],
+
+  "request" :{
+    "pathVariables" : {
+      "ccd-user-profile-api-version": "ccd-user-profile-api.json"
+    }
+  },
+
+  "expectedResponse": {
+    "responseCode" : 200,
+    "responseMessage" : "OK",
+    "body" : {
+      "openapi" : "[[ANYTHING_PRESENT]]",
+      "servers" : "[[ANYTHING_PRESENT]]",
+      "components" : "[[ANYTHING_PRESENT]]",
+      "paths": "[[ANYTHING_PRESENT]]",
+      "info": {
+        "description": "API to store and retrieve user profile data.",
+        "title": "User Profile API",
+        "version": "[[ANYTHING_PRESENT]]"
+      }
+    }
+  }
+}
