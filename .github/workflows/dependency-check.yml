@@ -31,7 +31,7 @@ jobs:
           java-version: 21
           distribution: 'zulu'
       - name: Run dependencyCheck
-        run: ./gradlew --info --stacktrace dependencyCheckAggregate -Dnvd.api.key=c061e751-e722-4a7d-b952-9fc0c46d9dca -Dnvd.api.delay=3000
+        run: ./gradlew dependencyCheckAggregate -Dnvd.api.key=c061e751-e722-4a7d-b952-9fc0c46d9dca -Dnvd.api.delay=3000
         continue-on-error: true
       - name: Run suppressCves
         run: ./gradlew suppressCves
