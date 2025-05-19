@@ -46,7 +46,7 @@ jobs:
           #  --failOnCVSS 7
           #  --enableRetired
       - name: Upload Dependency Check Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: owasp-report
           path: odc-reports
