@@ -46,8 +46,6 @@ apply from: './gradle/suppress.gradle'
 dependencyCheck {
     failBuildOnCVSS = 7.0
     suppressionFile = 'dependency-check-suppressions.xml'
-    nvdApiKey = System.getProperty("nvd.api.key", System.getenv("NVD_API_KEY"))
-    nvdApiDelay = Integer.parseInt(System.getProperty("nvd.api.delay", "3000"))
 
     analyzers {
         assemblyEnabled = false
