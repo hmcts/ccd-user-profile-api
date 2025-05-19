@@ -38,7 +38,7 @@ jobs:
         id: Depcheck
         with:
           project: 'test'
-          path: '.'
+          path: 'build/'
           format: 'HTML'
           out: 'reports' # this is the default, no need to specify unless you wish to override it
           args: >
