@@ -40,7 +40,7 @@ jobs:
           project: 'user-profile-api'
           path: '.'
           format: 'HTML'
-          outputDirectory: 'odc-reports' # this is the default, no need to specify unless you wish to override it
+          outputDirectory: 'build/reports' # this is the default, no need to specify unless you wish to override it
           failOnCvss: 7  # fail the build if CVSS >= 7
           #args: >
           #  --failOnCVSS 7
@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: owasp-report
-          path: odc-reports
+          path: build/reports
       #- name: Upload OWASP report
       #  uses: actions/upload-artifact@master
       #  with:
