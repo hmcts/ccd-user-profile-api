@@ -31,7 +31,7 @@ jobs:
           java-version: 21
           distribution: 'zulu'
       - name: Depcheck
-        uses: dependency-check/Dependency-Check_Action@1.0.0
+        uses: dependency-check/Dependency-Check_Action@main
         env:
           # actions/setup-java@v1 changes JAVA_HOME so it needs to be reset to match the depcheck image
           JAVA_HOME: /opt/jdk
@@ -40,16 +40,22 @@ jobs:
           project: 'user-profile-api'
           path: '.'
           format: 'HTML'
-          out: 'reports' # this is the default, no need to specify unless you wish to override it
-          args: >
-            --failOnCVSS 7
-            --enableRetired
-      - name: Upload OWASP report
-        uses: actions/upload-artifact@master
+          outputDirectory: 'odc-reports' # this is the default, no need to specify unless you wish to override it
+          failOnCvss: 7  # fail the build if CVSS >= 7
+          #args: >
+          #  --failOnCVSS 7
+          #  --enableRetired
+      - name: Upload Dependency Check Report
+        uses: actions/upload-artifact@v3
         with:
           name: owasp-report
-          path: |
-              **/build/reports/dependency-check
+          path: odc-reports
+      #- name: Upload OWASP report
+      #  uses: actions/upload-artifact@master
+      #  with:
+      #    name: owasp-report
+      #    path: |
+      #        **/build/reports/dependency-check
       #- name: Run dependencyCheck
       #  run: ./gradlew --info --stacktrace dependencyCheckAggregate -Dnvd.api.key=c061e751-e722-4a7d-b952-9fc0c46d9dca -Dnvd.api.delay=3000
       #  continue-on-error: true
