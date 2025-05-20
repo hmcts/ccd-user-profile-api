@@ -34,10 +34,7 @@ jobs:
         run:  |
           curl -H "Accept: application/json" -H "apiKey: 58942d4f-1548-4b6f-8629-e7eb19ea263a" -v https://services.nvd.nist.gov/rest/json/cves/2.0\?cpeName\=cpe:2.3:o:microsoft:windows_10:1607:\*:\*:\*:\*:\*:\*:\*
       - name: Run OWASP Dependency Check with Gradle
-        run: ./gradlew |
-              -Dnvd.api.key=58942d4f-1548-4b6f-8629-e7eb19ea263a |
-              -Dnvd.api.delay=3000 |
-               dependencyCheckAggregate
+        run: ./gradlew -Dnvd.api.key=58942d4f-1548-4b6f-8629-e7eb19ea263a -Dnvd.api.delay=3000 dependencyCheckAggregate
       - name: Run suppressCves
         run: ./gradlew suppressCves
       - name: Run cleanSuppressions
