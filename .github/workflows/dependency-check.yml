@@ -30,15 +30,8 @@ jobs:
         with:
           java-version: 21
           distribution: 'zulu'
-      - name: Make Gradle wrapper executable
-        run: chmod +x ./gradlew
       - name: Run OWASP Dependency Check with Gradle
-        run: ./gradlew dependencyCheckAggregate
-      - name: Upload OWASP Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: owasp-report
-          path: '**/build/reports/dependency-check'
+        run: ./gradlew dependencyCheckAggregate -Dnvd.api.key=58942d4f-1548-4b6f-8629-e7eb19ea263a -Dnvd.api.delay=3000
       - name: Run suppressCves
         run: ./gradlew suppressCves
       - name: Run cleanSuppressions
