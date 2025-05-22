@@ -95,7 +95,7 @@ withNightlyPipeline(type, product, component) {
     }
     */
 
-    afterFailure('build') {
+    afterFailure('securitychecks') {
         steps {
             sh './gradlew suppressCves'
         }
