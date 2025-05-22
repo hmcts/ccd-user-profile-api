@@ -95,6 +95,31 @@ withNightlyPipeline(type, product, component) {
     }
     */
 
+    afterFailure('build') {
+        steps {
+            sh './gradlew suppressCves'
+        }
+
+        steps {
+            sh './gradlew cleanSuppressions'
+        }
+
+        steps {
+            withCredentials([usernamePassword(credentialsId: env.GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                sh '''
+                        git config user.name "$GIT_USER"
+                        git config user.email "$GIT_EMAIL"
+
+                        git add .
+
+                        git diff-index --quiet HEAD || git commit -m "Suppressing CVE - Actions"
+
+                        git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/hmcts/ccd-user-profile-api.git
+                        git push origin test-fix-workflow-suppression
+                    '''
+            }
+        }
+    }
     afterAlways('fortify-scan') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
     }
