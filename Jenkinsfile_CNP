@@ -87,7 +87,7 @@ withPipeline(type, product, component) {
     disableLegacyDeployment()
     enableHighLevelDataSetup()
 
-    afterAlways('Security Checks') {
+    afterFailure('securitychecks') {
 
         steps.shell './gradlew suppressCves'
 
