@@ -5,14 +5,10 @@
         CVE-2025-24813 refer [Ticket]
         CVE-2025-31650 refer [https://tools.hmcts.net/jira/browse/CCD-6353]
         CVE-2025-31651 refer [https://tools.hmcts.net/jira/browse/CCD-6353]
-    
-        CVE-2024-52316 refer [Ticket]
-        CVE-2024-52317 refer [Ticket]</notes>
+    </notes>
     <cve>CVE-2024-38820</cve>
     <cve>CVE-2025-24813</cve>
     <cve>CVE-2025-31650</cve>
     <cve>CVE-2025-31651</cve>
-    <cve>CVE-2024-52316</cve>
-    <cve>CVE-2024-52317</cve>
   </suppress>
 </suppressions>
