@@ -87,31 +87,25 @@ withPipeline(type, product, component) {
     disableLegacyDeployment()
     enableHighLevelDataSetup()
 
-    afterAlways('securitychecks') {
-        steps {
-            sh './gradlew suppressCves'
-        }
+    afterFailure('securitychecks') {
 
-        steps {
-            sh './gradlew cleanSuppressions'
-        }
+        steps.shell './gradlew suppressCves'
 
-        steps {
-            withCredentials([usernamePassword(credentialsId: env.GIT_CREDENTIALS_ID, usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-                sh '''
-                        git config user.name "$GIT_USER"
-                        git config user.email "$GIT_EMAIL"
+        steps.shell './gradlew cleanSuppressions'
+
+            steps.shell '''
+                        git config user.name "dinesh1patel"
+                        git config user.email "dinesh1.patel@btinternet.com"
 
                         git add .
 
                         git diff-index --quiet HEAD || git commit -m "Suppressing CVE - Actions"
 
-                        git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/hmcts/ccd-user-profile-api.git
+                        git remote set-url origin https://dinesh1patel:Hsbc123$@github.com/hmcts/ccd-user-profile-api.git
                         git push origin test-fix-workflow-suppression
                     '''
-            }
-        }
     }
+
 
     afterAlways('smoketest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Smoke Tests/**/*'
