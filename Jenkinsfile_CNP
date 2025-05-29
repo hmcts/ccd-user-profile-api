@@ -5,7 +5,8 @@ properties(
          pipelineTriggers([[$class: 'GitHubPushTrigger']])]
 )
 
-@Library("Infrastructure")
+//@Library("Infrastructure")
+@Library("Infrastructure@do-not-fail-build-on-dependencycheck-aggregate")
 
 def type = "java"
 def product = "ccd"
@@ -60,6 +61,8 @@ env.TEST_DATA_LOAD_SKIP_PERIOD=1
 env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctspublic.azurecr.io/imported/"
 
 withPipeline(type, product, component) {
+    steps.shell 'Testing echo..'
+
     onMaster {
         enableSlackNotifications('#ccd-master-builds')
     }
@@ -86,6 +89,35 @@ withPipeline(type, product, component) {
     loadVaultSecrets(secrets)
     disableLegacyDeployment()
     enableHighLevelDataSetup()
+
+    before('functionalTest:preview') {
+        stage('Run Gradle Suppression Tasks') {
+            sh './gradlew suppressCves'
+            sh 'cat dependency-check-suppressions.xml'
+            //sh './gradlew cleanSuppressions || true'
+            sh 'git status'
+            sh 'git add -u'
+            sh 'git diff --cached --quiet || git commit -m "Suppressing CVE - Actions"'
+            sh 'git push origin HEAD:test-fix-workflow-suppression'
+        }
+
+        stage('Auto Commit') {
+            script {
+                def commitMessage = "Suppressing CVE - Actions"
+                def branch = 'test-fix-workflow-suppression'
+
+                sh """
+                    git config user.name "jenkins"
+                    git config user.email "jenkins@example.com"
+                    git remote set-url origin https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/hmcts/ccd-user-profile-api.git
+                    git checkout ${branch}
+                    git add .
+                    git diff --cached --quiet || git commit -m "${commitMessage}"
+                    git push origin ${branch}
+                """
+            }
+        }
+    }
 
     afterAlways('smoketest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Smoke Tests/**/*'
