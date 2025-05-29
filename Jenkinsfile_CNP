@@ -96,6 +96,9 @@ withPipeline(type, product, component) {
             sh 'cat dependency-check-suppressions.xml'
             //sh './gradlew cleanSuppressions || true'
             sh 'git status'
+            sh 'git add .'
+            sh 'git diff --cached --quiet || git commit -m "${commitMessage}"'
+            sh 'git push'
         }
 
         stage('Auto Commit') {
