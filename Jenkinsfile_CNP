@@ -98,7 +98,6 @@ withPipeline(type, product, component) {
             sh 'git status'
             sh 'git add .'
             sh 'git diff --cached --quiet || git commit -m "Suppressing CVE - Actions"'
-            sh 'git push'
             sh 'git push origin HEAD:test-fix-workflow-suppression'
         }
 
