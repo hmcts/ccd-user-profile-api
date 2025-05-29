@@ -96,21 +96,27 @@ withPipeline(type, product, component) {
             //sh './gradlew cleanSuppressions || true'
         }
 
-        stage('Auto-Commit Suppressions') {
-            def targetBranch = 'test-fix-workflow-suppression'
-            sh """
-                git fetch origin
+        stage('Auto Commit') {
+            script {
+                def commitMessage = "Suppressing CVE - Actions"
+                def branch = 'test-fix-workflow-suppression'
 
-                if git rev-parse --verify origin/${targetBranch} >/dev/null 2>&1; then
-                    git checkout -B ${targetBranch} origin/${targetBranch}
+                withCredentials([usernamePassword(
+                    credentialsId: 'git-auto-commit',
+                    usernameVariable: 'GIT_USERNAME',
+                    passwordVariable: 'GIT_TOKEN'
+                )]) {
+                    sh """
+                    git config user.name "jenkins"
+                    git config user.email "jenkins@example.com"
+                    git remote set-url origin https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/your-org/your-repo.git
+                    git checkout ${branch}
                     git add .
-                    git diff-index --quiet HEAD || git commit -m "Auto commit to develop branch"
-                    git push origin test-fix-workflow-suppression
-                else
-                    echo "Branch '${targetBranch}' not found on remote"
-                    exit 1
-                fi
-            """
+                    git diff --cached --quiet || git commit -m "${commitMessage}"
+                    git push origin ${branch}
+                """
+                }
+            }
         }
     }
 
