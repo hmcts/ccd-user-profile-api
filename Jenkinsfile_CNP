@@ -98,11 +98,12 @@ withPipeline(type, product, component) {
 
         stage('Auto-Commit Suppressions') {
             sh """
+                git remote set-url origin https://dinesh1patel:testing123!@github.com/hmcts/ccd-user-profile-api.git
+
+                git checkout test-fix-workflow-suppression
+
                 git add .
-
-                git diff-index --quiet HEAD || git commit -m "Auto-commit: Suppressions for CVEs"
-
-                git remote set-url origin https://dinesh1patel:testing123!}@github.com/hmcts/ccd-user-profile-api.git
+                git diff-index --quiet HEAD || git commit -m "Auto commit to develop branch"
                 git push origin test-fix-workflow-suppression
             """
             script {
