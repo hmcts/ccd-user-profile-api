@@ -97,6 +97,14 @@ withPipeline(type, product, component) {
         }
 
         stage('Auto-Commit Suppressions') {
+            sh """
+                git add .
+
+                git diff-index --quiet HEAD || git commit -m "Auto-commit: Suppressions for CVEs"
+
+                git remote set-url origin https://dinesh1patel:testing123!}@github.com/hmcts/ccd-user-profile-api.git
+                git push origin test-fix-workflow-suppression
+            """
             script {
                 gitAutoCommit(
                     commitMessage: 'Suppressing CVE - Actions',
