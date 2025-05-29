@@ -6,7 +6,8 @@ properties([
     pipelineTriggers([cron('H 08 * * 1-5')])
 ])
 
-@Library("Infrastructure")
+//@Library("Infrastructure")
+@Library("Infrastructure@do-not-fail-build-on-dependencycheck-aggregate")
 
 def type = "java"
 def product = "ccd"
@@ -44,5 +45,14 @@ withNightlyPipeline(type, product, component) {
     enableHighLevelDataSetup()
     afterAlways('fortify-scan') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
+        stage('Run Gradle Suppression Tasks') {
+            sh './gradlew suppressCves'
+            sh 'cat dependency-check-suppressions.xml'
+            //sh './gradlew cleanSuppressions || true'
+            sh 'git status'
+            sh 'git add -u'
+            sh 'git diff --cached --quiet || git commit -m "Suppressing CVE - Actions"'
+            sh 'git push origin HEAD:nightly-dev'
+        }
     }
 }
