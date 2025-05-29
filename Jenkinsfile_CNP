@@ -61,6 +61,8 @@ env.TEST_DATA_LOAD_SKIP_PERIOD=1
 env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctspublic.azurecr.io/imported/"
 
 withPipeline(type, product, component) {
+    steps.shell 'Testing echo..'
+
     onMaster {
         enableSlackNotifications('#ccd-master-builds')
     }
