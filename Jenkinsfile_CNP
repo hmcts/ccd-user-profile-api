@@ -92,7 +92,8 @@ withPipeline(type, product, component) {
 
     before('functionalTest:preview') {
         stage('Run Gradle Suppression Tasks') {
-            sh './gradlew suppressCves || true'
+            sh './gradlew suppressCves'
+            sh 'cat dependency-check-suppressions.xml'
             //sh './gradlew cleanSuppressions || true'
         }
 
