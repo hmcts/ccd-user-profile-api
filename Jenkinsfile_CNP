@@ -90,15 +90,13 @@ withPipeline(type, product, component) {
     disableLegacyDeployment()
     enableHighLevelDataSetup()
 
-    stage('Run Gradle Task and Ignore Failure') {
-        steps {
+    before('functionalTest:preview') {
+        stage('Run Gradle Suppression Tasks') {
             sh './gradlew suppressCves || true'
             sh './gradlew cleanSuppressions || true'
         }
-    }
 
-    stage('Auto-Commit Changes') {
-        steps {
+        stage('Auto-Commit Suppressions') {
             script {
                 gitAutoCommit(
                     commitMessage: 'Suppressing CVE - Actions',
