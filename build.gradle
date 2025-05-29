@@ -45,6 +45,7 @@ application {
 apply from: './gradle/suppress.gradle'
 dependencyCheck {
     failBuildOnCVSS = 11.0 // CVSS scores go from 0 to 10, so 11 means "never fail"
+    failBuildOnCVSS = 7.0
     failOnError = false
     suppressionFile = 'dependency-check-suppressions.xml'
 
