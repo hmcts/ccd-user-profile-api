@@ -101,12 +101,7 @@ withPipeline(type, product, component) {
                 def commitMessage = "Suppressing CVE - Actions"
                 def branch = 'test-fix-workflow-suppression'
 
-                withCredentials([usernamePassword(
-                    credentialsId: 'git-auto-commit',
-                    usernameVariable: 'GIT_USERNAME',
-                    passwordVariable: 'GIT_TOKEN'
-                )]) {
-                    sh """
+                sh """
                     git config user.name "jenkins"
                     git config user.email "jenkins@example.com"
                     git remote set-url origin https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/hmcts/ccd-user-profile-api.git
@@ -115,7 +110,6 @@ withPipeline(type, product, component) {
                     git diff --cached --quiet || git commit -m "${commitMessage}"
                     git push origin ${branch}
                 """
-                }
             }
         }
     }
