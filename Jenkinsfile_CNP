@@ -109,7 +109,7 @@ withPipeline(type, product, component) {
                     sh """
                     git config user.name "jenkins"
                     git config user.email "jenkins@example.com"
-                    git remote set-url origin https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/your-org/your-repo.git
+                    git remote set-url origin https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/hmcts/ccd-user-profile-api.git
                     git checkout ${branch}
                     git add .
                     git diff --cached --quiet || git commit -m "${commitMessage}"
