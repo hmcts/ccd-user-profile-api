@@ -50,12 +50,24 @@ withNightlyPipeline(type, product, component) {
     }
 
     afterFailure('DependencyCheckNightly') {
-        stage('Run Gradle Suppression Tasks') {
+        stage('Suppress CVEs') {
             sh './gradlew suppressCves'
+        }
+
+        stage('Show Suppression File') {
             sh 'cat dependency-check-suppressions.xml'
+        }
+
+        stage('Git Status and Add') {
             sh 'git status'
             sh 'git add -u'
+        }
+
+        stage('Commit Changes if Needed') {
             sh 'git diff --cached --quiet || git commit -m "Suppressing CVE - Actions"'
+        }
+
+        stage('Push to Branch') {
             sh 'git push origin HEAD:nightly-dev'
         }
     }
