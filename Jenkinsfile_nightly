@@ -73,13 +73,15 @@ withNightlyPipeline(type, product, component) {
                 echo "Staged files: ${changedFiles}"
 
                 if (changedFiles.contains('dependency-check-suppressions.xml')) {
+                    echo "📦 Suppression file was updated — notifying Slack"
+                    enableSlackNotifications('#nightly_cve_suppressions')
+
                     echo "✅ Only suppression file changed. Committing..."
                     git commit -m "Suppressing CVE - Actions"
 
                     git push origin HEAD:nightly-dev
 
-                    echo "📦 Suppression file was updated — notifying Slack"
-                    enableSlackNotifications('#nightly_cve_suppressions')
+
                 } else {
                     echo "✅ Suppression file not changed — skipping Slack notification"
                 }
