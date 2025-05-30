@@ -44,7 +44,12 @@ withNightlyPipeline(type, product, component) {
     enableSlackNotifications('#ccd-nightly-builds')
     enableSlackNotifications('#nightly_cve_suppressions')
     enableHighLevelDataSetup()
-    afterFailure('securitychecks') {
+
+    afterAlways('fortify-scan') {
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
+    }
+
+    afterFailure('DependencyCheckNightly') {
         stage('Run Gradle Suppression Tasks') {
             sh './gradlew suppressCves'
             sh 'cat dependency-check-suppressions.xml'
@@ -53,8 +58,5 @@ withNightlyPipeline(type, product, component) {
             sh 'git diff --cached --quiet || git commit -m "Suppressing CVE - Actions"'
             sh 'git push origin HEAD:nightly-dev'
         }
-    }
-    afterAlways('fortify-scan') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
     }
 }
