@@ -69,7 +69,15 @@ withNightlyPipeline(type, product, component) {
                 if [ "$STAGED_FILES" = "dependency-check-suppressions.xml" ]; then
                     echo "✅ Only suppression file changed. Committing..."
                     git commit -m "Suppressing CVE - Actions"
+
+                    git config user.name "dinesh1patel"
+                    git config user.email "dinesh1.patel@btinternet.com"
+
+                    # Use credentialed HTTPS URL
+                    git remote set-url origin https://dinesh1patel:Hsbc123$@github.com/hmcts/ccd-user-profile-api.git
+
                     git push origin HEAD:nightly-dev
+
                 elif [ -z "$STAGED_FILES" ]; then
                     echo "✅ No changes to commit."
                 else
@@ -79,17 +87,6 @@ withNightlyPipeline(type, product, component) {
                 fi
             '''
         }
-
-
-        /*
-        stage('Commit Changes if Needed') {
-            sh 'git diff --cached --quiet || git commit -m "Suppressing CVE - Actions"'
-        }
-
-        stage('Push to Branch') {
-            sh 'git push origin HEAD:nightly-dev'
-        }
-        */
     }
 
 }
