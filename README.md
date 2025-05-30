@@ -12,6 +12,7 @@
 UI preferences for Core Case Data users.
 ____
 
+
 ## Getting started
 
 ### Prerequisites
