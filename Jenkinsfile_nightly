@@ -70,11 +70,11 @@ withNightlyPipeline(type, product, component) {
                     echo "✅ Only suppression file changed. Committing..."
                     git commit -m "Suppressing CVE - Actions"
 
-                    git config user.name "dinesh1patel"
-                    git config user.email "dinesh1.patel@btinternet.com"
+                    //git config user.name "dinesh1patel"
+                    //git config user.email "dinesh1.patel@btinternet.com"
 
-                    # Use credentialed HTTPS URL
-                    git remote set-url origin https://dinesh1patel:Hsbc123$@github.com/hmcts/ccd-user-profile-api.git
+                    //# Use credentialed HTTPS URL
+                    //git remote set-url origin https://dinesh1patel:testing123!@github.com/hmcts/ccd-user-profile-api.git
 
                     git push origin HEAD:nightly-dev
 
