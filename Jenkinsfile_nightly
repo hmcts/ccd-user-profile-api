@@ -61,9 +61,21 @@ withNightlyPipeline(type, product, component) {
 
         stage('Git Status and Add') {
             sh 'git status'
-            sh 'git add -u'
+
+            sh '''
+                git add -u
+
+                if ! git diff --cached --quiet; then
+                    echo "There are staged changes to commit"
+                    git commit -m "Auto suppression update"
+                    git push origin HEAD:nightly-dev
+                else
+                    echo "No changes to commit"
+                fi
+            '''
         }
 
+        /*
         stage('Commit Changes if Needed') {
             sh 'git diff --cached --quiet || git commit -m "Suppressing CVE - Actions"'
         }
@@ -71,6 +83,7 @@ withNightlyPipeline(type, product, component) {
         stage('Push to Branch') {
             sh 'git push origin HEAD:nightly-dev'
         }
+        */
     }
 
 }
