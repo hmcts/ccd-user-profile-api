@@ -6,8 +6,8 @@ properties([
     pipelineTriggers([cron('H 08 * * 1-5')])
 ])
 
-//@Library("Infrastructure")
-@Library("Infrastructure@do-not-fail-build-on-dependencycheck-aggregate")
+@Library("Infrastructure")
+//@Library("Infrastructure@do-not-fail-build-on-dependencycheck-aggregate")
 
 def type = "java"
 def product = "ccd"
