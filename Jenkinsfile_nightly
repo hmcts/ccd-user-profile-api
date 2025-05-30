@@ -60,6 +60,35 @@ withNightlyPipeline(type, product, component) {
         }
 
         stage('Conditional Commit for Suppression File Only') {
+            script {
+                // Stage all modified tracked files
+                sh 'git add -u'
+
+                // Get the list of staged files
+                def changedFiles = sh(
+                    script: 'git diff --cached --name-only',
+                    returnStdout: true
+                ).trim().split("\n") as List
+
+                echo "Staged files: ${changedFiles}"
+
+                if (changedFiles.contains('dependency-check-suppressions.xml')) {
+                    echo "✅ Only suppression file changed. Committing..."
+                    git commit -m "Suppressing CVE - Actions"
+
+                    git push origin HEAD:nightly-dev
+
+                    echo "📦 Suppression file was updated — notifying Slack"
+                    enableSlackNotifications('#nightly_cve_suppressions')
+                } else {
+                    echo "✅ Suppression file not changed — skipping Slack notification"
+                }
+            }
+
+        }
+
+        /*
+        stage('Conditional Commit for Suppression File Only2') {
             sh '''
                 git add -u
 
@@ -67,8 +96,6 @@ withNightlyPipeline(type, product, component) {
                 STAGED_FILES=$(git diff --cached --name-only)
 
                 if [ "$STAGED_FILES" = "dependency-check-suppressions.xml" ]; then
-                    echo "📦 Suppression file was updated — notifying Slack"
-                    enableSlackNotifications('#nightly_cve_suppressions')
 
                     echo "✅ Only suppression file changed. Committing..."
                     git commit -m "Suppressing CVE - Actions"
@@ -90,6 +117,7 @@ withNightlyPipeline(type, product, component) {
                 fi
             '''
         }
+        */
     }
 
 }
