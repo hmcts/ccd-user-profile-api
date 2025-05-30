@@ -50,25 +50,40 @@ withNightlyPipeline(type, product, component) {
     }
 
     afterFailure('DependencyCheckNightly') {
-        stage('Suppress CVEs') {
-            sh './gradlew suppressCves'
-        }
+        stage('CVE Suppression Pipeline (Parallel)') {
+            parallel {
+                suppressCVEs: {
+                    sh './gradlew suppressCves'
+                }
 
-        stage('Show Suppression File') {
-            sh 'cat dependency-check-suppressions.xml'
-        }
+                showSuppressionFile: {
+                    // Delay slightly to wait for suppressCves to generate the file
+                    sh 'sleep 5 && cat dependency-check-suppressions.xml'
+                }
 
-        stage('Git Status and Add') {
-            sh 'git status'
-            sh 'git add -u'
-        }
+                gitStatusAndAdd: {
+                    sh '''
+                    git status
+                    git add -u
+                '''
+                }
 
-        stage('Commit Changes if Needed') {
-            sh 'git diff --cached --quiet || git commit -m "Suppressing CVE - Actions"'
-        }
+                commitChanges: {
+                    // Wait briefly to ensure 'git add' completes first
+                    sh '''
+                    sleep 10
+                    git diff --cached --quiet || git commit -m "Suppressing CVE - Actions"
+                '''
+                }
 
-        stage('Push to Branch') {
-            sh 'git push origin HEAD:nightly-dev'
+                pushChanges: {
+                    // Wait briefly to ensure commit (if any) is done
+                    sh '''
+                    sleep 15
+                    git push origin HEAD:nightly-dev
+                '''
+                }
+            }
         }
     }
 }
