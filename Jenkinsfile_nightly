@@ -42,12 +42,12 @@ withNightlyPipeline(type, product, component) {
     enableFortifyScan()
     enableDbMigration('ccd')
     enableSlackNotifications('#ccd-nightly-builds')
+    enableSlackNotifications('#nightly_cve_suppressions')
     enableHighLevelDataSetup()
     afterAlways('DependencyCheckNightly') {
         stage('Run Gradle Suppression Tasks') {
             sh './gradlew suppressCves'
             sh 'cat dependency-check-suppressions.xml'
-            //sh './gradlew cleanSuppressions || true'
             sh 'git status'
             sh 'git add -u'
             sh 'git diff --cached --quiet || git commit -m "Suppressing CVE - Actions"'
