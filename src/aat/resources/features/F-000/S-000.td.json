@@ -54,8 +54,8 @@
 						"total": "[[ANY_NUMBER_NOT_NULLABLE]]",
 						"free": "[[ANY_NUMBER_NOT_NULLABLE]]",
 						"threshold": "[[ANY_INTEGER_NOT_NULLABLE]]",
-            "exists" : true,
-            "path": "[[ANYTHING_PRESENT]]"
+						"exists" : true,
+						"path": "[[ANYTHING_PRESENT]]"
 					}
 				},
 				"livenessState": {
@@ -64,9 +64,10 @@
 				"ping": {
 					"status": "UP"
 				},
-			    "readinessState" : {
-			        "status" : "UP"
-			    }
+				"readinessState" : {
+					"status" : "UP"
+				},
+				"ssl": "[[ANY_OBJECT_NULLABLE]]"
 			},
 			"groups" : [ "liveness", "readiness" ]
 		}
