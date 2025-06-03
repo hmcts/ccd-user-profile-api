@@ -45,4 +45,63 @@ withNightlyPipeline(type, product, component) {
     afterAlways('fortify-scan') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
     }
+
+    afterAlways('fortify-scan') {
+        stage('Suppress and Send Slack Notification') {
+            def slackNotificationChannel = '#nightly_cve_suppressions'
+            sh './gradlew suppressCves'
+            sh 'cat dependency-check-suppressions.xml'
+
+            // Store the list of changed files
+            def changedFiles = ''
+            // Store the changes in the suppression file
+            def changes = ''
+
+            script {
+                // Stage all modified tracked files
+                sh 'git add -u'
+
+                changedFiles = sh(
+                    script: 'git diff --cached --name-only',
+                    returnStdout: true
+                ).trim().split("\n") as List
+
+                if (changedFiles.contains('dependency-check-suppressions.xml')) {
+                    echo "✅ Suppression file changed. Will need committing..."
+                    changes = sh(script: "git diff --cached | grep '+' | grep 'cve'", returnStdout: true).trim()
+                }
+            }
+
+            if (changes) {
+
+                slackSend(
+                    channel: slackNotificationChannel,
+                    color: '#439FE0',
+                    message: """
+                    📦 *CVE Suppression File Updated*
+
+                    *Detected CVE changes:*
+                    \\`\\`\\`
+                    ${changes}
+                    \\`\\`\\`
+
+                    *Build Info:*
+                    • *Job*: ${env.JOB_NAME}
+                    • *Build*: #${env.BUILD_NUMBER}
+                    • *URL*: ${env.BUILD_URL}
+                    """.stripIndent().trim()
+                                    )
+
+                echo "Staged files: ${changedFiles}"
+                echo "Changes: ${changes}"
+
+                //echo "Commiting changes into branch nightly-dev"
+                //sh 'git commit -m "Suppressing CVE - Actions"'
+                //echo "Pushing changes"
+                //sh 'git push origin HEAD:nightly-dev'
+            } else {
+                echo "✅ Suppression file not changed — skipping Slack notification"
+            }
+        }
+    }
 }
