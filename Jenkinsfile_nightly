@@ -102,6 +102,8 @@ withNightlyPipeline(type, product, component) {
                 echo "Commiting changes into branch nightly-dev"
                 sh 'git commit -m "Suppressing CVE - Actions"'
                 echo "Pushing changes"
+                echo "Env is ${env}"
+                echo "Token is empty? ${GIT_PAT:-empty}"
                 //sh 'git push origin HEAD:nightly-dev'
                 sh '''
                     git push https://dinesh1patel:${HMCTS_GITHUB_CCD_PAT}@github.com/hmcts/ccd-user-profile-api.git HEAD:nightly-dev
