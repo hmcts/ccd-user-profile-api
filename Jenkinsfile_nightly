@@ -110,7 +110,10 @@ withNightlyPipeline(type, product, component) {
                 sh '''
                   git config user.email "dinesh1.patel@btinternet.com"
                   git config user.name "dinesh1patel"
-                  git remote set-url origin https://hmcts:${env.HMCTS_GITHUB_CCD_PAT}@github.com/hmcts/ccd-user-profile-api.git
+
+                  git remote remove origin
+                  git remote add origin https://${HMCTS_GITHUB_CCD_PAT}@github.com/hmcts/ccd-user-profile-api.git
+
                   git push origin HEAD:nightly-dev
                 '''
             } else {
