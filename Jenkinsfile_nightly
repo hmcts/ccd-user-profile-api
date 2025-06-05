@@ -106,7 +106,7 @@ withNightlyPipeline(type, product, component) {
                 echo "Token is empty? ${GIT_PAT:-empty}"
                 //sh 'git push origin HEAD:nightly-dev'
                 sh '''
-                    git push https://dinesh1patel:${HMCTS_GITHUB_CCD_PAT}@github.com/hmcts/ccd-user-profile-api.git HEAD:nightly-dev
+                    git push https://dinesh1patel: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@github.com/hmcts/ccd-user-profile-api.git HEAD:nightly-dev
                 '''
             } else {
                 echo "✅ Suppression file not changed — skipping Slack notification"
