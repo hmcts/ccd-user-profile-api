@@ -16,7 +16,8 @@ def secrets = [
     'ccd-${env}': [
         secret('ccd-api-gateway-oauth2-client-secret', 'CCD_API_GATEWAY_OAUTH2_CLIENT_SECRET'),
         secret('definition-importer-username', 'DEFINITION_IMPORTER_USERNAME'),
-        secret('definition-importer-password', 'DEFINITION_IMPORTER_PASSWORD')
+        secret('definition-importer-password', 'DEFINITION_IMPORTER_PASSWORD'),
+        secret('ccd-github-pat', 'HMCTS_GITHUB_CCD_PAT')
     ],
     's2s-${env}': [
         secret('microservicekey-ccd-data', 'BEFTA_S2S_CLIENT_SECRET'),
@@ -98,10 +99,13 @@ withNightlyPipeline(type, product, component) {
                 echo "Staged files: ${changedFiles}"
                 echo "Changes: ${changes}"
 
-                //echo "Commiting changes into branch nightly-dev"
-                //sh 'git commit -m "Suppressing CVE - Actions"'
-                //echo "Pushing changes"
+                echo "Commiting changes into branch nightly-dev"
+                sh 'git commit -m "Suppressing CVE - Actions"'
+                echo "Pushing changes"
                 //sh 'git push origin HEAD:nightly-dev'
+                sh '''
+                    git push https://dinesh1patel:${HMCTS_GITHUB_CCD_PAT}@github.com/hmcts/ccd-user-profile-api.git HEAD:nightly-dev
+                '''
             } else {
                 echo "✅ Suppression file not changed — skipping Slack notification"
             }
