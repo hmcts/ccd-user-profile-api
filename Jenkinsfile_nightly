@@ -108,14 +108,14 @@ withNightlyPipeline(type, product, component) {
                 echo "check token 1 -> ${HMCTS_GITHUB_CCD_PAT}"
                 echo "check token 2 -> ${env.HMCTS_GITHUB_CCD_PAT}"
                 sh '''
-                  #git config user.email "dinesh1.patel@btinternet.com"
-                  #git config user.name "dinesh1patel"
+                  git config user.email "dinesh1.patel@btinternet.com"
+                  git config user.name "dinesh1patel"
 
                   # Ensure origin is reset with proper credentials
                   git remote remove origin || true
 
                   # Add remote using proper GitHub username and token
-                  git remote add origin https://hmcts:${HMCTS_GITHUB_CCD_PAT}@github.com/hmcts/ccd-user-profile-api.git
+                  git remote add origin https://dinesh1patel:${GIT_PAT}@github.com/hmcts/ccd-user-profile-api.git
 
                   # Push changes securely
                   git push origin HEAD:nightly-dev
