@@ -132,9 +132,9 @@ withNightlyPipeline(type, product, component) {
                 withCredentials([
                     gitUsernamePassword(credentialsId: credentialsId, gitToolName: 'Default')
                 ]) {
-                    sh '''
-                         git push origin HEAD:${branch}
-                    '''
+                    sh """
+                        git push origin HEAD:${branch}
+                    """
                 }
             } else {
                 echo "✅ Suppression file not changed — skipping Slack notification"
