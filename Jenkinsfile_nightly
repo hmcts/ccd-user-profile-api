@@ -51,7 +51,7 @@ withNightlyPipeline(type, product, component) {
         stage('Suppress and Send Slack Notification') {
 
             def slackNotificationChannel = '#nightly_cve_suppressions'
-            def branch = 'nightly-dev'
+            def branch = env.BRANCH_NAME
 
             sh './gradlew suppressCves'
             sh 'cat dependency-check-suppressions.xml'
