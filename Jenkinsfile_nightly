@@ -51,6 +51,7 @@ withNightlyPipeline(type, product, component) {
         stage('Suppress and Send Slack Notification') {
 
             def slackNotificationChannel = '#nightly_cve_suppressions'
+            def branch = 'nightly-dev'
 
             sh './gradlew suppressCves'
             sh 'cat dependency-check-suppressions.xml'
@@ -97,7 +98,7 @@ withNightlyPipeline(type, product, component) {
                     .readLines()
                     .collect { it.replaceFirst(/\+/, '').trim() }                // Remove leading '+'
                     .collect { it.replaceAll(/<\/?[^>]+>/, '') }                 // Strip XML/HTML tags
-                    .collect { it.replace('[Ticket]', '<https://yourtracker.example/TICKET-ID|Ticket>') } // Optional link
+                    //.collect { it.replace('[Ticket]', '<https://yourtracker.example/TICKET-ID|Ticket>') } // Optional link
                     .join('\n')
 
                 def message = """
@@ -122,7 +123,7 @@ withNightlyPipeline(type, product, component) {
                 echo "Staged files: ${changedFiles}"
                 echo "Changes: ${changes}"
 
-                echo "Commiting changes into branch nightly-dev"
+                echo "Commiting changes into branch ${branch}"
                 sh 'git commit -m "Suppressing CVE - Actions"'
                 echo "Pushing changes"
 
@@ -132,7 +133,7 @@ withNightlyPipeline(type, product, component) {
                     gitUsernamePassword(credentialsId: credentialsId, gitToolName: 'Default')
                 ]) {
                     sh '''
-                         git push origin HEAD:nightly-dev
+                         git push origin HEAD:${branch}
                     '''
                 }
             } else {
