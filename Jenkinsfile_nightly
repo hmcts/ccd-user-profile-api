@@ -104,7 +104,7 @@ withNightlyPipeline(type, product, component) {
                 def message = """
                                 📦 *CVE Suppression File Updated*
 
-                                *Detected CVE changes:*
+                                *Detected CVE changes (Please create Jira backlog ticket):*
 
                                 ${simplifiedChanges}
 
