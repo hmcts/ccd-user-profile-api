@@ -3,6 +3,6 @@
     <notes>Temporary Suppression
         CVE-2024-38820 refer [https://tools.hmcts.net/jira/browse/CFTS-6913]
     </notes>
-    <cve>CVE-2024-38820</cve>
+
   </suppress>
 </suppressions>
