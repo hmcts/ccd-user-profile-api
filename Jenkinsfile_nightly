@@ -47,13 +47,18 @@ withNightlyPipeline(type, product, component) {
     }
 
     afterAlways('fortify-scan') {
+
         stage('Suppress and Send Slack Notification') {
+
             def slackNotificationChannel = '#nightly_cve_suppressions'
+            def branch = 'nightly-dev'
+
             sh './gradlew suppressCves'
             sh 'cat dependency-check-suppressions.xml'
 
             // Store the list of changed files
             def changedFiles = ''
+
             // Store the changes in the suppression file
             def changes = ''
 
@@ -64,41 +69,73 @@ withNightlyPipeline(type, product, component) {
                 changedFiles = sh(
                     script: 'git diff --cached --name-only',
                     returnStdout: true
-                ).trim().split("\n") as List
+                ).trim().split("\n").findAll { it?.trim() } as List
 
-                if (changedFiles.contains('dependency-check-suppressions.xml')) {
-                    echo "✅ Suppression file changed. Will need committing..."
-                    changes = sh(script: "git diff --cached | grep '+' | grep 'cve'", returnStdout: true).trim()
+                if (changedFiles.size() == 1 && changedFiles[0] == 'dependency-check-suppressions.xml') {
+                    echo "✅ Only suppression file changed. Proceeding..."
+
+                    // Verify it includes CVE-related changes
+                    changes = sh(
+                        script: "git diff --cached dependency-check-suppressions.xml | grep '+' | grep 'CVE'",
+                        returnStdout: true
+                    ).trim()
+
+                    if (changes) {
+                        echo "✅ CVE-related changes found in suppression file."
+                    } else {
+                        echo "⚠️ No CVE-related changes detected."
+                    }
+
+                } else {
+                    error "❌ Invalid changes: Only 'dependency-check-suppressions.xml' must be committed. Found: ${changedFiles}"
                 }
             }
 
             if (changes) {
 
+                // Clean and format CVE lines
+                def simplifiedChanges = changes
+                    .readLines()
+                    .collect { it.replaceFirst(/\+/, '').trim() }                // Remove leading '+'
+                    .collect { it.replaceAll(/<\/?[^>]+>/, '') }                 // Strip XML/HTML tags
+                //.collect { it.replace('[Ticket]', '<https://yourtracker.example/TICKET-ID|Ticket>') } // Optional link
+                    .join('\n')
+
+                def message = """
+                                📦 *CVE Suppression File Updated*
+
+                                *Detected CVE changes:*
+
+                                ${simplifiedChanges}
+
+                                *Build Info:*
+                                • *Job*: ${env.JOB_NAME}
+                                • *Build*: #${env.BUILD_NUMBER}
+                                • *URL*: ${env.BUILD_URL}
+                               """.stripIndent().trim()
+
                 slackSend(
                     channel: slackNotificationChannel,
                     color: '#439FE0',
-                    message: """
-                    📦 *CVE Suppression File Updated*
-
-                    *Detected CVE changes:*
-                    \\`\\`\\`
-                    ${changes}
-                    \\`\\`\\`
-
-                    *Build Info:*
-                    • *Job*: ${env.JOB_NAME}
-                    • *Build*: #${env.BUILD_NUMBER}
-                    • *URL*: ${env.BUILD_URL}
-                    """.stripIndent().trim()
-                                    )
+                    message: message
+                )
 
                 echo "Staged files: ${changedFiles}"
                 echo "Changes: ${changes}"
 
-                //echo "Commiting changes into branch nightly-dev"
-                //sh 'git commit -m "Suppressing CVE - Actions"'
-                //echo "Pushing changes"
-                //sh 'git push origin HEAD:nightly-dev'
+                echo "Commiting changes into branch ${branch}"
+                sh 'git commit -m "Suppressing CVE - Actions"'
+                echo "Pushing changes"
+
+                def credentialsId = env.GIT_CREDENTIALS_ID
+
+                withCredentials([
+                    gitUsernamePassword(credentialsId: credentialsId, gitToolName: 'Default')
+                ]) {
+                    sh '''
+                         git push origin HEAD:${branch}
+                    '''
+                }
             } else {
                 echo "✅ Suppression file not changed — skipping Slack notification"
             }
