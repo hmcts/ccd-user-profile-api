@@ -76,7 +76,7 @@ withNightlyPipeline(type, product, component) {
 
                     // Verify it includes CVE-related changes
                     changes = sh(
-                        script: "git diff --cached dependency-check-suppressions.xml | grep '+' | grep 'CVE'",
+                        script: "git diff --cached dependency-check-suppressions.xml | grep '+' | grep '<cve>'",
                         returnStdout: true
                     ).trim()
 
