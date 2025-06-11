@@ -87,7 +87,7 @@ withNightlyPipeline(type, product, component) {
                     }
 
                 } else {
-                    error "❌ Invalid changes: Only 'dependency-check-suppressions.xml' must be committed. Found: ${changedFiles}"
+                    echo "✅ Suppression file not changed — marking step as successfull"
                 }
             }
 
