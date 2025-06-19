@@ -55,3 +55,15 @@ variable "subnet_suffix" {
   type        = string
   description = "Suffix to append to the subnet name, the originally created one used by this module is full in a number of environments."
 }
+
+variable "action_group_name" {
+  description = "The name of the Action Group to create."
+  type        = string
+  default     = "action_group"
+}
+
+variable "email_address_key" {
+  description = "Email address key in azure Key Vault."
+  type        = string
+  default     = "db-alert-monitoring-email-address"
+}
