@@ -2,8 +2,12 @@
   <suppress>
     <notes>Temporary Suppression
         CVE-2024-38820 refer [Ticket]
-        CVE-2024-22259 refer [Ticket]</notes>
+        CVE-2024-22259 refer [Ticket]
+        CVE-2025-48988 refer [Ticket]
+        CVE-2025-46701 refer [Ticket]</notes>
     <cve>CVE-2024-38820</cve>
     <cve>CVE-2024-22259</cve>
+    <cve>CVE-2025-48988</cve>
+    <cve>CVE-2025-46701</cve>
   </suppress>
 </suppressions>
