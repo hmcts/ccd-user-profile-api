@@ -192,7 +192,7 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
     testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.24.2'
-    testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: '9.2.3'
+    testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: '9.2.4'
     testImplementation 'com.github.hmcts:fortify-client:1.4.9:all'
     testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.9.11'
 }
