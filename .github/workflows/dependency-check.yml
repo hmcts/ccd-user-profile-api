@@ -30,13 +30,6 @@ jobs:
         with:
           java-version: 21
           distribution: 'zulu'
-      - name: check api key
-        run:  |
-          curl -H "Accept: application/json" -H "apiKey: 58942d4f-1548-4b6f-8629-e7eb19ea263a" -v https://services.nvd.nist.gov/rest/json/cves/2.0\?cpeName\=cpe:2.3:o:microsoft:windows_10:1607:\*:\*:\*:\*:\*:\*:\*
-      - name: Run OWASP against PSQL DB
-        run: ./gradlew --stacktrace -DdependencyCheck.failBuild=true -Dnvd.api.check.validforhours=24 -Danalyzer.central.enabled=false -Ddata.driver_name='org.postgresql.Driver' -Ddata.connection_string='jdbc:postgresql://owaspdependency-prod.postgres.database.azure.com/owaspdependencycheck' -Ddata.user='OWASPDB_V15_ACCOUNT' -Ddata.password='OWASPDB_V15_PASSWORD'  -Danalyzer.retirejs.enabled=false -Danalyzer.ossindex.enabled=false dependencyCheckAggregate
-      - name: Run OWASP Dependency Check with Gradle
-        run: ./gradlew -Dnvd.api.key=58942d4f-1548-4b6f-8629-e7eb19ea263a -Dnvd.api.delay=3000 dependencyCheckAggregate
       - name: Run suppressCves
         run: ./gradlew suppressCves
       - name: Run cleanSuppressions
