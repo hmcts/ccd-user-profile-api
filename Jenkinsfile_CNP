@@ -95,8 +95,8 @@ withPipeline(type, product, component) {
      steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/checkstyle/*.html'
      steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/pmd/*.html'
 
-     copyIgnore('./build/reports/tests/test', './Unit Tests/')
-     copyIgnore('./build/reports/tests/integration', './Integration Tests/')
+     //copyIgnore('./build/reports/tests/test', './Unit Tests/')
+     //copyIgnore('./build/reports/tests/integration', './Integration Tests/')
      steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Unit Tests/**/*'
      steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Integration Tests/**/*'
 
@@ -104,7 +104,7 @@ withPipeline(type, product, component) {
           allowMissing         : true,
           alwaysLinkToLastBuild: true,
           keepAll              : true,
-          reportDir            : 'Unit Tests',
+          reportDir            : 'build/reports/tests/test',
           reportFiles          : "index.html",
           reportName           : "Unit Test Report"
       ]
@@ -113,7 +113,7 @@ withPipeline(type, product, component) {
       allowMissing         : true,
       alwaysLinkToLastBuild: true,
       keepAll              : true,
-      reportDir            : 'Integration Tests',
+      reportDir            : 'build/reports/tests/integration',
       reportFiles          : "index.html",
       reportName           : "Integration Test Report"
     ]
