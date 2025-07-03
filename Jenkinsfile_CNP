@@ -97,8 +97,8 @@ withPipeline(type, product, component) {
 
      //copyIgnore('./build/reports/tests/test', './Unit Tests/')
      //copyIgnore('./build/reports/tests/integration', './Integration Tests/')
-     steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Unit Tests/**/*'
-     steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Integration Tests/**/*'
+     //steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Unit Tests/**/*'
+     //steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Integration Tests/**/*'
 
     publishHTML target: [
           allowMissing         : true,
