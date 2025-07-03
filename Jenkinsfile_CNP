@@ -181,5 +181,6 @@ withPipeline(type, product, component) {
             reportFiles          : "index.html",
             reportName           : "Contract Tests Report"
         ]
+
     }
-}
+
