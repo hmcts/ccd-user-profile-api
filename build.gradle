@@ -16,6 +16,8 @@ plugins {
     id 'uk.gov.hmcts.java' version '0.12.67'
 }
 
+apply from: "$rootDir/gradle/suppress.gradle"
+
 dependencyUpdates.resolutionStrategy {
     componentSelection { rules ->
         rules.all { ComponentSelection selection ->
