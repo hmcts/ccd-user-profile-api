@@ -50,11 +50,20 @@ withNightlyPipeline(type, product, component) {
 
         stage('Suppress and Send Slack Notification') {
 
+            script {
+                def suppressionFile = sh(
+                    script: './gradlew printSuppressionFile -q',
+                    returnStdout: true
+                ).trim().split("=")[1]
+
+                echo "Suppression file path is: ${suppressionFile}"
+            }
+
             def slackNotificationChannel = '#nightly_cve_suppressions'
             def branch = env.BRANCH_NAME
 
             sh './gradlew suppressCves'
-            sh 'cat dependency-check-suppressions.xml'
+            sh "cat ${suppressionFile}"
 
             // Store the list of changed files
             def changedFiles = ''
@@ -71,12 +80,12 @@ withNightlyPipeline(type, product, component) {
                     returnStdout: true
                 ).trim().split("\n").findAll { it?.trim() } as List
 
-                if (changedFiles.size() == 1 && changedFiles[0] == 'dependency-check-suppressions.xml') {
+                if (changedFiles.size() == 1 && changedFiles[0] == suppressionFile) {
                     echo "✅ Only suppression file changed. Proceeding..."
 
                     // Verify it includes CVE-related changes
                     changes = sh(
-                        script: "git diff --cached dependency-check-suppressions.xml | grep '+' | grep '<cve>'",
+                        script: "git diff --cached ${suppressionFile} | grep '+' | grep '<cve>'",
                         returnStdout: true
                     ).trim()
 
