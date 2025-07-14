@@ -57,13 +57,18 @@ withNightlyPipeline(type, product, component) {
                 ).trim().split("=")[1]
 
                 echo "Suppression file path is: ${suppressionFile}"
+
+                sh """
+                  echo 'Contents of ${suppressionFile}:'
+                  cat '${suppressionFile}'
+                """
             }
 
             def slackNotificationChannel = '#nightly_cve_suppressions'
             def branch = env.BRANCH_NAME
 
             sh './gradlew suppressCves'
-            sh "cat ${suppressionFile}"
+
 
             // Store the list of changed files
             def changedFiles = ''
