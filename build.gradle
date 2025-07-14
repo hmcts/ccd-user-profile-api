@@ -125,8 +125,7 @@ ext {
     lombokVersion = '1.18.38'
     reformLogging = '6.1.9'
     springCloudVersion = '2024.0.1'
-    //springSecurity = '6.4.6'
-    springSecurity = '6.1.5'
+    springSecurity = '6.4.6'
     limits = [
             'instruction': 6,
             'branch'     : 8,
@@ -145,7 +144,7 @@ dependencyManagement {
 
 dependencies {
 
-    implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.78'
+    //implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.78'
     compileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     annotationProcessor  group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
