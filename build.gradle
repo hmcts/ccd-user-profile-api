@@ -112,10 +112,6 @@ configurations {
         exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'com.h2database', module: 'h2'
-
-        resolutionStrategy {
-            force 'org.apache.struts:struts2-core:2.3.1'
-        }
     }
 }
 // end::jar[]
@@ -151,8 +147,6 @@ dependencyManagement {
 
 dependencies {
 
-    implementation 'commons-fileupload:commons-fileupload:1.2.1' // has CVE-2016-3092
-
     implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.78'
     compileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     annotationProcessor  group: 'org.projectlombok', name: 'lombok', version: lombokVersion
@@ -182,6 +176,7 @@ dependencies {
     implementation group: 'javax.inject', name: 'javax.inject', version: '1'
 
     //implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
+    implementation 'commons-fileupload:commons-fileupload:1.2.1' // has CVE-2016-3092
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.13.0'
     implementation group: 'com.sun.mail', name: 'mailapi', version: '2.0.1'
 
