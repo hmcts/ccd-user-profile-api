@@ -35,10 +35,10 @@ application {
 
 apply from: './gradle/suppress.gradle'
 dependencyCheck {
-    failBuildOnCVSS = 0.0 // allow build to continue even if CVEs are found
-    format = 'ALL'
-    //suppressionFile = 'config/owasp/suppressions.xml'
-    suppressionFile = null
+    //failBuildOnCVSS = 0.0 // allow build to continue even if CVEs are found
+    //format = 'ALL'
+    suppressionFile = 'config/owasp/suppressions.xml'
+    //suppressionFile = null
 }
 
 tasks.register("printSuppressionFile") {
