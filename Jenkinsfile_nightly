@@ -51,15 +51,26 @@ withNightlyPipeline(type, product, component) {
         stage('Suppress and Send Slack Notification') {
 
             script {
-                def suppressionFile = sh(
+                if (env.CHANGE_ID) {
+                    echo "This is a PR: #${env.CHANGE_ID}"
+                    echo "Source branch: ${env.CHANGE_BRANCH}"
+                    echo "Target branch: ${env.CHANGE_TARGET}"
+                } else {
+                    echo "Not a pull request — branch: ${env.BRANCH_NAME}"
+                }
+            }
+
+            def suppressionFile = ''
+            script {
+                suppressionFile = sh(
                     script: './gradlew printSuppressionFile -q',
                     returnStdout: true
                 ).trim().split("=")[1]
 
-                echo "Suppression file path is: ${suppressionFile}"
+                echo "Suppression file and path: ${suppressionFile}"
 
                 sh """
-                  echo 'Contents of ${suppressionFile}:'
+                  echo 'Current contents of ${suppressionFile}:'
                   cat '${suppressionFile}'
                 """
             }
@@ -67,8 +78,12 @@ withNightlyPipeline(type, product, component) {
             def slackNotificationChannel = '#nightly_cve_suppressions'
             def branch = env.BRANCH_NAME
 
-            sh './gradlew suppressCves'
+            if (env.CHANGE_ID) {
+                // If this is a PR, push changes to the PR branch
+                branch = env.CHANGE_BRANCH
+            }
 
+            sh './gradlew suppressCves'
 
             // Store the list of changed files
             def changedFiles = ''
@@ -85,12 +100,25 @@ withNightlyPipeline(type, product, component) {
                     returnStdout: true
                 ).trim().split("\n").findAll { it?.trim() } as List
 
+                echo "List of changed files: ${changedFiles}"
+
+                def fileName = sh(
+                    script: """
+                        echo '${changedFiles}' | tr -d '[]' | xargs basename
+                    """,
+                    returnStdout: true
+                ).trim()
+
+                echo "File name: ${fileName}" // → suppressions.xml
+
                 if (changedFiles.size() == 1 && changedFiles[0] == suppressionFile) {
                     echo "✅ Only suppression file changed. Proceeding..."
 
                     // Verify it includes CVE-related changes
                     changes = sh(
-                        script: "git diff --cached ${suppressionFile} | grep '+' | grep '<cve>'",
+                        script: """
+                          git diff --cached ${suppressionFile} | grep '^+' | grep '<cve>' || true
+                        """,
                         returnStdout: true
                     ).trim()
 
