@@ -172,8 +172,7 @@ dependencies {
     }
     implementation group: 'javax.inject', name: 'javax.inject', version: '1'
 
-    //implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5' //this is what is in master currently, commented out
-    implementation 'commons-fileupload:commons-fileupload:1.2.1' // has CVE-2016-3092, added to replicate a dependency check failure in the pipeline
+    implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.13.0'
     implementation group: 'com.sun.mail', name: 'mailapi', version: '2.0.1'
 
