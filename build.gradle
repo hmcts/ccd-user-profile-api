@@ -16,8 +16,6 @@ plugins {
     id 'uk.gov.hmcts.java' version '0.12.67'
 }
 
-apply from: "$rootDir/gradle/suppress.gradle"
-
 dependencyUpdates.resolutionStrategy {
     componentSelection { rules ->
         rules.all { ComponentSelection selection ->
@@ -35,8 +33,15 @@ application {
     mainClass = 'uk.gov.hmcts.ccd.UserProfileApplication'
 }
 
+apply from: './gradle/suppress.gradle'
 dependencyCheck {
     suppressionFile = 'config/owasp/suppressions.xml'
+}
+
+tasks.register("printSuppressionFile") {
+    doLast {
+        println "SUPPRESSION_FILE=${dependencyCheck.suppressionFile}"
+    }
 }
 
  // tag::repositories[]
@@ -193,7 +198,7 @@ dependencies {
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
-    testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.24.2'
+    testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.25.4'
     testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: '9.2.4'
     testImplementation 'com.github.hmcts:fortify-client:1.4.9:all'
     testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0'
