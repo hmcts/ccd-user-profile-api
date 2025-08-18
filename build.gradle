@@ -12,7 +12,7 @@ plugins {
     id 'jacoco'
     id "com.github.kt3k.coveralls" version "2.12.2"
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.25'
-    id "info.solidsoft.pitest" version '1.9.11'
+    id "info.solidsoft.pitest" version '1.15.0'
     id 'uk.gov.hmcts.java' version '0.12.67'
 }
 
