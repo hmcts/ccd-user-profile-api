@@ -3,7 +3,7 @@
 properties([
     // H allow predefined but random minute see https://en.wikipedia.org/wiki/Cron#Non-standard_characters
     //CCD-3539 (Stop running Nightly builds on weekends). Original schedule was 'H 05 * * *'
-    pipelineTriggers([cron('H 08 * * 1-5')])
+    //pipelineTriggers([cron('H 08 * * 1-5')])
 ])
 
 @Library("Infrastructure")
@@ -37,13 +37,6 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
 env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctspublic.azurecr.io/imported/"
 
 withNightlyPipeline(type, product, component) {
-
-    stage('Wait for ccd-data-store-api job') {
-        script {
-            echo "Waiting for upstream ccd-data-store-api job to complete..."
-            build job: 'HMCTS_a_to_c_Nightly/ccd-data-store-api/master', wait: true, propagate: false
-        }
-    }
 
     loadVaultSecrets(secrets)
     enableFortifyScan()
