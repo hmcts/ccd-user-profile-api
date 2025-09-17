@@ -47,7 +47,7 @@ variable "aks_subscription_id" {}
 variable "pgsql_storage_mb" {
   description = "Max storage allowed for the PGSql Flexibile instance"
   type        = number
-  default     = 65536
+  default     = 128000
 }
 
 variable "subnet_suffix" {
