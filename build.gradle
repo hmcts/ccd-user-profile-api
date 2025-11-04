@@ -122,7 +122,7 @@ java {
 
 ext {
     sl4jVersion = '2.0.17'
-    lombokVersion = '1.18.38'
+    lombokVersion = '1.18.42'
     reformLogging = '6.1.9'
     springCloudVersion = '2024.0.2'
     springSecurity = '6.4.6'
