@@ -146,7 +146,7 @@ dependencyManagement {
 
 dependencies {
 
-    implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.81'
+    implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.82'
     compileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     annotationProcessor  group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
@@ -168,14 +168,14 @@ dependencies {
     runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.7.8'
     implementation group: 'com.github.hmcts', name: 'auth-checker-lib', version: '2.1.5'
     constraints {
-        implementation('com.google.guava:guava:33.4.8-jre') {
+        implementation('com.google.guava:guava:33.5.0-jre') {
             because 'previous versions of this transitive dependency have CVEs'
         }
     }
     implementation group: 'javax.inject', name: 'javax.inject', version: '1'
 
     implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.6.0'
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.18.0'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.20.0'
     implementation group: 'com.sun.mail', name: 'mailapi', version: '2.0.2'
 
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.14'
@@ -193,7 +193,7 @@ dependencies {
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
 
-    testImplementation "org.junit.jupiter:junit-jupiter:5.13.4"
+    testImplementation "org.junit.jupiter:junit-jupiter:5.14.1"
     testImplementation "org.testcontainers:testcontainers:1.21.1"
     testImplementation "org.testcontainers:junit-jupiter:1.21.1"
     testImplementation 'org.testcontainers:postgresql'
