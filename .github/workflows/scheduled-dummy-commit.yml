@@ -1,6 +1,9 @@
 name: Scheduled Dummy Commit to develop Branch
 
 on:
+  push:
+    branches:
+      - renovate/actions-checkout-6.x
   schedule:
     - cron: "30 8 */3 * *"
   workflow_dispatch:

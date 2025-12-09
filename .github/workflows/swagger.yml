@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - test-swagger-publish-off-master
+      - renovate/actions-checkout-6.x
 
 jobs:
   build:
