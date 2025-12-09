@@ -35,7 +35,6 @@ application {
 
 apply from: './gradle/suppress.gradle'
 dependencyCheck {
-    failBuildOnCVSS = 0.0
     suppressionFile = 'config/owasp/suppressions.xml'
 }
 
