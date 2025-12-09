@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - renovate/actions-setup-java-5.x
 
 jobs:
   build:
