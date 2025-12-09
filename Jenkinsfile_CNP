@@ -55,7 +55,6 @@ env.CCD_API_GATEWAY_OAUTH2_REDIRECT_URL = "https://www-ccd.aat.platform.hmcts.ne
 env.CCD_CASEWORKER_AUTOTEST_EMAIL = "auto.test.cnp@gmail.com"
 env.BEFTA_RESPONSE_HEADER_CHECK_POLICY="JUST_WARN" // Temporary workaround for platform changes: turn BEFTA header checks to warning mode
 env.TEST_DATA_LOAD_SKIP_PERIOD=1
-env.FAIL_BUILD_ON_CVSS = '0.0'
 
 // Prevent Docker hub rate limit errors by ensuring that testcontainers uses images from hmctspublic ACR
 env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctspublic.azurecr.io/imported/"
