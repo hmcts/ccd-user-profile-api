@@ -126,6 +126,7 @@ ext {
     reformLogging = '6.1.9'
     springCloudVersion = '2024.0.2'
     springSecurity = '6.4.6'
+    //springSecurity = '6.5.7'
     limits = [
             'instruction': 6,
             'branch'     : 8,
