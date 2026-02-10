@@ -166,7 +166,7 @@ dependencies {
     implementation "org.flywaydb:flyway-core:9.22.3"
     implementation group: 'org.yaml', name: 'snakeyaml', version: '2.5'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.1.0'
-    runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.7.8'
+    runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.7.9'
     implementation group: 'com.github.hmcts', name: 'auth-checker-lib', version: '2.1.5'
     constraints {
         implementation('com.google.guava:guava:33.5.0-jre') {
