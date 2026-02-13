@@ -12,6 +12,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import uk.gov.hmcts.ccd.data.userprofile.UserProfileEntity;
 
@@ -31,10 +32,12 @@ public abstract class BaseTest {
                                                                  Charset.forName("utf8"));
     protected static final ObjectMapper mapper = new ObjectMapper();
 
+    @Container
     static PostgreSQLContainer<?> postgresqlContainer = new PostgreSQLContainer<>("postgres:15");
 
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
+        startPostgreSqlContainer();
         registry.add("spring.datasource.url", postgresqlContainer::getJdbcUrl);
         registry.add("spring.datasource.username", postgresqlContainer::getUsername);
         registry.add("spring.datasource.password", postgresqlContainer::getPassword);
@@ -45,8 +48,14 @@ public abstract class BaseTest {
 
     @BeforeAll
     public static void beforeAll() {
-        postgresqlContainer.start();
+        startPostgreSqlContainer();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    }
+
+    private static void startPostgreSqlContainer() {
+        if (!postgresqlContainer.isRunning()) {
+            postgresqlContainer.start();
+        }
     }
 
     protected UserProfileEntity mapUserProfileData(final ResultSet resultSet,
