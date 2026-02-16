@@ -150,7 +150,7 @@ dependencies {
     annotationProcessor  group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
     implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLogging
-    implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+    implementation 'net.logstash.logback:logstash-logback-encoder:9.0'
 
     implementation group: 'org.slf4j', name: 'slf4j-api', version: sl4jVersion
     implementation group: 'org.slf4j', name: 'jcl-over-slf4j', version: sl4jVersion
