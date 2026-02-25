@@ -125,7 +125,7 @@ ext {
     lombokVersion = '1.18.42'
     reformLogging = '6.1.9'
     springCloudVersion = '2025.0.1'
-    springSecurity = '6.5.7'
+    springSecurity = '6.5.1'
     limits = [
             'instruction': 6,
             'branch'     : 8,
