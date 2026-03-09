@@ -37,9 +37,9 @@ application {
 apply from: './gradle/suppress.gradle'
 dependencyCheck {
     failBuildOnCVSS = 0
-    formats = ['XML']
     scanConfigurations = ['runtimeClasspath']
-    suppressionFile = 'config/owasp/suppressions.xml'
+    formats = ['HTML', 'XML']
+    suppressionFiles = ['config/owasp/suppressions.xml']
     analyzers {
         assemblyEnabled = false
         centralEnabled = false
@@ -51,9 +51,18 @@ dependencyCheck {
 }
 
 tasks.register("printSuppressionFile") {
-    doLast {
-        println "SUPPRESSION_FILE=${dependencyCheck.suppressionFile}"
+  doLast {
+    def suppressionFile = dependencyCheck.getSuppressionFiles()
+    if (suppressionFile?.metaClass?.respondsTo(suppressionFile, "getOrNull")) {
+      suppressionFile = suppressionFile.getOrNull()
+    } else if (suppressionFile?.metaClass?.respondsTo(suppressionFile, "get")) {
+      suppressionFile = suppressionFile.get()
     }
+    if (suppressionFile instanceof Collection) {
+      suppressionFile = suppressionFile.find { it }?.toString()
+    }
+    println "SUPPRESSION_FILE=${suppressionFile}"
+  }
 }
 
  // tag::repositories[]
