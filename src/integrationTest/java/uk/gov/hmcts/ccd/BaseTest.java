@@ -12,7 +12,6 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import uk.gov.hmcts.ccd.data.userprofile.UserProfileEntity;
 
@@ -32,7 +31,6 @@ public abstract class BaseTest {
                                                                  Charset.forName("utf8"));
     protected static final ObjectMapper mapper = new ObjectMapper();
 
-    @Container
     static PostgreSQLContainer<?> postgresqlContainer = new PostgreSQLContainer<>("postgres:15");
 
     @DynamicPropertySource
@@ -48,14 +46,8 @@ public abstract class BaseTest {
 
     @BeforeAll
     public static void beforeAll() {
-        startPostgreSqlContainer();
+        postgresqlContainer.start();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-    }
-
-    private static void startPostgreSqlContainer() {
-        if (!postgresqlContainer.isRunning()) {
-            postgresqlContainer.start();
-        }
     }
 
     protected UserProfileEntity mapUserProfileData(final ResultSet resultSet,
