@@ -1,4 +1,4 @@
-FROM postgres:15
+FROM postgres:18
 USER postgres
 LABEL maintainer="https://github.com/hmcts/ccd-user-profile-api"
 
