@@ -145,7 +145,7 @@ java {
 ext {
     sl4jVersion = '2.0.17'
     reformLogging = '8.0.0'
-    lombokVersion = '1.18.44'
+    lombokVersion = '1.18.46'
     springCloudVersion = '2025.0.1'
     springSecurity = '6.4.13'
     //springSecurity = '6.5.7'
@@ -223,7 +223,7 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
     testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.25.4'
-    testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: '9.2.4'
+    testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: '9.2.6'
     testImplementation 'com.github.hmcts:fortify-client:1.4.10:all'
     testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0'
 }
