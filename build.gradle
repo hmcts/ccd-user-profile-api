@@ -35,11 +35,10 @@ application {
 }
 
 apply from: './gradle/suppress.gradle'
-def dependencyCheckDataVersion = '12.2.2'
+def dependencyCheckDataVersion = '12.2.2-schema-5.6'
 def dependencyCheckDataDirectory = file(
     System.getProperty('data.directory') ?: "${gradle.gradleUserHomeDir}/dependency-check-data/${dependencyCheckDataVersion}"
 )
-def dependencyCheckDataMarker = file("${dependencyCheckDataDirectory}/.updated-${dependencyCheckDataVersion}")
 
 dependencyCheck {
     failBuildOnCVSS = 0
@@ -60,18 +59,8 @@ dependencyCheck {
     }
 }
 
-tasks.named('dependencyCheckPurge') {
-    onlyIf {
-        !dependencyCheckDataMarker.exists()
-    }
-}
-
 tasks.named('dependencyCheckUpdate') {
     dependsOn tasks.named('dependencyCheckPurge')
-    doLast {
-        dependencyCheckDataMarker.parentFile.mkdirs()
-        dependencyCheckDataMarker.text = dependencyCheckDataVersion
-    }
 }
 
 tasks.matching { it.name in ['dependencyCheckAnalyze', 'dependencyCheckAggregate'] }.configureEach {
