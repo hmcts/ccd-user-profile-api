@@ -41,6 +41,9 @@ dependencyCheck {
     formats = ['HTML', 'XML']
     suppressionFiles = ['config/owasp/suppressions.xml']
     autoUpdate = true
+    data {
+        directory = "${gradle.gradleUserHomeDir}/dependency-check-data/12.2.2"
+    }
     analyzers {
         assemblyEnabled = false
         centralEnabled = false
