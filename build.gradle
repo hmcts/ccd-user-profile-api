@@ -35,6 +35,12 @@ application {
 }
 
 apply from: './gradle/suppress.gradle'
+def dependencyCheckDataVersion = '12.2.2'
+def dependencyCheckDataDirectory = file(
+    System.getProperty('data.directory') ?: "${gradle.gradleUserHomeDir}/dependency-check-data/${dependencyCheckDataVersion}"
+)
+def dependencyCheckDataMarker = file("${dependencyCheckDataDirectory}/.updated-${dependencyCheckDataVersion}")
+
 dependencyCheck {
     failBuildOnCVSS = 0
     scanConfigurations = ['runtimeClasspath']
@@ -42,7 +48,7 @@ dependencyCheck {
     suppressionFiles = ['config/owasp/suppressions.xml']
     autoUpdate = true
     data {
-        directory = "${gradle.gradleUserHomeDir}/dependency-check-data/12.2.2"
+        directory = dependencyCheckDataDirectory.absolutePath
     }
     analyzers {
         assemblyEnabled = false
@@ -51,6 +57,20 @@ dependencyCheck {
         retirejs {
             enabled = false
         }
+    }
+}
+
+tasks.named('dependencyCheckPurge') {
+    onlyIf {
+        !dependencyCheckDataMarker.exists()
+    }
+}
+
+tasks.named('dependencyCheckUpdate') {
+    dependsOn tasks.named('dependencyCheckPurge')
+    doLast {
+        dependencyCheckDataMarker.parentFile.mkdirs()
+        dependencyCheckDataMarker.text = dependencyCheckDataVersion
     }
 }
 
