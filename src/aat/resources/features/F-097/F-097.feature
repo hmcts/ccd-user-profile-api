@@ -40,7 +40,7 @@ Scenario: must return 403 when request provides authentic credentials without au
       And it is submitted to call the [Get User Profiles by Jurisdiction Id] operation of [CCD User Profile API]
 
      Then a negative response is received
-      And the response [contains a HTTP 403 Forbidden]
+      And the response [contains a HTTP 403 Access Denied]
       And the response has all other details as expected
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
