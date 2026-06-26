@@ -1,150 +1,90 @@
 #!groovy
+import groovy.json.JsonOutput
+import jenkins.model.Jenkins
 
-properties([
-    // H allow predefined but random minute see https://en.wikipedia.org/wiki/Cron#Non-standard_characters
-    //CCD-3539 (Stop running Nightly builds on weekends). Original schedule was 'H 05 * * *'
-    //pipelineTriggers([cron('H 08 * * 1-5')])
-])
+properties(
+        [[$class: 'GithubProjectProperty', projectUrlStr: 'https://git.reform.hmcts.net/case-management/user-profile-app'],
+         pipelineTriggers([[$class: 'GitHubPushTrigger']])]
+)
 
-@Library("Infrastructure")
-
-def type = "java"
-def product = "ccd"
-def component = "user-profile-api"
-
-def secrets = [
-    'ccd-${env}': [
-        secret('ccd-api-gateway-oauth2-client-secret', 'CCD_API_GATEWAY_OAUTH2_CLIENT_SECRET'),
-        secret('definition-importer-username', 'DEFINITION_IMPORTER_USERNAME'),
-        secret('definition-importer-password', 'DEFINITION_IMPORTER_PASSWORD')
+def jenkinsLatestBuildStatusJobs = [
+    [
+        group: 'ccd',
+        name: 'ccd-definition-store-api',
+        fullName: 'HMCTS_a_to_c/ccd-definition-store-api/master'
     ],
-    's2s-${env}': [
-        secret('microservicekey-ccd-data', 'BEFTA_S2S_CLIENT_SECRET'),
-        secret('microservicekey-ccd-data', 'CCD_DS_SERVICE_SECRET')
+    [
+        group: 'ccd',
+        name: 'ccd-data-store-api',
+        fullName: 'HMCTS_a_to_c/ccd-data-store-api/master'
     ]
 ]
 
-static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
-    [ $class: 'AzureKeyVaultSecret',
-      secretType: 'Secret',
-      name: secretName,
-      version: '',
-      envVariable: envVar
+def collectJenkinsLatestBuildStatuses(List<Map<String, String>> configuredJobs) {
+    def rootUrl = Jenkins.instance.getRootUrl()
+
+    if (!rootUrl) {
+        error('Jenkins root URL is not configured. Set it in Manage Jenkins > System > Jenkins URL.')
+    }
+
+    def builds = configuredJobs.collect { configuredJob ->
+        def job = Jenkins.instance.getItemByFullName(configuredJob.fullName as String)
+
+        if (job == null) {
+            return [
+                group: configuredJob.group,
+                name: configuredJob.name,
+                result: 'UNKNOWN',
+                error: "Jenkins job not found: ${configuredJob.fullName}"
+            ]
+        }
+
+        def build = job.getLastBuild()
+
+        if (build == null) {
+            return [
+                group: configuredJob.group,
+                name: configuredJob.name,
+                result: 'UNKNOWN',
+                error: "No builds found for Jenkins job: ${configuredJob.fullName}"
+            ]
+        }
+
+        return [
+            group: configuredJob.group,
+            name: configuredJob.name,
+            buildNumber: build.getNumber(),
+            result: build.getResult()?.toString(),
+            timestamp: build.getTimeInMillis(),
+            url: rootUrl + build.getUrl()
+        ]
+    }
+
+    return [
+        event_type: 'jenkins_build_statuses',
+        client_payload: [
+            builds: builds
+        ]
     ]
 }
 
-// Prevent Docker hub rate limit errors by ensuring that testcontainers uses images from hmctspublic ACR
-env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctspublic.azurecr.io/imported/"
+pipeline {
+    agent any
 
-withNightlyPipeline(type, product, component) {
-    loadVaultSecrets(secrets)
-    enableFortifyScan()
-    enableDbMigration('ccd')
-    enableSlackNotifications('#ccd-nightly-builds')
-    enableHighLevelDataSetup()
-    afterAlways('fortify-scan') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
+    options {
+        timestamps()
+        disableConcurrentBuilds()
     }
 
-    afterAlways('fortify-scan') {
-
-        stage('Suppress and Send Slack Notification') {
-
-            def slackNotificationChannel = '#nightly_cve_suppressions'
-            def branch = env.BRANCH_NAME
-
-            sh './gradlew suppressCves'
-
-            // Store the list of changed files
-            def changedFiles = ''
-
-            // Store the changes in the suppression file
-            def changes = ''
-
-            script {
-
-                def suppressionFile = sh(
-                    script: './gradlew printSuppressionFile -q',
-                    returnStdout: true
-                ).trim().split("=")[1]
-
-                echo "Suppression file path is: ${suppressionFile}"
-
-                // Stage all modified tracked files
-                sh 'git add -u'
-
-                changedFiles = sh(
-                    script: 'git diff --cached --name-only',
-                    returnStdout: true
-                ).trim().split("\n").findAll { it?.trim() } as List
-
-                if (changedFiles.size() == 1 && changedFiles[0] == suppressionFile) {
-                    echo "✅ Only suppression file changed. Proceeding..."
-
-                    // Verify it includes CVE-related changes
-                    changes = sh(
-                        script: "git diff --cached ${suppressionFile} | grep '+' | grep '<cve>'",
-                        returnStdout: true
-                    ).trim()
-
-                    if (changes) {
-                        echo "✅ CVE-related changes found in suppression file."
-                    } else {
-                        echo "⚠️ No CVE-related changes detected."
-                    }
-
-                } else {
-                    echo "✅ Suppression file not changed — marking step as successfull"
+    stages {
+        stage('Archive latest Jenkins build statuses') {
+            steps {
+                script {
+                    def payload = collectJenkinsLatestBuildStatuses(jenkinsLatestBuildStatusJobs)
+                    writeFile file: 'Jenkins-Latest-Builds-Status.json', text: JsonOutput.prettyPrint(JsonOutput.toJson(payload))
+                    archiveArtifacts allowEmptyArchive: false, artifacts: 'Jenkins-Latest-Builds-Status.json'
+                    currentBuild.description = "Collected ${payload.client_payload.builds.size()} build statuses"
                 }
-            }
-
-            if (changes) {
-
-                // Clean and format CVE lines
-                def simplifiedChanges = changes
-                    .readLines()
-                    .collect { it.replaceFirst(/\+/, '').trim() }                // Remove leading '+'
-                    .collect { it.replaceAll(/<\/?[^>]+>/, '') }                 // Strip XML/HTML tags
-                //.collect { it.replace('[Ticket]', '<https://yourtracker.example/TICKET-ID|Ticket>') } // Optional link
-                    .join('\n')
-
-                def message = """
-                                📦 *CVE Suppression File Updated*
-
-                                *Detected CVE changes (Please create Jira backlog ticket):*
-
-                                ${simplifiedChanges}
-
-                                *Build Info:*
-                                • *Job*: ${env.JOB_NAME}
-                                • *Build*: #${env.BUILD_NUMBER}
-                                • *URL*: ${env.BUILD_URL}
-                               """.stripIndent().trim()
-
-                slackSend(
-                    channel: slackNotificationChannel,
-                    color: '#439FE0',
-                    message: message
-                )
-
-                echo "Staged files: ${changedFiles}"
-                echo "Changes: ${changes}"
-
-                echo "Commiting changes into branch ${branch}"
-                sh 'git commit -m "Suppressing CVE - Actions"'
-                echo "Pushing changes"
-
-                def credentialsId = env.GIT_CREDENTIALS_ID
-
-                withCredentials([
-                    gitUsernamePassword(credentialsId: credentialsId, gitToolName: 'Default')
-                ]) {
-                    sh """
-                        git push origin HEAD:${branch}
-                    """
-                }
-            } else {
-                echo "✅ Suppression file not changed — skipping Slack notification"
             }
         }
     }
