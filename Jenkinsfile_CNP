@@ -1,18 +1,12 @@
 #!groovy
-import uk.gov.hmcts.contino.GithubAPI
 import groovy.json.JsonOutput
 import jenkins.model.Jenkins
+
 properties(
         [[$class: 'GithubProjectProperty', projectUrlStr: 'https://git.reform.hmcts.net/case-management/user-profile-app'],
          pipelineTriggers([[$class: 'GitHubPushTrigger']])]
 )
 
-@Library("Infrastructure")
-
-def type = "java"
-def product = "ccd"
-def component = "user-profile-api"
-def branchesToSync = ['demo', 'ithc', 'perftest', 'develop']
 def jenkinsLatestBuildStatusJobs = [
     [
         group: 'ccd',
@@ -26,34 +20,7 @@ def jenkinsLatestBuildStatusJobs = [
     ]
 ]
 
-// Variables to switch pipeline logic and wiring per type of build
-def definitionStoreDevelopPr = "PR-575" // This doesn't change frequently, but when it does, only change this value.
-def userProfileApiDevelopPr  = "PR-335" // This doesn't change frequently, but when it does, only change this value.
-def prsToUseAat             = "PR-407" // Set this value to a PR number, or add it as a comma-separated value, if it's to follow CI/CD.
-
-def secrets = [
-    'ccd-${env}': [
-        secret('ccd-caseworker-autotest-password', 'CCD_CASEWORKER_AUTOTEST_PASSWORD'),
-
-        secret('ccd-api-gateway-oauth2-client-secret', 'CCD_API_GATEWAY_OAUTH2_CLIENT_SECRET'),
-        secret('definition-importer-username', 'DEFINITION_IMPORTER_USERNAME'),
-        secret('definition-importer-password', 'DEFINITION_IMPORTER_PASSWORD')
-    ],
-    's2s-${env}': [
-        secret('microservicekey-ccd-data', 'BEFTA_S2S_CLIENT_SECRET'),
-    ]
-]
-
-static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
-    [ $class: 'AzureKeyVaultSecret',
-      secretType: 'Secret',
-      name: secretName,
-      version: '',
-      envVariable: envVar
-    ]
-}
-
-def archiveJenkinsLatestBuildStatuses(List<Map<String, String>> configuredJobs) {
+def collectJenkinsLatestBuildStatuses(List<Map<String, String>> configuredJobs) {
     def rootUrl = Jenkins.instance.getRootUrl()
 
     if (!rootUrl) {
@@ -93,82 +60,32 @@ def archiveJenkinsLatestBuildStatuses(List<Map<String, String>> configuredJobs) 
         ]
     }
 
-    def payload = [
+    return [
         event_type: 'jenkins_build_statuses',
         client_payload: [
             builds: builds
         ]
     ]
-
-    writeFile file: 'Jenkins-Latest-Builds-Status.json', text: JsonOutput.prettyPrint(JsonOutput.toJson(payload))
-    archiveArtifacts allowEmptyArchive: true, artifacts: 'Jenkins-Latest-Builds-Status.json'
 }
 
-def vaultOverrides = [
-    'preview': 'aat',
-    'spreview': 'saat'
-]
-// Vars needed for AKS functional and smoke tests
-// Assume a feature build branched off 'develop', with dependencies develop-to-develop.
+pipeline {
+    agent any
 
-// Other env variables needed for BEFTA.
-env.CCD_API_GATEWAY_OAUTH2_CLIENT_ID = "ccd_gateway"
-env.IDAM_API_URL_BASE = "https://idam-api.aat.platform.hmcts.net"
-env.S2S_URL_BASE = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
-env.BEFTA_S2S_CLIENT_ID = "ccd_data"
-env.CCD_API_GATEWAY_OAUTH2_REDIRECT_URL = "https://www-ccd.aat.platform.hmcts.net/oauth2redirect"
-env.CCD_CASEWORKER_AUTOTEST_EMAIL = "auto.test.cnp@gmail.com"
-env.BEFTA_RESPONSE_HEADER_CHECK_POLICY="JUST_WARN" // Temporary workaround for platform changes: turn BEFTA header checks to warning mode
-env.TEST_DATA_LOAD_SKIP_PERIOD=1
-
-// Prevent Docker hub rate limit errors by ensuring that testcontainers uses images from hmctspublic ACR
-env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctspublic.azurecr.io/imported/"
-
-withPipeline(type, product, component) {
-    onMaster {
-        enableSlackNotifications('#ccd-master-builds')
-    }
-    if (env.BRANCH_NAME.equalsIgnoreCase(userProfileApiDevelopPr)) {
-        enableSlackNotifications('#ccd-develop-builds')
+    options {
+        timestamps()
+        disableConcurrentBuilds()
     }
 
-    onDemo {
-        enableSlackNotifications('#ccd-demo-builds')
-    }
-    onPR {
-        enableSlackNotifications('#ccd-pr-builds')
-    }
-
-    // Check if the build should be wired to a preview instance of definition store
-    if (!(env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'demo' || env.BRANCH_NAME == 'perftest' || env.BRANCH_NAME == 'ithc' || prsToUseAat.toLowerCase().contains(env.BRANCH_NAME.toLowerCase()))) {
-        env.DEFINITION_STORE_URL_BASE = "https://ccd-definition-store-api-${definitionStoreDevelopPr}.preview.platform.hmcts.net".toLowerCase()
-    }
-
-    syncBranchesWithMaster(branchesToSync)
-    overrideVaultEnvironments(vaultOverrides)
-    enableAksStagingDeployment()
-    disableLegacyDeploymentOnAAT()
-    loadVaultSecrets(secrets)
-    disableLegacyDeployment()
-    enableHighLevelDataSetup()
-
-    afterAlways('build') {
-        archiveJenkinsLatestBuildStatuses(jenkinsLatestBuildStatusJobs)
-    }
-
-    afterAlways('smoketest:preview') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Smoke Tests/**/*'
-    }
-
-    afterAlways('smoketest:aat') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Smoke Tests/**/*'
-    }
-
-    afterAlways('functionalTest:preview') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Functional Tests/**/*'
-    }
-
-    afterAlways('functionalTest:aat') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Functional Tests/**/*, **/cucumber-html-reports/**/*'
+    stages {
+        stage('Archive latest Jenkins build statuses') {
+            steps {
+                script {
+                    def payload = collectJenkinsLatestBuildStatuses(jenkinsLatestBuildStatusJobs)
+                    writeFile file: 'Jenkins-Latest-Builds-Status.json', text: JsonOutput.prettyPrint(JsonOutput.toJson(payload))
+                    archiveArtifacts allowEmptyArchive: false, artifacts: 'Jenkins-Latest-Builds-Status.json'
+                    currentBuild.description = "Collected ${payload.client_payload.builds.size()} build statuses"
+                }
+            }
+        }
     }
 }
