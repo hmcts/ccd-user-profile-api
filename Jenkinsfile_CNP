@@ -1,5 +1,7 @@
 #!groovy
 import uk.gov.hmcts.contino.GithubAPI
+import groovy.json.JsonOutput
+import jenkins.model.Jenkins
 properties(
         [[$class: 'GithubProjectProperty', projectUrlStr: 'https://git.reform.hmcts.net/case-management/user-profile-app'],
          pipelineTriggers([[$class: 'GitHubPushTrigger']])]
@@ -11,6 +13,18 @@ def type = "java"
 def product = "ccd"
 def component = "user-profile-api"
 def branchesToSync = ['demo', 'ithc', 'perftest', 'develop']
+def jenkinsLatestBuildStatusJobs = [
+    [
+        group: 'ccd',
+        name: 'ccd-definition-store-api',
+        fullName: 'HMCTS_a_to_c/ccd-definition-store-api/master'
+    ],
+    [
+        group: 'ccd',
+        name: 'ccd-data-store-api',
+        fullName: 'HMCTS_a_to_c/ccd-data-store-api/master'
+    ]
+]
 
 // Variables to switch pipeline logic and wiring per type of build
 def definitionStoreDevelopPr = "PR-575" // This doesn't change frequently, but when it does, only change this value.
@@ -37,6 +51,57 @@ static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
       version: '',
       envVariable: envVar
     ]
+}
+
+def archiveJenkinsLatestBuildStatuses(List<Map<String, String>> configuredJobs) {
+    def rootUrl = Jenkins.instance.getRootUrl()
+
+    if (!rootUrl) {
+        error('Jenkins root URL is not configured. Set it in Manage Jenkins > System > Jenkins URL.')
+    }
+
+    def builds = configuredJobs.collect { configuredJob ->
+        def job = Jenkins.instance.getItemByFullName(configuredJob.fullName as String)
+
+        if (job == null) {
+            return [
+                group: configuredJob.group,
+                name: configuredJob.name,
+                result: 'UNKNOWN',
+                error: "Jenkins job not found: ${configuredJob.fullName}"
+            ]
+        }
+
+        def build = job.getLastBuild()
+
+        if (build == null) {
+            return [
+                group: configuredJob.group,
+                name: configuredJob.name,
+                result: 'UNKNOWN',
+                error: "No builds found for Jenkins job: ${configuredJob.fullName}"
+            ]
+        }
+
+        return [
+            group: configuredJob.group,
+            name: configuredJob.name,
+            buildNumber: build.getNumber(),
+            result: build.getResult()?.toString(),
+            timestamp: build.getTimeInMillis(),
+            url: rootUrl + build.getUrl()
+        ]
+    }
+
+    def payload = [
+        event_type: 'jenkins_build_statuses',
+        client_payload: [
+            builds: builds
+        ]
+    ]
+
+    writeFile file: 'Jenkins-Latest-Builds-Status.json', text: JsonOutput.prettyPrint(JsonOutput.toJson(payload))
+    archiveArtifacts allowEmptyArchive: true, artifacts: 'Jenkins-Latest-Builds-Status.json'
 }
 
 def vaultOverrides = [
@@ -86,6 +151,10 @@ withPipeline(type, product, component) {
     loadVaultSecrets(secrets)
     disableLegacyDeployment()
     enableHighLevelDataSetup()
+
+    afterAlways('build') {
+        archiveJenkinsLatestBuildStatuses(jenkinsLatestBuildStatusJobs)
+    }
 
     afterAlways('smoketest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Smoke Tests/**/*'
