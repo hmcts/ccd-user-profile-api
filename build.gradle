@@ -145,7 +145,7 @@ ext {
     sl4jVersion = '2.0.18'
     reformLogging = '8.0.0'
     lombokVersion = '1.18.46'
-    springCloudVersion = '2025.0.1'
+    springCloudVersion = '2025.0.3'
     springSecurity = '6.4.13'
     //springSecurity = '6.5.7'
     limits = [
