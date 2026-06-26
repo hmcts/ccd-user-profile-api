@@ -8,6 +8,7 @@ properties(
 )
 
 def jenkinsBaseUrl = 'https://build.hmcts.net'
+def jenkinsApiCredentialsId = 'jenkins-build-dashboard-api-token'
 def jenkinsLatestBuildStatusJobs = [
     [
         group: 'ccd',
@@ -32,11 +33,21 @@ def collectJenkinsLatestBuildStatuses(String baseUrl, List<Map<String, String>> 
         def responseFile = "jenkins-latest-${configuredJob.name}.json"
         def statusFile = "jenkins-latest-${configuredJob.name}.status"
 
-        sh """
-            set +e
-            curl --globoff --silent --show-error --location --output '${responseFile}' --write-out '%{http_code}' '${apiUrl}' > '${statusFile}'
-            exit 0
-        """
+        withEnv([
+            "JENKINS_LATEST_API_URL=${apiUrl}",
+            "JENKINS_LATEST_RESPONSE_FILE=${responseFile}",
+            "JENKINS_LATEST_STATUS_FILE=${statusFile}"
+        ]) {
+            sh '''
+                set +e
+                curl --globoff --silent --show-error --location \
+                    --user "${JENKINS_API_USERNAME}:${JENKINS_API_TOKEN}" \
+                    --output "${JENKINS_LATEST_RESPONSE_FILE}" \
+                    --write-out '%{http_code}' \
+                    "${JENKINS_LATEST_API_URL}" > "${JENKINS_LATEST_STATUS_FILE}"
+                exit 0
+            '''
+        }
 
         def httpStatus = readFile(statusFile).trim()
 
@@ -83,10 +94,12 @@ pipeline {
         stage('Archive latest Jenkins build statuses') {
             steps {
                 script {
-                    def payload = collectJenkinsLatestBuildStatuses(jenkinsBaseUrl, jenkinsLatestBuildStatusJobs)
-                    writeFile file: 'Jenkins-Latest-Builds-Status.json', text: JsonOutput.prettyPrint(JsonOutput.toJson(payload))
-                    archiveArtifacts allowEmptyArchive: false, artifacts: 'Jenkins-Latest-Builds-Status.json'
-                    currentBuild.description = "Collected ${payload.client_payload.builds.size()} build statuses"
+                    withCredentials([usernamePassword(credentialsId: jenkinsApiCredentialsId, usernameVariable: 'JENKINS_API_USERNAME', passwordVariable: 'JENKINS_API_TOKEN')]) {
+                        def payload = collectJenkinsLatestBuildStatuses(jenkinsBaseUrl, jenkinsLatestBuildStatusJobs)
+                        writeFile file: 'Jenkins-Latest-Builds-Status.json', text: JsonOutput.prettyPrint(JsonOutput.toJson(payload))
+                        archiveArtifacts allowEmptyArchive: false, artifacts: 'Jenkins-Latest-Builds-Status.json'
+                        currentBuild.description = "Collected ${payload.client_payload.builds.size()} build statuses"
+                    }
                 }
             }
         }
