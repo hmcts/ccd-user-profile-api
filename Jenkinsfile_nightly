@@ -1,14 +1,12 @@
 #!groovy
 import groovy.json.JsonOutput
-import groovy.json.JsonSlurperClassic
+import jenkins.model.Jenkins
 
 properties(
         [[$class: 'GithubProjectProperty', projectUrlStr: 'https://git.reform.hmcts.net/case-management/user-profile-app'],
          pipelineTriggers([[$class: 'GitHubPushTrigger']])]
 )
 
-def jenkinsBaseUrl = 'https://build.hmcts.net'
-def jenkinsApiCredentialsId = 'jenkins-build-dashboard-api-token'
 def jenkinsLatestBuildStatusJobs = [
     [
         group: 'ccd',
@@ -22,55 +20,45 @@ def jenkinsLatestBuildStatusJobs = [
     ]
 ]
 
-def latestBuildApiUrl(String baseUrl, String fullName) {
-    def jobPath = fullName.split('/').collect { "job/${it}" }.join('/')
-    return "${baseUrl}/${jobPath}/lastBuild/api/json?tree=number,result,timestamp,url"
-}
+def collectJenkinsLatestBuildStatuses(List<Map<String, String>> configuredJobs) {
+    def rootUrl = Jenkins.instance.getRootUrl()
 
-def collectJenkinsLatestBuildStatuses(String baseUrl, List<Map<String, String>> configuredJobs) {
+    if (!rootUrl) {
+        error('Jenkins root URL is not configured. Set it in Manage Jenkins > System > Jenkins URL.')
+    }
+
     def builds = configuredJobs.collect { configuredJob ->
-        def apiUrl = latestBuildApiUrl(baseUrl, configuredJob.fullName as String)
-        def responseFile = "jenkins-latest-${configuredJob.name}.json"
-        def statusFile = "jenkins-latest-${configuredJob.name}.status"
+        def fullName = configuredJob.fullName as String
+        def job = Jenkins.instance.getItemByFullName(fullName)
 
-        withEnv([
-            "JENKINS_LATEST_API_URL=${apiUrl}",
-            "JENKINS_LATEST_RESPONSE_FILE=${responseFile}",
-            "JENKINS_LATEST_STATUS_FILE=${statusFile}"
-        ]) {
-            sh '''
-                set +e
-                curl --globoff --silent --show-error --location \
-                    --user "${JENKINS_API_USERNAME}:${JENKINS_API_TOKEN}" \
-                    --output "${JENKINS_LATEST_RESPONSE_FILE}" \
-                    --write-out '%{http_code}' \
-                    "${JENKINS_LATEST_API_URL}" > "${JENKINS_LATEST_STATUS_FILE}"
-                exit 0
-            '''
-        }
-
-        def httpStatus = readFile(statusFile).trim()
-
-        if (httpStatus != '200') {
+        if (job == null) {
             return [
                 group: configuredJob.group,
                 name: configuredJob.name,
                 result: 'UNKNOWN',
-                url: apiUrl,
-                error: "Jenkins API returned HTTP ${httpStatus}"
+                error: "Jenkins job not found: ${fullName}"
             ]
         }
 
-        def responseText = readFile(responseFile)
-        def latestBuild = new JsonSlurperClassic().parseText(responseText)
+        def build = job.getLastBuild()
+
+        if (build == null) {
+            return [
+                group: configuredJob.group,
+                name: configuredJob.name,
+                result: 'UNKNOWN',
+                url: rootUrl + job.getUrl(),
+                error: 'No builds found'
+            ]
+        }
 
         return [
             group: configuredJob.group,
             name: configuredJob.name,
-            buildNumber: latestBuild.number,
-            result: latestBuild.result,
-            timestamp: latestBuild.timestamp,
-            url: latestBuild.url
+            buildNumber: build.getNumber(),
+            result: build.getResult()?.toString(),
+            timestamp: build.getTimeInMillis(),
+            url: rootUrl + build.getUrl()
         ]
     }
 
@@ -94,12 +82,10 @@ pipeline {
         stage('Archive latest Jenkins build statuses') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: jenkinsApiCredentialsId, usernameVariable: 'JENKINS_API_USERNAME', passwordVariable: 'JENKINS_API_TOKEN')]) {
-                        def payload = collectJenkinsLatestBuildStatuses(jenkinsBaseUrl, jenkinsLatestBuildStatusJobs)
-                        writeFile file: 'Jenkins-Latest-Builds-Status.json', text: JsonOutput.prettyPrint(JsonOutput.toJson(payload))
-                        archiveArtifacts allowEmptyArchive: false, artifacts: 'Jenkins-Latest-Builds-Status.json'
-                        currentBuild.description = "Collected ${payload.client_payload.builds.size()} build statuses"
-                    }
+                    def payload = collectJenkinsLatestBuildStatuses(jenkinsLatestBuildStatusJobs)
+                    writeFile file: 'Jenkins-Latest-Builds-Status.json', text: JsonOutput.prettyPrint(JsonOutput.toJson(payload))
+                    archiveArtifacts allowEmptyArchive: false, artifacts: 'Jenkins-Latest-Builds-Status.json'
+                    currentBuild.description = "Collected ${payload.client_payload.builds.size()} build statuses"
                 }
             }
         }
