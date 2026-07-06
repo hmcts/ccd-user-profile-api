@@ -13,7 +13,7 @@ plugins {
     id "com.github.kt3k.coveralls" version "2.12.2"
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.25'
     id "info.solidsoft.pitest" version '1.15.0'
-    id 'org.owasp.dependencycheck' version '12.2.1'
+    id 'org.owasp.dependencycheck' version '12.2.2'
     id 'uk.gov.hmcts.java' version '0.12.70'
 }
 
@@ -35,11 +35,20 @@ application {
 }
 
 apply from: './gradle/suppress.gradle'
+def dependencyCheckDataVersion = '12.2.2-schema-5.6'
+def dependencyCheckDataDirectory = file(
+    System.getProperty('data.directory') ?: "${gradle.gradleUserHomeDir}/dependency-check-data/${dependencyCheckDataVersion}"
+)
+
 dependencyCheck {
     failBuildOnCVSS = 0
     scanConfigurations = ['runtimeClasspath']
     formats = ['HTML', 'XML']
     suppressionFiles = ['config/owasp/suppressions.xml']
+    autoUpdate = true
+    data {
+        directory = dependencyCheckDataDirectory.absolutePath
+    }
     analyzers {
         assemblyEnabled = false
         centralEnabled = false
@@ -48,6 +57,14 @@ dependencyCheck {
             enabled = false
         }
     }
+}
+
+tasks.named('dependencyCheckUpdate') {
+    dependsOn tasks.named('dependencyCheckPurge')
+}
+
+tasks.matching { it.name in ['dependencyCheckAnalyze', 'dependencyCheckAggregate'] }.configureEach {
+    dependsOn tasks.named('dependencyCheckUpdate')
 }
 
 tasks.register("printSuppressionFile") {
