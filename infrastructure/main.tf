@@ -29,7 +29,7 @@ data "azurerm_key_vault" "ccd_shared_key_vault" {
 ///////////////////////
 
 module "postgresql_v15" {
-  source = "git@github.com:hmcts/terraform-module-postgresql-flexible?ref=master"
+  source = "git@github.com:hmcts/terraform-module-postgresql-flexible?ref=DTSPO-30107-additional-postgres-admins"
   providers = {
     azurerm.postgres_network = azurerm.postgres_network
   }
@@ -53,15 +53,15 @@ module "postgresql_v15" {
       value = "pg_stat_statements,pg_buffercache,hypopg"
     }
   ]
-  pgsql_version               = "15"
-  product                     = var.product
-  name                        = local.db_name
-  pgsql_sku                   = var.pgsql_sku
-  pgsql_storage_mb            = var.pgsql_storage_mb
-  subnet_suffix               = var.subnet_suffix
-  action_group_name           = join("-", [var.action_group_name, local.db_name, var.env])
-  email_address_key           = var.email_address_key
-  email_address_key_vault_id  = data.azurerm_key_vault.ccd_shared_key_vault.id
+  pgsql_version              = "15"
+  product                    = var.product
+  name                       = local.db_name
+  pgsql_sku                  = var.pgsql_sku
+  pgsql_storage_mb           = var.pgsql_storage_mb
+  subnet_suffix              = var.subnet_suffix
+  action_group_name          = join("-", [var.action_group_name, local.db_name, var.env])
+  email_address_key          = var.email_address_key
+  email_address_key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
 }
 
 ////////////////////////////////////

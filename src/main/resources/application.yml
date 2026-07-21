@@ -72,6 +72,8 @@ management:
     diskspace:
       enabled: true
   endpoint:
+    loggers:
+      enabled: false
     metrics:
       enabled: true
       cache:

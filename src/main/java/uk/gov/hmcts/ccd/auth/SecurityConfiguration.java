@@ -38,7 +38,6 @@ public class SecurityConfiguration {
                     "/health/readiness",
                     "/health/liveness",
                     "/status/health",
-                    "/loggers/**",
                     "/error").permitAll()
                 .anyRequest().authenticated())
         ;
