@@ -183,7 +183,7 @@ dependencyManagement {
 
 dependencies {
 
-    implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.85'
+    implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.85.2'
     compileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     annotationProcessor  group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
@@ -239,7 +239,7 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
     testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.25.4'
-    testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: '9.2.7'
+    testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: '9.2.10'
     testImplementation 'com.github.hmcts:fortify-client:1.4.10:all'
     testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0'
 }
