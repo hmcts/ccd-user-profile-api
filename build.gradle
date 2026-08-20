@@ -164,6 +164,7 @@ ext {
     lombokVersion = '1.18.46'
     springCloudVersion = '2025.0.1'
     springSecurity = '6.4.13'
+    nettyVersion = '4.1.136.Final'
     //springSecurity = '6.5.7'
     limits = [
             'instruction': 6,
@@ -174,6 +175,8 @@ ext {
             'class'      : 8
     ]
 }
+
+ext['netty.version'] = nettyVersion
 
 dependencyManagement {
     imports {
