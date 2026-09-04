@@ -159,7 +159,7 @@ java {
 }
 
 ext {
-    sl4jVersion = '2.0.18'
+    sl4jVersion = '2.0.19'
     reformLogging = '8.0.0'
     lombokVersion = '1.18.46'
     springCloudVersion = '2025.0.1'
