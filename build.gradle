@@ -161,7 +161,7 @@ java {
 ext {
     sl4jVersion = '2.0.19'
     reformLogging = '8.0.0'
-    lombokVersion = '1.18.46'
+    lombokVersion = '1.18.48'
     springCloudVersion = '2025.0.1'
     springSecurity = '6.5.11'
     //springSecurity = '6.5.7'
