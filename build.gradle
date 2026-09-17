@@ -12,7 +12,7 @@ plugins {
     id 'checkstyle'
     id "com.github.kt3k.coveralls" version "2.12.2"
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.25'
-    id "info.solidsoft.pitest" version '1.15.0'
+    id "info.solidsoft.pitest" version '1.19.0'
     id 'org.owasp.dependencycheck' version '12.2.2'
     id 'uk.gov.hmcts.java' version '0.12.70'
 }
@@ -241,7 +241,7 @@ dependencies {
     testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.26.12'
     testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: '9.2.11'
     testImplementation 'com.github.hmcts:fortify-client:1.4.10:all'
-    testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0'
+    testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.19.0'
 }
 // end::dependencies[]
 
