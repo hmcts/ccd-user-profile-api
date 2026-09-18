@@ -151,17 +151,20 @@ configurations {
         exclude group: 'com.h2database', module: 'h2'
     }
 
-    matching { it.name in ['testImplementation', 'testRuntimeOnly', 'testCompileClasspath', 'testRuntimeClasspath'] } {
-        resolutionStrategy {
-            force 'org.junit.jupiter:junit-jupiter:5.14.3'
-            force 'org.junit.jupiter:junit-jupiter-api:5.14.3'
-            force 'org.junit.jupiter:junit-jupiter-params:5.14.3'
-            force 'org.junit.jupiter:junit-jupiter-engine:5.14.3'
-            force 'org.junit.platform:junit-platform-commons:1.14.3'
-            force 'org.junit.platform:junit-platform-engine:1.14.3'
-            force 'org.junit.platform:junit-platform-launcher:1.14.3'
-            force 'org.junit.vintage:junit-vintage-engine:5.14.3'
-        }
+}
+
+configurations.matching {
+    it.name in ['testCompileClasspath', 'testRuntimeClasspath']
+}.configureEach {
+    resolutionStrategy {
+        force 'org.junit.jupiter:junit-jupiter:5.14.3'
+        force 'org.junit.jupiter:junit-jupiter-api:5.14.3'
+        force 'org.junit.jupiter:junit-jupiter-params:5.14.3'
+        force 'org.junit.jupiter:junit-jupiter-engine:5.14.3'
+        force 'org.junit.platform:junit-platform-commons:1.14.3'
+        force 'org.junit.platform:junit-platform-engine:1.14.3'
+        force 'org.junit.platform:junit-platform-launcher:1.14.3'
+        force 'org.junit.vintage:junit-vintage-engine:5.14.3'
     }
 }
 // end::jar[]
