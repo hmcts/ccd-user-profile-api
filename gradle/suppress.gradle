@@ -1,6 +1,7 @@
-import groovy.util.slurpersupport.GPathResult
 import groovy.xml.DOMBuilder
+import groovy.xml.XmlSlurper
 import groovy.xml.XmlUtil
+import groovy.xml.slurpersupport.GPathResult
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.w3c.dom.Node
