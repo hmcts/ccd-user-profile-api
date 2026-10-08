@@ -78,6 +78,10 @@ tasks.register("printSuppressionFile") {
     if (suppressionFile instanceof Collection) {
       suppressionFile = suppressionFile.find { it }?.toString()
     }
+    if (!suppressionFile) {
+      throw new GradleException("No dependency-check suppression file configured")
+    }
+    suppressionFile = project.relativePath(suppressionFile)
     println "SUPPRESSION_FILE=${suppressionFile}"
   }
 }
