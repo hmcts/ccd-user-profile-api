@@ -48,13 +48,14 @@ def vaultOverrides = [
 
 // Other env variables needed for BEFTA.
 env.CCD_API_GATEWAY_OAUTH2_CLIENT_ID = "ccd_gateway"
-env.IDAM_API_URL_BASE = "https://idam-api.aat.platform.hmcts.net"
 env.S2S_URL_BASE = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
 env.BEFTA_S2S_CLIENT_ID = "ccd_data"
 env.CCD_API_GATEWAY_OAUTH2_REDIRECT_URL = "https://www-ccd.aat.platform.hmcts.net/oauth2redirect"
 env.CCD_CASEWORKER_AUTOTEST_EMAIL = "auto.test.cnp@gmail.com"
 env.BEFTA_RESPONSE_HEADER_CHECK_POLICY="JUST_WARN" // Temporary workaround for platform changes: turn BEFTA header checks to warning mode
 env.TEST_DATA_LOAD_SKIP_PERIOD=1
+env.OAUTH2_ACCESS_TOKEN_TYPE = "OIDC" // use new OIDC authentication for BEFTA tests
+env.OAUTH2_SCOPE_VARIABLES = "profile openid roles"
 
 // Prevent Docker hub rate limit errors by ensuring that testcontainers uses images from hmctsprod ACR
 env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctsprod.azurecr.io/imported/"
@@ -88,33 +89,40 @@ withPipeline(type, product, component) {
     disableLegacyDeployment()
     enableHighLevelDataSetup()
 
-     afterAlways('test') {
+    afterAlways('test') {
 
-     // hmcts/cnp-jenkins-library may fail to copy artifacts after checkstyle error so repeat command (see /src/uk/gov/hmcts/contino/GradleBuilder.groovy)
-     steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/checkstyle/*.html'
-     steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/pmd/*.html'
+        // hmcts/cnp-jenkins-library may fail to copy artifacts after checkstyle error so repeat command (see /src/uk/gov/hmcts/contino/GradleBuilder.groovy)
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/checkstyle/*.html'
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/pmd/*.html'
 
 
-     publishHTML target: [
-        allowMissing         : true,
-        alwaysLinkToLastBuild: true,
-        keepAll              : true,
-        reportDir            : 'build/reports/tests/test',
-        reportFiles          : "index.html",
-        reportName           : "Unit Test Report"
-     ]
+        publishHTML target: [
+           allowMissing         : true,
+           alwaysLinkToLastBuild: true,
+           keepAll              : true,
+           reportDir            : 'build/reports/tests/test',
+           reportFiles          : "index.html",
+           reportName           : "Unit Test Report"
+        ]
 
-      publishHTML target: [
-      allowMissing         : true,
-      alwaysLinkToLastBuild: true,
-      keepAll              : true,
-      reportDir            : 'build/reports/tests/integrationTest',
-      reportFiles          : "index.html",
-      reportName           : "Integration Test Report"
-     ]
+         publishHTML target: [
+         allowMissing         : true,
+         alwaysLinkToLastBuild: true,
+         keepAll              : true,
+         reportDir            : 'build/reports/tests/integrationTest',
+         reportFiles          : "index.html",
+         reportName           : "Integration Test Report"
+        ]
 
-  }
+    }
 
+    // Set IDAM_API_URL_BASE post high-level data setup where it would have been overridden
+    before('smoketest:preview') {
+        env.IDAM_API_URL_BASE = "https://idam-web-public.aat.platform.hmcts.net"
+    }   
+    before('smoketest:aat') {
+        env.IDAM_API_URL_BASE = "https://idam-web-public.aat.platform.hmcts.net"
+    }
 
     afterAlways('smoketest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Smoke Tests/**/*'
