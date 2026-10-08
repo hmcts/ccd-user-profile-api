@@ -198,9 +198,9 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat'
 
+    implementation "org.flywaydb:flyway-core:13.2.0"
+    implementation "org.flywaydb:flyway-database-postgresql:13.2.0"
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.9.1'
-    implementation "org.flywaydb:flyway-core:12.11.0"
-    implementation "org.flywaydb:flyway-database-postgresql:12.11.0"
     implementation group: 'org.yaml', name: 'snakeyaml', version: '2.7'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '7.1.0'
     runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.7.13'
