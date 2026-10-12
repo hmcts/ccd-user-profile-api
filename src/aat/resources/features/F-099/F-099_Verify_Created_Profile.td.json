@@ -1,0 +1,24 @@
+{
+  "_guid_": "F-099_Verify_Created_Profile",
+  "_extends_": "User_Profile_Write_Base",
+  "operationName": "Get User Profile",
+  "method": "GET",
+  "specs": ["to fetch the created user profile"],
+  "request": {
+    "queryParams": {
+      "uid": "${[scenarioContext][parentContext][testData][request][body][id]}"
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "User_Profile_Common_200_Response",
+    "body": {
+      "id": "${[scenarioContext][parentContext][testData][request][body][id]}",
+      "jurisdictions": [
+        { "id": "BEFTA_JURISDICTION_2" }
+      ],
+      "work_basket_default_jurisdiction": "BEFTA_JURISDICTION_2",
+      "work_basket_default_case_type": "BEFTA_CASETYPE_2_1",
+      "work_basket_default_state": "TODO"
+    }
+  }
+}

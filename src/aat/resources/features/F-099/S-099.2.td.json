@@ -1,0 +1,21 @@
+{
+  "_guid_": "S-099.2",
+  "_extends_": "F-099.base",
+  "title": "should reject a user profile without an id",
+  "specs": ["has the 400 Bad Request code"],
+  "request": {
+    "body": {
+      "id": null
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Message": "A User Profile must have an Id"
+    },
+    "body": {
+      "__plainTextValue__": "A User Profile must have an Id"
+    }
+  }
+}
