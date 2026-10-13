@@ -1,0 +1,24 @@
+{
+  "_guid_": "F-099.base",
+  "_extends_": "User_Profile_Write_Base",
+  "operationName": "Create User Profile",
+  "method": "POST",
+  "request": {
+    "body": {
+      "id": "ccd-4657-${[scenarioContext][customValues][uuid]}@example.com",
+      "jurisdictions": [
+        { "id": "BEFTA_JURISDICTION_2" }
+      ],
+      "work_basket_default_jurisdiction": "BEFTA_JURISDICTION_2",
+      "work_basket_default_case_type": "BEFTA_CASETYPE_2_1",
+      "work_basket_default_state": "TODO"
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 201,
+    "responseMessage": "Created",
+    "headers": {
+      "_extends_": "User_Profile_Common_Response_Headers"
+    }
+  }
+}
