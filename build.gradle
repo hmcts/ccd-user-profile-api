@@ -1,3 +1,5 @@
+import groovy.xml.XmlParser
+
 plugins {
     id 'java'
     id 'eclipse'
@@ -133,6 +135,22 @@ configurations {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'com.h2database', module: 'h2'
     }
+
+}
+
+configurations.matching {
+    it.name in ['testCompileClasspath', 'testRuntimeClasspath']
+}.configureEach {
+    resolutionStrategy {
+        force 'org.junit.jupiter:junit-jupiter:5.14.3'
+        force 'org.junit.jupiter:junit-jupiter-api:5.14.3'
+        force 'org.junit.jupiter:junit-jupiter-params:5.14.3'
+        force 'org.junit.jupiter:junit-jupiter-engine:5.14.3'
+        force 'org.junit.platform:junit-platform-commons:1.14.3'
+        force 'org.junit.platform:junit-platform-engine:1.14.3'
+        force 'org.junit.platform:junit-platform-launcher:1.14.3'
+        force 'org.junit.vintage:junit-vintage-engine:5.14.3'
+    }
 }
 // end::jar[]
 
@@ -188,10 +206,10 @@ dependencies {
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.9.1'
     implementation group: 'org.yaml', name: 'snakeyaml', version: '2.7'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '7.1.0'
-    runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.7.13'
+    runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.7.14'
     implementation group: 'com.github.hmcts', name: 'auth-checker-lib', version: '2.1.5'
     constraints {
-        implementation('com.google.guava:guava:33.7.1-jre') {
+        implementation('com.google.guava:guava:33.7.2-jre') {
             because 'previous versions of this transitive dependency have CVEs'
         }
     }
@@ -212,8 +230,10 @@ dependencies {
 
     aatImplementation 'com.github.hmcts:service-auth-provider-java-client:6.0.0'
     codacy 'com.github.codacy:codacy-coverage-reporter:13.13.7'
-    testImplementation "org.junit.jupiter:junit-jupiter-api"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation platform("org.junit:junit-bom:5.14.3")
+    testImplementation "org.junit.jupiter:junit-jupiter"
+    testRuntimeOnly "org.junit.platform:junit-platform-engine:1.14.3"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher:1.14.3"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
     testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 
@@ -228,6 +248,7 @@ dependencies {
     testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.26.12'
     testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: '9.2.11'
     testImplementation 'com.github.hmcts:fortify-client:1.4.10:all'
+    testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.19.0'
 }
 // end::dependencies[]
 
@@ -370,27 +391,23 @@ task highLevelDataSetup(type: JavaExec) {
     jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
 }
 
-task smoke() {
+task smoke(type: JavaExec) {
   description = 'Executes smoke tests against an the CCD User Profile API instance just deployed'
   dependsOn aatClasses
+  generateCucumberReports.enabled = true
+
+  mainClass = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
+  classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
+  args = ['--plugin', "json:${rootDir}/target/cucumber.json",
+          '--plugin', "junit:${buildDir}/test-results/smoke/cucumber.xml",
+          '--tags', '@Smoke',
+          '--glue', 'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
+  jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
 
   new File("$buildDir/test-results/test").mkdirs()
   copy{
     from "src/aat/resources/DummyTest.xml"
     into "$buildDir/test-results/test"
-  }
-
-  doLast {
-    generateCucumberReports.enabled = true
-    javaexec {
-      mainClass = "uk.gov.hmcts.ccd.userprofile.befta.UserProfileBeftaMain"
-      classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
-      args = ['--plugin', "json:${rootDir}/target/cucumber.json",
-              '--plugin', "junit:${buildDir}/test-results/smoke/cucumber.xml",
-              '--tags', '@Smoke',
-              '--glue', 'uk.gov.hmcts.befta.player', 'src/aat/resources/features']
-      jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
-    }
   }
 
   finalizedBy {
