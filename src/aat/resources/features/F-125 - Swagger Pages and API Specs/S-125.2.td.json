@@ -7,12 +7,6 @@
     "to observe the swagger json content"
   ],
 
-  "request" :{
-    "pathVariables" : {
-      "ccd-user-profile-api-version": "ccd-user-profile-api.json"
-    }
-  },
-
   "expectedResponse": {
     "responseCode" : 200,
     "responseMessage" : "OK",
