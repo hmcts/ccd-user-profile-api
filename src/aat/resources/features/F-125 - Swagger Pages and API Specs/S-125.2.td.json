@@ -7,6 +7,8 @@
     "to observe the swagger json content"
   ],
 
+  "request": {},
+
   "expectedResponse": {
     "responseCode" : 200,
     "responseMessage" : "OK",
