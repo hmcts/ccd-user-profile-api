@@ -1,0 +1,11 @@
+{
+  "_guid_": "F-100.base",
+  "_extends_": "User_Profile_Write_Base",
+  "operationName": "Populate User Profiles",
+  "method": "PUT",
+  "specs": ["has the 200 OK code"],
+  "expectedResponse": {
+    "_extends_": "User_Profile_Common_200_Response",
+    "body": null
+  }
+}

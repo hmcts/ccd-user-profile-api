@@ -1,0 +1,24 @@
+{
+  "_guid_": "F-100_Verify_First_Profile",
+  "_extends_": "User_Profile_Write_Base",
+  "operationName": "Get User Profile",
+  "method": "GET",
+  "specs": ["to fetch the first saved user profile"],
+  "request": {
+    "queryParams": {
+      "uid": "${[scenarioContext][parentContext][testData][request][body][arrayInMap][0][id]}"
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "User_Profile_Common_200_Response",
+    "body": {
+      "id": "${[scenarioContext][parentContext][testData][request][body][arrayInMap][0][id]}",
+      "jurisdictions": [
+        { "id": "${[scenarioContext][parentContext][testData][request][body][arrayInMap][0][work_basket_default_jurisdiction]}" }
+      ],
+      "work_basket_default_jurisdiction": "${[scenarioContext][parentContext][testData][request][body][arrayInMap][0][work_basket_default_jurisdiction]}",
+      "work_basket_default_case_type": "${[scenarioContext][parentContext][testData][request][body][arrayInMap][0][work_basket_default_case_type]}",
+      "work_basket_default_state": "${[scenarioContext][parentContext][testData][request][body][arrayInMap][0][work_basket_default_state]}"
+    }
+  }
+}
