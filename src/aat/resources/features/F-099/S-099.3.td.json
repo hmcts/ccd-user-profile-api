@@ -1,0 +1,21 @@
+{
+  "_guid_": "S-099.3",
+  "_extends_": "F-099.base",
+  "title": "should reject a user profile without associated jurisdictions",
+  "specs": ["has the 400 Bad Request code"],
+  "request": {
+    "body": {
+      "jurisdictions": ["__befta_replace__"]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Message": "A User Profile must have at least one associated Jurisdiction"
+    },
+    "body": {
+      "__plainTextValue__": "A User Profile must have at least one associated Jurisdiction"
+    }
+  }
+}

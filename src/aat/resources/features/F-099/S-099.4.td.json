@@ -1,0 +1,21 @@
+{
+  "_guid_": "S-099.4",
+  "_extends_": "F-099.base",
+  "title": "should reject a jurisdiction without an id",
+  "specs": ["has the 400 Bad Request code"],
+  "request": {
+    "body": {
+      "jurisdictions": ["__befta_replace__", { "id": null }]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Message": "A Jurisdiction must have an Id"
+    },
+    "body": {
+      "__plainTextValue__": "A Jurisdiction must have an Id"
+    }
+  }
+}
