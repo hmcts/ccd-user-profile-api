@@ -7,6 +7,17 @@ Background:
     Given an appropriate test context as detailed in the test data source
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+@S-098.4
+Scenario: should return not found for an unknown user profile id
+
+     When a request is prepared with appropriate values
+      And it is submitted to call the [Get User Profile] operation of [CCD User Profile API]
+
+     Then a negative response is received
+      And the response [has the 404 Not Found code]
+      And the response has all other details as expected
+
+#-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 @S-098.1
 Scenario: should fetch a user profile for a given email id in request header
 

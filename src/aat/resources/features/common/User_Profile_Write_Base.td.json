@@ -1,0 +1,18 @@
+{
+  "_guid_": "User_Profile_Write_Base",
+  "productName": "CCD User Profile API",
+  "uri": "/user-profile/users",
+  "users": {
+    "invokingUser": {
+      "username": "[[$CCD_CASEWORKER_AUTOTEST_EMAIL]]",
+      "password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
+    }
+  },
+  "request": {
+    "headers": {
+      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
+      "Content-Type": "application/json",
+      "actionedBy": "CCD-4657-functional-tests"
+    }
+  }
+}

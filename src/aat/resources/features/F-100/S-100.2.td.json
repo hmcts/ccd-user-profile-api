@@ -1,0 +1,17 @@
+{
+  "_guid_": "S-100.2",
+  "_extends_": "F-100.base",
+  "title": "should update workbasket defaults while retaining existing jurisdiction membership",
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "id": "${[scenarioContext][childContexts][F-100_Create_Existing_Profile][testData][actualResponse][body][id]}",
+          "work_basket_default_jurisdiction": "BEFTA_JURISDICTION_3",
+          "work_basket_default_case_type": "BEFTA_CASETYPE_3_1",
+          "work_basket_default_state": "OPEN"
+        }
+      ]
+    }
+  }
+}

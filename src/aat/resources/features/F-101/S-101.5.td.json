@@ -1,0 +1,24 @@
+{
+  "_guid_": "S-101.5",
+  "_extends_": "F-101.base",
+  "operationName": "Delete User Profile Jurisdiction",
+  "method": "DELETE",
+  "uri": "/users",
+  "specs": ["has the 400 Bad Request code"],
+  "request": {
+    "queryParams": {
+      "uid": "${[scenarioContext][childContexts][F-101_Create_Profile][testData][request][body][arrayInMap][0][id]}",
+      "jid": "BEFTA_JURISDICTION_NOT_ASSOCIATED"
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Message": "User is not a member of the BEFTA_JURISDICTION_NOT_ASSOCIATED jurisdiction"
+    },
+    "body": {
+      "__plainTextValue__": "User is not a member of the BEFTA_JURISDICTION_NOT_ASSOCIATED jurisdiction"
+    }
+  }
+}

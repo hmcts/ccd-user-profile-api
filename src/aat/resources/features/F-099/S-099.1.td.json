@@ -1,0 +1,17 @@
+{
+  "_guid_": "S-099.1",
+  "_extends_": "F-099.base",
+  "title": "should create a user profile with jurisdictions and workbasket defaults",
+  "specs": ["has the 201 Created code"],
+  "expectedResponse": {
+    "body": {
+      "id": "${[scenarioContext][testData][request][body][id]}",
+      "jurisdictions": [
+        { "id": "BEFTA_JURISDICTION_2" }
+      ],
+      "work_basket_default_jurisdiction": "BEFTA_JURISDICTION_2",
+      "work_basket_default_case_type": "BEFTA_CASETYPE_2_1",
+      "work_basket_default_state": "TODO"
+    }
+  }
+}
