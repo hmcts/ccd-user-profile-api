@@ -142,14 +142,14 @@ configurations.matching {
     it.name in ['testCompileClasspath', 'testRuntimeClasspath']
 }.configureEach {
     resolutionStrategy {
-        force 'org.junit.jupiter:junit-jupiter:5.14.3'
-        force 'org.junit.jupiter:junit-jupiter-api:5.14.3'
-        force 'org.junit.jupiter:junit-jupiter-params:5.14.3'
-        force 'org.junit.jupiter:junit-jupiter-engine:5.14.3'
-        force 'org.junit.platform:junit-platform-commons:1.14.3'
-        force 'org.junit.platform:junit-platform-engine:1.14.3'
-        force 'org.junit.platform:junit-platform-launcher:1.14.3'
-        force 'org.junit.vintage:junit-vintage-engine:5.14.3'
+        force 'org.junit.jupiter:junit-jupiter:5.14.4'
+        force 'org.junit.jupiter:junit-jupiter-api:5.14.4'
+        force 'org.junit.jupiter:junit-jupiter-params:5.14.4'
+        force 'org.junit.jupiter:junit-jupiter-engine:5.14.4'
+        force 'org.junit.platform:junit-platform-commons:1.14.4'
+        force 'org.junit.platform:junit-platform-engine:1.14.4'
+        force 'org.junit.platform:junit-platform-launcher:1.14.4'
+        force 'org.junit.vintage:junit-vintage-engine:5.14.4'
     }
 }
 // end::jar[]
@@ -230,10 +230,10 @@ dependencies {
 
     aatImplementation 'com.github.hmcts:service-auth-provider-java-client:6.0.0'
     codacy 'com.github.codacy:codacy-coverage-reporter:13.13.7'
-    testImplementation platform("org.junit:junit-bom:5.14.3")
+    testImplementation platform("org.junit:junit-bom:5.14.4")
     testImplementation "org.junit.jupiter:junit-jupiter"
-    testRuntimeOnly "org.junit.platform:junit-platform-engine:1.14.3"
-    testRuntimeOnly "org.junit.platform:junit-platform-launcher:1.14.3"
+    testRuntimeOnly "org.junit.platform:junit-platform-engine:1.14.4"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher:1.14.4"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
     testImplementation "org.testcontainers:testcontainers:2.0.5"
     testImplementation "org.testcontainers:junit-jupiter:1.21.4"
