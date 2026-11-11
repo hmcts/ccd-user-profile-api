@@ -1,0 +1,31 @@
+{
+  "_guid_": "S-101.1",
+  "_extends_": "F-101.base",
+  "operationName": "Save User Profile",
+  "method": "PUT",
+  "uri": "/users/save",
+  "request": {
+    "body": {
+      "id": "ccd-4658-new-${[scenarioContext][customValues][uuid]}@example.com",
+      "jurisdictions": [{ "id": "BEFTA_JURISDICTION_2" }],
+      "work_basket_default_jurisdiction": "BEFTA_JURISDICTION_2",
+      "work_basket_default_case_type": "BEFTA_CASETYPE_2_1",
+      "work_basket_default_state": "TODO"
+    }
+  },
+  "specs": ["has the 200 OK code"],
+  "expectedResponse": {
+    "_extends_": "User_Profile_Common_200_Response",
+    "headers": {
+      "Set-Cookie": "[[ANY_STRING_NULLABLE]]",
+      "X-XSS-Protection": "0"
+    },
+    "body": {
+      "id": "${[scenarioContext][testData][request][body][id]}",
+      "jurisdictions": [{ "id": "BEFTA_JURISDICTION_2" }],
+      "work_basket_default_jurisdiction": "BEFTA_JURISDICTION_2",
+      "work_basket_default_case_type": "BEFTA_CASETYPE_2_1",
+      "work_basket_default_state": "TODO"
+    }
+  }
+}
