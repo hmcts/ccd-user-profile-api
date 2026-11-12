@@ -850,7 +850,7 @@ public class UserProfileEndpointIT extends BaseTest {
 
         // Then an HTTP 400 (Bad Request) status should be returned
         assertEquals(400, mvcResult.getResponse().getStatus());
-        assertEquals("User is not a member of the TEST1 jurisdiction",
+        assertEquals("User is not a member of the requested jurisdiction",
             mvcResult.getResponse().getContentAsString());
 
         final int auditRows = JdbcTestUtils.countRowsInTable(template, "user_profile_audit");

@@ -128,7 +128,6 @@ configurations {
     cucumberRuntime.extendsFrom(functionalRuntime)
 
     all {
-        exclude group: 'ch.qos.logback'
         exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'com.h2database', module: 'h2'
