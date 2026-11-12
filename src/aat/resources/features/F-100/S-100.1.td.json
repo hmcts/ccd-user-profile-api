@@ -1,0 +1,23 @@
+{
+  "_guid_": "S-100.1",
+  "_extends_": "F-100.base",
+  "title": "should create multiple user profiles and associate their default jurisdictions",
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "id": "ccd-4657-${[scenarioContext][customValues][uuid]}@example.com",
+          "work_basket_default_jurisdiction": "BEFTA_JURISDICTION_2",
+          "work_basket_default_case_type": "BEFTA_CASETYPE_2_1",
+          "work_basket_default_state": "TODO"
+        },
+        {
+          "id": "ccd-4657-${[scenarioContext][customValues][uuid]}@example.com",
+          "work_basket_default_jurisdiction": "BEFTA_JURISDICTION_3",
+          "work_basket_default_case_type": "BEFTA_CASETYPE_3_1",
+          "work_basket_default_state": "OPEN"
+        }
+      ]
+    }
+  }
+}
