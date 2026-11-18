@@ -1,0 +1,20 @@
+{
+  "_guid_": "S-101.4",
+  "_extends_": "F-101.base",
+  "operationName": "Delete User Profile Jurisdiction",
+  "method": "DELETE",
+  "uri": "/users",
+  "request": {
+    "queryParams": {
+      "uid": "${[scenarioContext][childContexts][F-101_Create_Profile_Two_Jurisdictions][testData][request][body][arrayInMap][0][id]}",
+      "jid": "BEFTA_JURISDICTION_2"
+    }
+  },
+  "specs": ["has the 400 Bad Request code"],
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": { "Message": "Cannot delete user profile as the user's workbasket defaults are set to the Jurisdiction the user is being deleted from. Please update the user's workbasket default values to another Jurisdiction and try again." },
+    "body": { "__plainTextValue__": "Cannot delete user profile as the user's workbasket defaults are set to the Jurisdiction the user is being deleted from. Please update the user's workbasket default values to another Jurisdiction and try again." }
+  }
+}

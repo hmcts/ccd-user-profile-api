@@ -1,0 +1,28 @@
+{
+  "_guid_": "F-101_Create_Profile",
+  "_extends_": "F-101.base",
+  "productName": "CCD User Profile API",
+  "operationName": "Populate User Profiles",
+  "method": "PUT",
+  "uri": "/users",
+  "request": {
+    "headers": {
+      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
+      "Content-Type": "application/json",
+      "actionedBy": "CCD-4658-functional-tests"
+    },
+    "body": {
+      "arrayInMap": [
+        {
+          "id": "ccd-4658-save-${[scenarioContext][customValues][uuid]}@example.com",
+          "jurisdictions": [{ "id": "BEFTA_JURISDICTION_2" }],
+          "work_basket_default_jurisdiction": "BEFTA_JURISDICTION_2",
+          "work_basket_default_case_type": "BEFTA_CASETYPE_2_1",
+          "work_basket_default_state": "TODO"
+        }
+      ]
+    }
+  },
+  "specs": ["to create a user profile"],
+  "expectedResponse": { "responseCode": 200 }
+}

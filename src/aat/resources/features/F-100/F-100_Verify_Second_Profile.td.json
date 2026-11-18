@@ -1,0 +1,22 @@
+{
+  "_guid_": "F-100_Verify_Second_Profile",
+  "_extends_": "F-100_Verify_First_Profile",
+  "specs": ["to fetch the second saved user profile"],
+  "request": {
+    "queryParams": {
+      "uid": "${[scenarioContext][parentContext][testData][request][body][arrayInMap][1][id]}"
+    }
+  },
+  "expectedResponse": {
+    "body": {
+      "id": "${[scenarioContext][parentContext][testData][request][body][arrayInMap][1][id]}",
+      "jurisdictions": [
+        "__befta_replace__",
+        { "id": "${[scenarioContext][parentContext][testData][request][body][arrayInMap][1][work_basket_default_jurisdiction]}" }
+      ],
+      "work_basket_default_jurisdiction": "${[scenarioContext][parentContext][testData][request][body][arrayInMap][1][work_basket_default_jurisdiction]}",
+      "work_basket_default_case_type": "${[scenarioContext][parentContext][testData][request][body][arrayInMap][1][work_basket_default_case_type]}",
+      "work_basket_default_state": "${[scenarioContext][parentContext][testData][request][body][arrayInMap][1][work_basket_default_state]}"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "_guid_": "S-101.3",
+  "_extends_": "F-101.base",
+  "operationName": "Delete User Profile Jurisdiction",
+  "method": "DELETE",
+  "uri": "/users",
+  "request": {
+    "queryParams": {
+      "uid": "${[scenarioContext][childContexts][F-101_Create_Profile_Two_Jurisdictions][testData][request][body][arrayInMap][0][id]}",
+      "jid": "BEFTA_JURISDICTION_3"
+    }
+  },
+  "specs": ["has the 204 No Content code"],
+  "expectedResponse": { "responseCode": 204, "responseMessage": "No Content" }
+}
