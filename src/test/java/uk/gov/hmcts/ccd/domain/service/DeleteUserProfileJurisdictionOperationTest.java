@@ -69,7 +69,7 @@ class DeleteUserProfileJurisdictionOperationTest {
 
             BadRequestException exception = assertThrows(BadRequestException.class,
                 () -> classUnderTest.deleteAssociation(USER_ID, "TEST2", ACTIONED_BY));
-            assertEquals("User is not a member of the TEST2 jurisdiction",
+            assertEquals("User is not a member of the requested jurisdiction",
                 exception.getMessage());
         }
 

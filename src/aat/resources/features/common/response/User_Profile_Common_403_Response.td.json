@@ -1,13 +1,15 @@
 {
-	"_guid_": "User_Profile_Common_403_Response",
-	"_extends_": "Common_Response",
-
-	"responseCode": 403,
-	"responseMessage": "Forbidden",
-	"headers": {
-		"_extends_": "User_Profile_Common_403_Response_Headers"
-	},
-	"body": {
-		"_extends_": "Common_403_Response_Body"
-	}
+  "_guid_": "User_Profile_Common_403_Response",
+  "responseCode": 403,
+  "responseMessage": "Forbidden",
+  "headers": {
+    "_extends_": "User_Profile_Common_403_Response_Headers"
+  },
+  "body": {
+    "timestamp": "[[ANYTHING_PRESENT]]",
+    "status": 403,
+    "error": "Forbidden",
+    "message": "Forbidden",
+    "path": "/"
+  }
 }

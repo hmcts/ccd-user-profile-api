@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.endpoint.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+/** Public business failure: messages must be fixed, safe text without internal diagnostics or request values. */
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class NotFoundException extends RuntimeException {
     public NotFoundException(final String message) {

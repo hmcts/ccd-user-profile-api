@@ -1,7 +1,10 @@
 server:
   port: 4453
   error:
-    include-message: always
+    include-message: never
+    include-exception: false
+    include-stacktrace: never
+    include-binding-errors: never
   max-http-header-size: 24KB
 
 logging:
@@ -80,7 +83,7 @@ management:
         time-to-live: 1000ms
     health:
       enabled: true
-      show-details: always
+      show-details: never
       cache:
         time-to-live: 1000ms
       group:
