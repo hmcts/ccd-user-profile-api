@@ -1,0 +1,15 @@
+{
+  "_guid_": "F-100_Verify_Updated_Profile",
+  "_extends_": "F-100_Verify_First_Profile",
+  "specs": ["to fetch the updated user profile"],
+  "expectedResponse": {
+    "body": {
+      "jurisdictions": [
+        "__befta_replace__",
+        { "__ordering__": "UNORDERED", "__elementId__": "id" },
+        { "id": "BEFTA_JURISDICTION_2" },
+        { "id": "BEFTA_JURISDICTION_3" }
+      ]
+    }
+  }
+}
