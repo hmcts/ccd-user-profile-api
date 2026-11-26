@@ -1,0 +1,23 @@
+{
+  "_guid_": "S-098.4",
+  "_extends_": "F-098.base",
+  "title": "should return not found for an unknown user profile id",
+  "operationName": "Get User Profile",
+  "method": "GET",
+  "request": {
+    "queryParams": {
+      "uid": "missing-user-profile-ccd-4658@example.com"
+    }
+  },
+  "specs": ["has the 404 Not Found code"],
+  "expectedResponse": {
+    "responseCode": 404,
+    "responseMessage": "Not Found",
+    "headers": {
+      "Message": "Cannot find user profile"
+    },
+    "body": {
+      "__plainTextValue__": "Cannot find user profile"
+    }
+  }
+}

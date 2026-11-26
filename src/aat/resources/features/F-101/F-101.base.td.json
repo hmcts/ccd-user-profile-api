@@ -1,0 +1,17 @@
+{
+  "_guid_": "F-101.base",
+  "productName": "CCD User Profile API",
+  "users": {
+    "invokingUser": {
+      "username": "[[$CCD_CASEWORKER_AUTOTEST_EMAIL]]",
+      "password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
+    }
+  },
+  "request": {
+    "headers": {
+      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
+      "Content-Type": "application/json",
+      "actionedBy": "CCD-4658-functional-tests"
+    }
+  }
+}
