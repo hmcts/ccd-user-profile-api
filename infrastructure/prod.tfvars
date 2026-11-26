@@ -2,3 +2,4 @@
 pgsql_sku        = "GP_Standard_D2s_v3"
 subnet_suffix    = "expanded"
 pgsql_storage_mb = 131072
+service_criticality = 5
