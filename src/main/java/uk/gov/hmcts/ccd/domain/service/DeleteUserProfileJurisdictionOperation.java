@@ -48,8 +48,7 @@ public class DeleteUserProfileJurisdictionOperation {
                 .stream()
                 .filter(j -> j.getId().equals(jurisdictionId))
                 .findFirst()
-                .orElseThrow(() -> new BadRequestException("User is not a member of the "
-                    + jurisdictionId + " jurisdiction"));
+                .orElseThrow(() -> new BadRequestException("User is not a member of the requested jurisdiction"));
 
 
         LOG.info("Deleting association to {} jurisdiction for User Profile ...", jurisdictionId

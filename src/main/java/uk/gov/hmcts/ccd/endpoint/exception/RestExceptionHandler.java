@@ -11,7 +11,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.sql.SQLException;
-import java.util.Collections;
+import java.util.Map;
+import org.springframework.http.HttpStatusCode;
+import uk.gov.hmcts.ccd.error.ErrorCode;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -19,28 +21,45 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleException(final RuntimeException e, final WebRequest request) {
-        final StringBuilder errorMsg = new StringBuilder(e.getMessage());
+        HttpStatus status = e instanceof BadRequestException ? HttpStatus.BAD_REQUEST
+            : e instanceof NotFoundException ? HttpStatus.NOT_FOUND : HttpStatus.INTERNAL_SERVER_ERROR;
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Message", e.getMessage());
-        if (e instanceof BadRequestException) {
-            LOG.warn("exception with message {}, {}, {}", errorMsg, HttpStatus.BAD_REQUEST, request, e);
-            return handleExceptionInternal(e, errorMsg, headers, HttpStatus.BAD_REQUEST, request);
+        if (status != HttpStatus.INTERNAL_SERVER_ERROR) {
+            headers.add("Message", e.getMessage() == null ? status.getReasonPhrase() : e.getMessage());
         }
-        if (e instanceof NotFoundException) {
-            LOG.warn("exception with message {}, {}, {}", errorMsg, HttpStatus.NOT_FOUND, request, e);
-            return handleExceptionInternal(e, errorMsg, headers, HttpStatus.NOT_FOUND, request);
-        }
-        LOG.warn("exception with message {}, {}, {}", errorMsg, HttpStatus.INTERNAL_SERVER_ERROR, request, e);
-        return handleExceptionInternal(e, errorMsg, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+        return handleExceptionInternal(e, null, headers, status, request);
     }
 
     @ExceptionHandler(SQLException.class)
     protected ResponseEntity<Object> handleSQLException(final SQLException e, final WebRequest request) {
-        final String errorMsg = "SQL Exception thrown during API operation";
+        return handleExceptionInternal(e, null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
 
-        LOG.error(errorMsg);
-        handleExceptionInternal(e, errorMsg, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(Collections.singletonMap("errorMessage", errorMsg));
+    @Override
+    protected ResponseEntity<Object> handleExceptionInternal(Exception exception, Object body,
+                                                              HttpHeaders headers, HttpStatusCode status,
+                                                              WebRequest request) {
+        try (var diagnostics = uk.gov.hmcts.ccd.error.FailureDiagnostics.open(exception, status.value())) {
+            if (status.is5xxServerError()) {
+                LOG.error("Request failed: code={} status={}",
+                    ErrorCode.fromStatus(status.value()), status.value(), exception);
+            } else {
+                LOG.warn("Request failed: code={} status={}",
+                    ErrorCode.fromStatus(status.value()), status.value(), exception);
+            }
+            // These application exceptions contain reviewed public business validation only.
+            if ((exception instanceof BadRequestException || exception instanceof NotFoundException)
+                && exception.getMessage() != null) {
+                return super.handleExceptionInternal(exception, exception.getMessage(), headers, status, request);
+            }
+            String safeMessage = HttpStatus.valueOf(status.value()).getReasonPhrase();
+            Object safeBody = exception instanceof SQLException ? Map.of("errorMessage", safeMessage) : safeMessage;
+            if (exception instanceof org.springframework.web.ErrorResponse) {
+                var problem = org.springframework.http.ProblemDetail.forStatusAndDetail(status, safeMessage);
+                problem.setInstance(java.net.URI.create("/"));
+                safeBody = problem;
+            }
+            return super.handleExceptionInternal(exception, safeBody, headers, status, request);
+        }
     }
 }

@@ -1,75 +1,43 @@
 {
-	"_guid_": "S-000",
-	"title": "must return an all-healthy response from the Healthcheck Operation",
-
-	"productName": "CCD User Profile API",
-	"operationName": "Healthcheck",
-
-	"method": "GET",
-	"uri": "/health",
-
-	"specs": [
-		"an active profile in CCD",
-		"has the 200 OK code"
-	],
-
-	"users": {
-		"invokingUser": {
-			"username": "[[$CCD_CASEWORKER_AUTOTEST_EMAIL]]",
-			"password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
-		}
-	},
-
-	"request": {
-		"headers": {
-			"Authorization": "[[DEFAULT_AUTO_VALUE]]",
-			"ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
-			"Content-Type": "application/json"
-		}
-	},
-
-	"expectedResponse": {
-		"responseCode": 200,
-		"responseMessage": "OK",
-		"headers": {
-			"Content-Length": "[[ANYTHING_PRESENT]]",
-			"Content-Type": "application/vnd.spring-boot.actuator.v3+json",
-			"Date": "[[ANYTHING_PRESENT]]",
-			"Request-Context": "[[ANYTHING_PRESENT]]",
-			"Vary": "Accept-Encoding"
-		},
-		"body": {
-			"status": "UP",
-			"components": {
-				"db": {
-					"status": "UP",
-					"details": {
-						"database": "PostgreSQL",
-						"validationQuery": "isValid()"
-					}
-				},
-				"diskSpace": {
-					"status": "UP",
-					"details": {
-						"total": "[[ANY_NUMBER_NOT_NULLABLE]]",
-						"free": "[[ANY_NUMBER_NOT_NULLABLE]]",
-						"threshold": "[[ANY_INTEGER_NOT_NULLABLE]]",
-						"exists" : true,
-						"path": "[[ANYTHING_PRESENT]]"
-					}
-				},
-				"livenessState": {
-					"status": "UP"
-				},
-				"ping": {
-					"status": "UP"
-				},
-				"readinessState" : {
-					"status" : "UP"
-				},
-				"ssl": "[[ANY_OBJECT_NULLABLE]]"
-			},
-			"groups" : [ "liveness", "readiness" ]
-		}
-	}
+  "_guid_": "S-000",
+  "title": "must return an all-healthy response from the Healthcheck Operation",
+  "productName": "CCD User Profile API",
+  "operationName": "Healthcheck",
+  "method": "GET",
+  "uri": "/health",
+  "specs": [
+    "an active profile in CCD",
+    "has the 200 OK code"
+  ],
+  "users": {
+    "invokingUser": {
+      "username": "[[$CCD_CASEWORKER_AUTOTEST_EMAIL]]",
+      "password": "[[$CCD_CASEWORKER_AUTOTEST_PASSWORD]]"
+    }
+  },
+  "request": {
+    "headers": {
+      "Authorization": "[[DEFAULT_AUTO_VALUE]]",
+      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
+      "Content-Type": "application/json"
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 200,
+    "responseMessage": "OK",
+    "headers": {
+      "Content-Length": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/vnd.spring-boot.actuator.v3+json",
+      "Date": "[[ANYTHING_PRESENT]]",
+      "Request-Context": "[[ANYTHING_PRESENT]]",
+      "Vary": "Accept-Encoding"
+    },
+    "body": {
+      "status": "UP",
+      "groups": [
+        "liveness",
+        "readiness"
+      ]
+    }
+  }
 }
